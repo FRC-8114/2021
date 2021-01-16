@@ -12,4 +12,24 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+public final class Constants {
+    public static final int kLeftMotor1Port = 1;
+    public static final int kLeftMotor2Port = 2;
+    public static final int kRightMotor1Port = 3;
+    public static final int kRightMotor2Port = 4;
+    
+    public static final double ksVolts = 0.0861;
+    public static final double kvVoltSecondsPerMeter = 2.81;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.241;
+
+    public static final double kPDriveVel = 20.3;
+
+    public static final double kTrackWidthMeters = 0.5318125;
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeters);
+
+    public static final double kMaxSpeedMetersPerSecond = 2;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 2;
+
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+}
