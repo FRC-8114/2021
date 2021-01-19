@@ -6,7 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants.DriveConstants;
@@ -20,14 +21,14 @@ public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
   private final SpeedControllerGroup m_leftMotors =
       new SpeedControllerGroup(
-          new PWMVictorSPX(DriveConstants.kLeftMotor1Port),
-          new PWMVictorSPX(DriveConstants.kLeftMotor2Port));
+          new CANSparkMax(1, MotorType.kBrushless),
+          new CANSparkMax(2, MotorType.kBrushless));
 
   // The motors on the right side of the drive.
   private final SpeedControllerGroup m_rightMotors =
       new SpeedControllerGroup(
-          new PWMVictorSPX(DriveConstants.kRightMotor1Port),
-          new PWMVictorSPX(DriveConstants.kRightMotor2Port));
+        new CANSparkMax(3, MotorType.kBrushless),
+        new CANSparkMax(4, MotorType.kBrushless));
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
