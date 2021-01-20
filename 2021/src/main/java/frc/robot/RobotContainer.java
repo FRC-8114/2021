@@ -29,8 +29,8 @@ public class RobotContainer {
 
   private static XboxController controller;
 
-  private static final LimelightSubsystem limelight = new LimelightSubsystem("limelight-eleven");
-  private static final DriveSubsystem m_drive = new DriveSubsystem();
+  private static final LimelightSubsystem limelight = new LimelightSubsystem("limelight-eleven", controller);
+  private static final DriveSubsystem m_drive = new DriveSubsystem(controller);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
