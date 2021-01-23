@@ -6,10 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -21,16 +19,15 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Command m_autoCommand = new autoTurning(limelight, m_drive);
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private static JoystickButton a, b;
 
-  private static JoystickButton a;
+  private static XboxController controller = new XboxController(0);
 
-  private static XboxController controller;
-
-  private static final LimelightSubsystem limelight = new LimelightSubsystem("limelight-eleven", controller);
   private static final DriveSubsystem m_drive = new DriveSubsystem(controller);
+
+  private static final LimelightSubsystem limelight = new LimelightSubsystem("limelight-eleven");
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,8 +43,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     a = new JoystickButton(controller, 1);
+    b = new JoystickButton(controller, 2);
 
-    a.whileHeld(() -> limelight.findTarget()).whenReleased(() -> m_drive.drive(0,0));
+    a.whileHeld(new autoTurning(limelight, m_drive));
+    b.cancelWhenPressed(new autoTurning(limelight, m_drive));
   }
 
   /**

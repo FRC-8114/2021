@@ -17,6 +17,11 @@ public final class Constants {
     public static final int kLeftMotor2Port = 2;
     public static final int kRightMotor1Port = 3;
     public static final int kRightMotor2Port = 4;
+
+    public static final double kDriveSpeed = 0.475;
+
+    public static final double kMaxFindAngle = 0.35;
+    public static final double kFindDriveSpeed = 0.05;
     
     public static final double ksVolts = 0.0861;
     public static final double kvVoltSecondsPerMeter = 2.81;

@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
 
@@ -11,13 +10,12 @@ public class LimelightSubsystem extends SubsystemBase {
   private final double TARGET_HEIGHT = 81.0625, LIMELIGHT_HEIGHT = 8.5, HEIGHT_DIFFERENCE = TARGET_HEIGHT - LIMELIGHT_HEIGHT; // Measurements in inches
   private final double LIMELIGHT_HORIZONTAL_ANGLE = 34.324911622; // Measured in degrees
   private final double TRIGONOMIC_WEIGHT = 0; 
-  private final DriveSubsystem m_drive;
 
   /**
    * Initalizes the Networktable pulling for the Limelight subsystem on the RoboRio
    * sets initial values if there are any present on the table
    */
-  public LimelightSubsystem(String limelightTableName, XboxController controller) {
+  public LimelightSubsystem(String limelightTableName) {
     /*
      * The following creates a variable in which the table for the Limelight is stored
      * and then stores the following as entries: the targets x angle*, the targets y
@@ -27,8 +25,6 @@ public class LimelightSubsystem extends SubsystemBase {
      * *The limelight stores x and y offset from center based off of angle in the camera's
      * FOV (x -27<->27; y -20.5<->20.5)
      */
-
-    m_drive = new DriveSubsystem(controller);
 
     limelightTable = NetworkTableInstance.getDefault().getTable(limelightTableName); // The instance is not given a variable all limelights are on the same instance
     
@@ -46,17 +42,6 @@ public class LimelightSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Distance to Target", approximateDistance());
 
 
-  }
-
-  public void findTarget() {
-      for (double i = getTargetXAngle(); i > 0.1 || i < -0.1; i = getTargetXAngle()) {
-          if (i < -0.1)
-            m_drive.drive(.25,-.25);
-          else if (i > 0.1)
-            m_drive.drive(-.25, .25);
-          else
-            m_drive.drive(0,0);
-      }
   }
 
   /*

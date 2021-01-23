@@ -5,7 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
@@ -37,6 +37,9 @@ public class DriveSubsystem extends SubsystemBase {
         new CANSparkMax(3, MotorType.kBrushless),
         new CANSparkMax(4, MotorType.kBrushless)); 
 
+    m_leftMotors.setInverted(true);
+    m_rightMotors.setInverted(true);
+
     //creates a differential drive object
     m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
     
@@ -51,11 +54,12 @@ public class DriveSubsystem extends SubsystemBase {
     // read and store the right y axis value for the controller joystick
     double yrightAxis = controller.getY(Hand.kRight);
 
-    m_drive.tankDrive(yleftAxis, yrightAxis, false);
+    m_drive.tankDrive(Constants.kDriveSpeed*Math.floor(yleftAxis*100)/100, Constants.kDriveSpeed*Math.floor(yrightAxis*100)/100, false);
   }
 
   public void drive(double left, double right) {
-    //pass in two values for the left and right motor speeds
+    //pass in two values for the left and right motor speeds, which the robot will drive
+    //at continuously until it is stopped
     m_drive.tankDrive(left, right, false);
   }
 }
