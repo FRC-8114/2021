@@ -1,5 +1,7 @@
 Code for the Boerne Rocketeers 2021 Infinite Recharge from Home robot.
 
+For the best experience navigating and editing the .md files in this repo, we suggest Obsidian: https://obsidian.md (note the school blocks this link) or https://github.com/obsidianmd/obsidian-releases.
+
 Documentation:
 	~ Spark MAX Documentation - https://www.revrobotics.com/sparkmax-software/
 		* Spark MAX Vendor Dependencies Link - https://www.revrobotics.com/content/sw/max/sdk/REVRobotics.json
