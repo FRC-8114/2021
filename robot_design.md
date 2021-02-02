@@ -1,8 +1,8 @@
 Motor Ports:
 Front Left - 2
 Back Left - 1
-Front Right - 1
-Back Left - 1
+Front Right - 3
+Back Right - 4
 
 Built in Encoders:
 Front Left
