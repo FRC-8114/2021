@@ -14,7 +14,7 @@ Characterization Tutorial: https://docs.wpilib.org/en/stable/docs/software/examp
 	- *Control Type*: Spark Max
 3. Set the correct values for your *robotconfig.py* file.
 	- *brushed*: False
-	- *motorPorts*: [1, 2]
+	- *motorPorts*: [2, 1]
 	- *rightMotorPorts*: [3, 4]
 	- *motorsInverted*: [False, False]
 	- *rightMotorsInverted*: [False, False]
