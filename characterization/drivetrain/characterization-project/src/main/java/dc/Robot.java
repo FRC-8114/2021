@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
   }
 
   // methods to create and setup motors (reduce redundancy)
-  public CANSparkMax setupCANSparkMax(int port, Sides side, boolean inverted) {
+  public CANSparkMax setupCANSparkMax(int port, Sides side, boolean inverted, boolean encoderInverted) {
     // create new motor and set neutral modes (if needed)
     // setup Brushless spark
     CANSparkMax motor = new CANSparkMax(port, MotorType.kBrushless);
@@ -106,11 +106,8 @@ public class Robot extends TimedRobot {
     
     // setup encoder if motor isn't a follower
     if (side != Sides.FOLLOWER) {
-    
-      
       CANEncoder encoder = motor.getEncoder();
-
-
+      enocder.setInverted(encoderInverted);
 
     switch (side) {
       // setup encoder and data collecting methods
@@ -152,15 +149,15 @@ public class Robot extends TimedRobot {
     stick = new Joystick(0);
     
     // create left motor
-    CANSparkMax leftMotor = setupCANSparkMax(2, Sides.LEFT, false);
+    CANSparkMax leftMotor = setupCANSparkMax(2, Sides.LEFT, false, false);
 
-    CANSparkMax leftFollowerID1 = setupCANSparkMax(1, Sides.FOLLOWER, false);
+    CANSparkMax leftFollowerID1 = setupCANSparkMax(1, Sides.FOLLOWER, false, false);
     leftFollowerID1.follow(leftMotor, false);
         
     
 
-    CANSparkMax rightMotor = setupCANSparkMax(3, Sides.RIGHT, false);
-    CANSparkMax rightFollowerID4 = setupCANSparkMax(4, Sides.FOLLOWER, false);
+    CANSparkMax rightMotor = setupCANSparkMax(3, Sides.RIGHT, false, true);
+    CANSparkMax rightFollowerID4 = setupCANSparkMax(4, Sides.FOLLOWER, false, true);
     rightFollowerID4.follow(rightMotor, false);
     drive = new DifferentialDrive(leftMotor, rightMotor);
     drive.setDeadband(0);
