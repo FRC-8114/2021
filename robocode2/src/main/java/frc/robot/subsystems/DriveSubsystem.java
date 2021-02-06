@@ -152,7 +152,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Gets the left encoders distance
+   * Gets the left encoder's distance
    * 
    * @return the left encoder's distance 
    */
@@ -161,12 +161,30 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Gets the right encoders distance
+   * Gets the left encoder's velocity
+   * 
+   * @return the left encoder's velocity
+   */
+  public double getLeftEncoderVelocity() {
+    return leftLeaderEncoder.getVelocity() * (DriveConstants.kLeftEncoderInverted? -1:1);
+  }
+
+  /**
+   * Gets the right encoder's distance
    * 
    * @return the right encoder's distance 
    */
   public double getRightEncoderDistance() {
     return rightLeaderEncoder.getPosition() * (DriveConstants.kRightEncoderInverted? -1:1);
+  }
+
+  /**
+   * Gets the right encoder's velocity
+   * 
+   * @return the right encoder's velocity
+   */
+  public double getRightEncoderVelocity() {
+    return rightLeaderEncoder.getVelocity() * (DriveConstants.kRightEncoderInverted? -1:1);
   }
 
   /**
@@ -243,9 +261,9 @@ public class DriveSubsystem extends SubsystemBase {
    * Sends encoder positions and velocities to SmartDashboard
    */
   public void sendEncodersToShuffleboard() {
-    SmartDashboard.putNumber("left_encoder_position", getLeftEncoder().getPosition());
-    SmartDashboard.putNumber("left_encoder_velocity", getLeftEncoder().getVelocity());
-    SmartDashboard.putNumber("right_encoder_position", getRightEncoder().getPosition());
-    SmartDashboard.putNumber("right_encoder_velocity", getRightEncoder().getVelocity());
+    SmartDashboard.putNumber("left_encoder_position", getLeftEncoderDistance());
+    SmartDashboard.putNumber("left_encoder_velocity", getLeftEncoderVelocity());
+    SmartDashboard.putNumber("right_encoder_position", getRightEncoderDistance());
+    SmartDashboard.putNumber("right_encoder_velocity", getRightEncoderVelocity());
   }
 }
