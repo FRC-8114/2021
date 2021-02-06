@@ -11,3 +11,5 @@ Documentation:
 		* WPILibPi - https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/index.html
 		
 [[robot_design | Hardware Specifications]]
+
+Robot Wifi Password: 8114WPAKEY
