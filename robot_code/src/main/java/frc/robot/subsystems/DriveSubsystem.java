@@ -16,35 +16,44 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANEncoder;
+
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  private final SpeedControllerGroup m_leftMotors =
-      new SpeedControllerGroup(
-          new PWMVictorSPX(DriveConstants.kLeftMotor1Port),
-          new PWMVictorSPX(DriveConstants.kLeftMotor2Port));
+  final CANSparkMax leftMotorLeader = new CANSparkMax(Constants.DriveConstants.kLeftMotor1Port, MotorType.kBrushless);
+  leftMotorLeader.restoreFactoryDefaults(); 
+  leftMotorLeader.setIdleMode(IdleMode.kBrake);  
+  leftMotorLeader.setInverted(Constants.Driveconstants.kLeftMotorsInversed);
+
+  final CANSparkMax leftMotorFollower = new CANSparkMax(Constants.DriveConstants.kLeftMotor2Port, MotorType.kBrushless);
+  leftMotorFollower.restoreFactoryDefaults(); 
+  leftMotorFollower.setIdleMode(IdleMode.kBrake);  
+  leftMotorFollower.setInverted(Constants.Driveconstants.kLeftMotorsInversed);
+  leftMotorFollower.follow(leftMotorLeader, false);
 
   // The motors on the right side of the drive.
-  private final SpeedControllerGroup m_rightMotors =
-      new SpeedControllerGroup(
-          new PWMVictorSPX(DriveConstants.kRightMotor1Port),
-          new PWMVictorSPX(DriveConstants.kRightMotor2Port));
+  final CANSparkMax rightMotorLeader = new CANSparkMax(Constants.DriveConstants.kRightMotor1Port, MotorType.kBrushless);
+  rightMotorLeader.restoreFactoryDefaults(); 
+  rightMotorLeader.setIdleMode(IdleMode.kBrake);  
+  rightMotorLeader.setInverted(Constants.Driveconstants.kRightMotorsInversed);
+
+  final CANSparkMax rightMotorFollower = new CANSparkMax(Constants.DriveConstants.kRightMotor2Port, MotorType.kBrushless);
+  rightMotorFollower.restoreFactoryDefaults(); 
+  rightMotorFollower.setIdleMode(IdleMode.kBrake);  
+  rightMotorFollower.setInverted(Constants.Driveconstants.kRightMotorsInversed);
+  rightMotorFollower.follow(leftMotorLeader, false);
 
   // The robot's drive
-  private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+  private final DifferentialDrive m_drive = new DifferentialDrive(leftMotorLeader, rightMotorLeader);
 
   // The left-side drive encoder
-  private final Encoder m_leftEncoder =
-      new Encoder(
-          DriveConstants.kLeftEncoderPorts[0],
-          DriveConstants.kLeftEncoderPorts[1],
-          DriveConstants.kLeftEncoderReversed);
+  final CANEncoder leftLeaderEncoder = leftMotorLeader.getEncoder();
 
   // The right-side drive encoder
-  private final Encoder m_rightEncoder =
-      new Encoder(
-          DriveConstants.kRightEncoderPorts[0],
-          DriveConstants.kRightEncoderPorts[1],
-          DriveConstants.kRightEncoderReversed);
+  final CANEncoder rightLeaderEncoder = rightMotorLeader.getEncoder();
 
   // The gyro sensor
   private final Gyro m_gyro = new ADXRS450_Gyro();
@@ -55,8 +64,8 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     // Sets the distance per pulse for the encoders
-    m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    leftLeaderEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    rightLeaderEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
@@ -66,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+        m_gyro.getRotation2d(), leftLeaderEncoder.getDistance(), rightLeaderEncoder.getDistance());
   }
 
   /**
