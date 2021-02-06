@@ -66,10 +66,12 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Drive at half speed when the right bumper is held
+    // Increment drive speed when the right bumper is pressed
     new JoystickButton(m_driverController, Button.kBumperRight.value)
-        .whenPressed(() -> m_robotDrive.setMaxOutput(0.5))
-        .whenReleased(() -> m_robotDrive.setMaxOutput(1));
+        .whenPressed(() -> m_robotDrive.incMaxSpeed());
+    // Decrement drive speed when the left bumper is pressed
+    new JoystickButton(m_driverController, Button.kBumperLeft.value)
+        .whenPressed(() -> m_robotDrive.decMaxSpeed());
   }
 
   /**

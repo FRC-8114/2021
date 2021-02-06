@@ -41,6 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
+  private double maxOutput;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -73,6 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    maxOutput = 1.0;
   }
 
   @Override
@@ -166,11 +168,31 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
-   *
-   * @param maxOutput the maximum output to which the drive will be constrained
+   * Increments maxOutput by 0.05 and updates the differential drive's
+   * max output, maxing at 1.0.
+   * 
+   * @param maxOutput
    */
-  public void setMaxOutput(double maxOutput) {
+  public void incMaxSpeed() {
+    maxOutput = Math.min(maxOutput+0.05, 1.0);
+    setMaxOutput();
+  }
+
+  /**
+   * Decreases maxOutput by 0.05 and updates the differential drive's
+   * max output, stopping at 0.1.
+   * 
+   * @param maxOutput
+   */
+  public void decMaxSpeed() {
+    maxOutput = Math.max(maxOutput-0.05, 0.1);
+    setMaxOutput();
+  }
+
+  /**
+   * Sets the max output of the drive to the value of maxOutput;
+   */
+  public void setMaxOutput() {
     m_drive.setMaxOutput(maxOutput);
   }
 
