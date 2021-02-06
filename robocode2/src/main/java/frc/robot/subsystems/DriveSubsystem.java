@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
@@ -217,5 +218,15 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return -m_gyro.getRate();
+  }
+
+  /**
+   * Sends encoder positions and velocities to SmartDashboard
+   */
+  public void sendEncodersToShuffleboard() {
+    SmartDashboard.putNumber("left_encoder_position", getLeftEncoder().getPosition());
+    SmartDashboard.putNumber("left_encoder_velocity", getLeftEncoder().getVelocity());
+    SmartDashboard.putNumber("right_encoder_position", getRightEncoder().getPosition());
+    SmartDashboard.putNumber("right_encoder_velocity", getRightEncoder().getVelocity());
   }
 }

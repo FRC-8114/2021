@@ -136,4 +136,14 @@ public class RobotContainer {
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
   }
+
+  /*
+   * Returns the drive subsystem object used to communicate with the 
+   * drivetrain
+   * 
+   * @return m_robotDrive   the robots drive subsystem
+   */
+  public DriveSubsystem getDriveSystem() {
+      return m_robotDrive;
+  }
 }
