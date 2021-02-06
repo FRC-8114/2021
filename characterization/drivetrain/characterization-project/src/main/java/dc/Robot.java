@@ -120,9 +120,9 @@ public class Robot extends TimedRobot {
 
 
         rightEncoderPosition = ()
-          -> encoder.getPosition() * encoderConstant;
+          -> encoder.getPosition() * -encoderConstant;
         rightEncoderRate = ()
-          -> encoder.getVelocity() * encoderConstant / 60.;
+          -> encoder.getVelocity() * -encoderConstant / 60.;
 
         break;
       case LEFT:
@@ -171,7 +171,10 @@ public class Robot extends TimedRobot {
 
     // Note that the angle from the NavX and all implementors of WPILib Gyro
     // must be negated because getAngle returns a clockwise positive angle
-    gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
+    
+    
+    //gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
+    gyro = new ADXRS450_Gyro();
     gyroAngleRadians = () -> -1 * Math.toRadians(gyro.getAngle());
 
     // Set the update rate instead of using flush because of a ntcore bug
@@ -201,6 +204,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // feedback for users, but not used by the control program
+    SmartDashboard.putNumber("gyro_angle", gyro.getAngle());
     SmartDashboard.putNumber("l_encoder_pos", leftEncoderPosition.get());
     SmartDashboard.putNumber("l_encoder_rate", leftEncoderRate.get());
     SmartDashboard.putNumber("r_encoder_pos", rightEncoderPosition.get());
