@@ -20,8 +20,8 @@ public final class Constants {
     public static final int kLeftMotor2Port = 1;
     public static final int kRightMotor1Port = 3;
     public static final int kRightMotor2Port = 4;
-    public static final boolean kLeftMotorsInversed = false;
-    public static final boolean kRightMotorsInversed = false;
+    public static final boolean kLeftMotorsInversed = true;
+    public static final boolean kRightMotorsInversed = true;
 
     public static final int[] kLeftEncoderPorts = new int[] {2, 1};
     public static final int[] kRightEncoderPorts = new int[] {3, 4};
