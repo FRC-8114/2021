@@ -25,7 +25,7 @@ public final class Constants {
 
     public static final int[] kLeftEncoderPorts = new int[] {2, 1};
     public static final int[] kRightEncoderPorts = new int[] {3, 4};
-    public static final boolean kLeftEncoderReversed = false;
+    public static final boolean kLeftEncoderReversed = true;
     public static final boolean kRightEncoderReversed = true;
     public static final double kTrackwidthMeters = 1.214821901;
     public static final DifferentialDriveKinematics kDriveKinematics =
