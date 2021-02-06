@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
@@ -147,7 +148,25 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the average of the two encoder readings
    */
   public double getAverageEncoderDistance() {
-    return (leftLeaderEncoder.getPosition() + rightLeaderEncoder.getPosition()) / 2.0;
+    return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+  }
+
+  /**
+   * Gets the left encoders distance
+   * 
+   * @return the left encoder's distance 
+   */
+  public double getLeftEncoderDistance() {
+    return leftLeaderEncoder.getPosition() * (DriveConstants.kLeftEncoderInverted? -1:1);
+  }
+
+  /**
+   * Gets the right encoders distance
+   * 
+   * @return the right encoder's distance 
+   */
+  public double getRightEncoderDistance() {
+    return rightLeaderEncoder.getPosition() * (DriveConstants.kRightEncoderInverted? -1:1);
   }
 
   /**
