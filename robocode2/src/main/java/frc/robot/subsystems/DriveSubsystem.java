@@ -65,7 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
     rightMotorFollower.restoreFactoryDefaults(); 
     rightMotorFollower.setIdleMode(IdleMode.kBrake);  
     rightMotorFollower.setInverted(Constants.DriveConstants.kRightMotorsInversed);
-    rightMotorFollower.follow(leftMotorLeader, false);
+    rightMotorFollower.follow(rightMotorLeader, false);
 
     // Sets the distance per pulse for the encoders
     leftLeaderEncoder.setPositionConversionFactor(Constants.DriveConstants.kEncoderDistancePerPulse);
