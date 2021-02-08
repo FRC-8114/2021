@@ -9,6 +9,8 @@ Documentation:
 		* Trajectories Tutorial - https://docs.wpilib.org/en/stable/docs/software/examples-tutorials/trajectory-tutorial/index.html
 		* Robot Characterization Documentation - https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html
 		* WPILibPi - https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/index.html
+	~ WPILib API: https://first.wpi.edu/FRC/roborio/release/docs/java/
+	~ Infinite Recharge At Home Game Manual: https://www.firstinspires.org/resource-library/frc/competition-manual-qa-system
 		
 [[robot_design | Hardware Specifications]]
 
