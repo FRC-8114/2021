@@ -32,6 +32,8 @@ public final class Constants {
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
     public static final int kEncoderCPR = 1024;
+    public static final double kPositionConversionFactor = 100;
+    public static final double kVelocityConversionFactor = .0001;
     public static final double kWheelDiameterMeters = 0.15;
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
