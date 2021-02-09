@@ -157,7 +157,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the left encoder's distance 
    */
   public double getLeftEncoderDistance() {
-    return leftLeaderEncoder.getPosition() * (DriveConstants.kLeftEncoderInverted? -1:1);
+    return leftLeaderEncoder.getPosition() * (DriveConstants.kLeftEncoderReversed? -1:1);
   }
 
   /**
@@ -166,7 +166,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the left encoder's velocity
    */
   public double getLeftEncoderVelocity() {
-    return leftLeaderEncoder.getVelocity() * (DriveConstants.kLeftEncoderInverted? -1:1);
+    return leftLeaderEncoder.getVelocity() * (DriveConstants.kLeftEncoderReversed? -1:1);
   }
 
   /**
@@ -175,7 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the right encoder's distance 
    */
   public double getRightEncoderDistance() {
-    return rightLeaderEncoder.getPosition() * (DriveConstants.kRightEncoderInverted? -1:1);
+    return rightLeaderEncoder.getPosition() * (DriveConstants.kRightEncoderReversed? -1:1);
   }
 
   /**
@@ -184,7 +184,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the right encoder's velocity
    */
   public double getRightEncoderVelocity() {
-    return rightLeaderEncoder.getVelocity() * (DriveConstants.kRightEncoderInverted? -1:1);
+    return rightLeaderEncoder.getVelocity() * (DriveConstants.kRightEncoderReversed? -1:1);
   }
 
   /**
