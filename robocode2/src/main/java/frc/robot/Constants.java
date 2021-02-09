@@ -33,11 +33,11 @@ public final class Constants {
 
     public static final int kEncoderCPR = 1024;
     public static final double kPositionConversionFactor = 100;
-    public static final double kVelocityConversionFactor = .0001;
+    public static final double kVelocityConversionFactor = .001;
     public static final double kWheelDiameterMeters = 0.15;
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
-        (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
+        (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR * kPositionConversionFactor;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically
