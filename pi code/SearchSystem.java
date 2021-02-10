@@ -6,7 +6,7 @@ import org.opencv.videoio.VideoCapture;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SearchSystem extends SubsystemBase {
-    static GripPipeline pipeline = new GripPipeline();
+    static GripPipeline2 pipeline = new GripPipeline2();
 
     VideoCapture camera = new VideoCapture(0);
     static Mat frame = new Mat();
