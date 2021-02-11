@@ -280,11 +280,11 @@ public final class Main {
    * Example pipeline.
    */
   public static class MyPipeline implements VisionPipeline {
-    public int val;
+    public GripPipeline pipeline = new GripPipeline();
 
     @Override
     public void process(Mat mat) {
-      val += 1;
+      pipeline.process(mat);
     }
   }
 
