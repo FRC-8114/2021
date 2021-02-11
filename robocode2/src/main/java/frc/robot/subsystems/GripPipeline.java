@@ -162,7 +162,7 @@ public class GripPipeline implements VisionPipeline {
 	 */
 	private void rgbThreshold(Mat input, double[] red, double[] green, double[] blue,
 		Mat out) {
-		//Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2RGB);
+		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2RGB);
 		Core.inRange(out, new Scalar(red[0], green[0], blue[0]),
 			new Scalar(red[1], green[1], blue[1]), out);
 	}
@@ -190,7 +190,7 @@ public class GripPipeline implements VisionPipeline {
 	 */
 	private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
 	    Mat out) {
-		//Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
+		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
 		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
 			new Scalar(hue[1], sat[1], val[1]), out);
 	}

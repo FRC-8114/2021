@@ -16,13 +16,12 @@ public class SearchSystem extends SubsystemBase {
 
     public SearchSystem() {
         CameraServer.getInstance().startAutomaticCapture();
-        cvSink = CameraServer.getInstance().getVideo();
+        cvSink = CameraServer.getInstance().startAutomaticCapture().getVideo();
         CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
 
     }
 
     public static void process() {
-
-        pipeline.process(frame);
+        pipeline.process(cvSink);
     }
 }
