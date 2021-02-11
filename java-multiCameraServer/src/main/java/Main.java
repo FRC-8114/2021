@@ -19,12 +19,12 @@ import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.EntryListenerFlags;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.vision.VisionPipeline;
 import edu.wpi.first.vision.VisionThread;
 
-import org.opencv.core.Mat;
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
 
 /*
    JSON format:
@@ -71,6 +71,7 @@ import org.opencv.core.Mat;
 
 public final class Main {
   private static String configFile = "/boot/frc.json";
+
 
   @SuppressWarnings("MemberName")
   public static class CameraConfig {
@@ -286,6 +287,10 @@ public final class Main {
     public void process(Mat mat) {
       pipeline.process(mat);
     }
+
+    public ArrayList<MatOfPoint> filterContoursOutput() {
+      return pipeline.filterContoursOutput();
+    }
   }
 
   /**
@@ -326,7 +331,9 @@ public final class Main {
     if (cameras.size() >= 1) {
       VisionThread visionThread = new VisionThread(cameras.get(0),
               new MyPipeline(), pipeline -> {
-        // do something with pipeline results
+                Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+                ntinst.getTable("power_cell_vision").getEntry("target_area").forceSetDouble(r.area());
+                ntinst.getTable("power_cell_vision").getEntry("target_width").forceSetDouble(r.width);
       });
       /* something like this for GRIP:
       VisionThread visionThread = new VisionThread(cameras.get(0),
