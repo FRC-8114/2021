@@ -335,9 +335,9 @@ public final class Main {
               new MyPipeline(), pipeline -> {
                 if(pipeline.filterContoursOutput().size() >= 1) {
                   Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+                  ntinst.getTable("power_cell_vision").getEntry("target_area").forceSetDouble(r.area());
+                  ntinst.getTable("power_cell_vision").getEntry("target_width").forceSetDouble(r.width);
                 }
-                ntinst.getTable("power_cell_vision").getEntry("target_area").forceSetDouble(r.area());
-                ntinst.getTable("power_cell_vision").getEntry("target_width").forceSetDouble(r.width);
       });
       visionThread.start();
       /* something like this for GRIP:
