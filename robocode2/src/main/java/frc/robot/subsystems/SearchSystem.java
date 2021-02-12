@@ -45,4 +45,13 @@ public class SearchSystem extends SubsystemBase {
     private double widthEstimateDistance() {
         return 1299 * Math.pow(targetWidth.getDouble(0.0), -1.01);
     }
+
+    
+    /**
+     * Sends the estimated distance to the power_cell_vision
+     * networktable
+     */
+    public void sendEstimatedDistance() {
+        powerCellVision.getEntry("estimatedDistance").forceSetDouble(estimateDistance());
+    }
 }
