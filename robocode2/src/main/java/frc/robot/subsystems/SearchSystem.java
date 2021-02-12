@@ -16,6 +16,16 @@ public class SearchSystem extends SubsystemBase {
     }
 
     /**
+     * Estimates the target's distance by averaging bot the area and
+     * width methods
+     * 
+     * @return the estimated distance to target
+     */
+    public double estimateDistance() {
+        return (areaEstimateDistance() + widthEstimateDistance()) / 2;
+    }
+
+    /**
      * Estimates the target's distance based off of a function derived
      * from experimental datapoints and its area
      * 
