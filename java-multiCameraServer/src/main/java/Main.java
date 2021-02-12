@@ -307,9 +307,9 @@ public final class Main {
     }
 
     // start NetworkTables
-    //NetworkTableInstance ntinst = NetworkTableInstance.getDefault();
-    NetworkTableInstance ntinst = NetworkTableInstance.create();
-    ntinst.startClientTeam(8114);
+    NetworkTableInstance ntinst = NetworkTableInstance.getDefault();
+    //NetworkTableInstance ntinst = NetworkTableInstance.create();
+    //ntinst.startServer();
     if (server) {
       System.out.println("Setting up NetworkTables server");
       ntinst.startServer();
