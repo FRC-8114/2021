@@ -11,10 +11,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.*;
+import frc.robot.subsystems.*;
+import jdk.nashorn.internal.runtime.regexp.joni.SearchAlgorithm;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -37,6 +36,7 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final SearchSystem searchSystem = new SearchSystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -137,13 +137,23 @@ public class RobotContainer {
     return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
   }
 
-  /*
+  /**
    * Returns the drive subsystem object used to communicate with the 
    * drivetrain
    * 
-   * @return m_robotDrive   the robots drive subsystem
+   * @return the robots drive subsystem
    */
   public DriveSubsystem getDriveSystem() {
       return m_robotDrive;
+  }
+
+  /**
+   * Returns the search subsystem object used to calculate the distance
+   * to the power cell
+   * 
+   * @return the search system
+   */
+  public SearchSystem getSearchSystem() {
+      return searchSystem;
   }
 }
