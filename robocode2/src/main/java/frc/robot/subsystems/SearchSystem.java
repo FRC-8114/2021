@@ -14,4 +14,25 @@ public class SearchSystem extends SubsystemBase {
         targetArea = powerCellVision.getEntry("target_area");
         targetWidth = powerCellVision.getEntry("target_width");
     }
+
+    /**
+     * Estimates the target's distance based off of a function derived
+     * from experimental datapoints and its area
+     * 
+     * @return the estimated distance to target
+     */
+    private double areaEstimateDistance() {
+        return 903136 * Math.pow(targetArea.getDouble(0.0), -1.91);
+    }
+
+
+    /**
+     * Estimates the target's distance based off of a function derived
+     * from experimental datapoints and its width
+     * 
+     * @return the estimated distance to target
+     */
+    private double widthEstimateDistance() {
+        return 1299 * Math.pow(targetWidth.getDouble(0.0), -1.01);
+    }
 }
