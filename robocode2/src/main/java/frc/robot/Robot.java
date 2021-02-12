@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
 
     // Send values to Shuffleboard
     m_robotContainer.getDriveSystem().sendEncodersToShuffleboard();
+    m_robotContainer.getSearchSystem().sendEstimatedDistance();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
