@@ -140,6 +140,6 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.getDriveSystem().tankDrive(
       m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft),
-      m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight));
+      m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight));
   }
 }
