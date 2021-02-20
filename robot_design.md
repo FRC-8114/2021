@@ -19,6 +19,7 @@ Robot Network IP Address:
 10.81.14.5 - Driver Station Static IP Wired*
 10.81.14.9 - Driver Station Static IP Wireless*
 10.81.14.11 - Limelight
+10.81.14.57 - Pi3
 
 *Subnet Mask: 255.0.0.0*
 Note: The RoboRadio assigns IP's between 10.81.14.20 and 10.81.14.199, using these may lead to conflicts.
