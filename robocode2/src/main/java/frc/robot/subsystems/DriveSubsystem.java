@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -22,12 +21,12 @@ import com.revrobotics.CANEncoder;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  final CANSparkMax leftMotorLeader = new CANSparkMax(Constants.DriveConstants.LEFT_MOTOR_1_PORT, MotorType.kBrushless);
-  final CANSparkMax leftMotorFollower = new CANSparkMax(Constants.DriveConstants.LEFT_MOTOR_2_PORT, MotorType.kBrushless);
+  final CANSparkMax leftMotorLeader = new CANSparkMax(DriveConstants.LEFT_MOTOR_1_PORT, MotorType.kBrushless);
+  final CANSparkMax leftMotorFollower = new CANSparkMax(DriveConstants.LEFT_MOTOR_2_PORT, MotorType.kBrushless);
 
   // The motors on the right side of the drive.
-  final CANSparkMax rightMotorLeader = new CANSparkMax(Constants.DriveConstants.RIGHT_MOTOR_1_PORT, MotorType.kBrushless);
-  final CANSparkMax rightMotorFollower = new CANSparkMax(Constants.DriveConstants.RIGHT_MOTOR_2_PORT, MotorType.kBrushless);
+  final CANSparkMax rightMotorLeader = new CANSparkMax(DriveConstants.RIGHT_MOTOR_1_PORT, MotorType.kBrushless);
+  final CANSparkMax rightMotorFollower = new CANSparkMax(DriveConstants.RIGHT_MOTOR_2_PORT, MotorType.kBrushless);
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(leftMotorLeader, rightMotorLeader);
@@ -51,30 +50,30 @@ public class DriveSubsystem extends SubsystemBase {
     // Left Leader
     leftMotorLeader.restoreFactoryDefaults(); 
     leftMotorLeader.setIdleMode(IdleMode.kBrake);  
-    leftMotorLeader.setInverted(Constants.DriveConstants.LEFT_MOTORS_INVERSED);
+    leftMotorLeader.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
 
     // Left Follower
     leftMotorFollower.restoreFactoryDefaults(); 
     leftMotorFollower.setIdleMode(IdleMode.kBrake);  
-    leftMotorFollower.setInverted(Constants.DriveConstants.LEFT_MOTORS_INVERSED);
+    leftMotorFollower.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
     leftMotorFollower.follow(leftMotorLeader, false);
 
     // Right Leader
     rightMotorLeader.restoreFactoryDefaults(); 
     rightMotorLeader.setIdleMode(IdleMode.kBrake);  
-    rightMotorLeader.setInverted(Constants.DriveConstants.RIGHT_MOTORS_INVERSED);
+    rightMotorLeader.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
 
     // Right Follower
     rightMotorFollower.restoreFactoryDefaults(); 
     rightMotorFollower.setIdleMode(IdleMode.kBrake);  
-    rightMotorFollower.setInverted(Constants.DriveConstants.RIGHT_MOTORS_INVERSED);
+    rightMotorFollower.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
     rightMotorFollower.follow(rightMotorLeader, false);
 
     // Sets the distance per pulse for the encoders
-    leftLeaderEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_DISTANCE_PER_PULSE);
-    leftLeaderEncoder.setVelocityConversionFactor(Constants.DriveConstants.VELOCITY_CONVERSION_FACTOR);
-    rightLeaderEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_DISTANCE_PER_PULSE);
-    rightLeaderEncoder.setVelocityConversionFactor(Constants.DriveConstants.VELOCITY_CONVERSION_FACTOR);
+    leftLeaderEncoder.setPositionConversionFactor(DriveConstants.ENCODER_DISTANCE_PER_PULSE);
+    leftLeaderEncoder.setVelocityConversionFactor(DriveConstants.VELOCITY_CONVERSION_FACTOR);
+    rightLeaderEncoder.setPositionConversionFactor(DriveConstants.ENCODER_DISTANCE_PER_PULSE);
+    rightLeaderEncoder.setVelocityConversionFactor(DriveConstants.VELOCITY_CONVERSION_FACTOR);
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
