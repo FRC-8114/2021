@@ -7,6 +7,8 @@ public class SearchSystem extends SubsystemBase {
     NetworkTableInstance ntinst;
     NetworkTable powerCellVision;
     NetworkTableEntry targetArea, targetWidth;
+    double sum = 0;
+    int counter = 0;
 
     public SearchSystem() {
         ntinst = NetworkTableInstance.getDefault();
@@ -22,7 +24,7 @@ public class SearchSystem extends SubsystemBase {
      * @return the estimated distance to target
      */
     public double estimateDistance() {
-        return (areaEstimateDistance() + widthEstimateDistance()) / 2;
+        return (widthEstimateDistance());
     }
 
     /**
@@ -32,7 +34,7 @@ public class SearchSystem extends SubsystemBase {
      * @return the estimated distance to target
      */
     private double areaEstimateDistance() {
-        return 903136 * Math.pow(targetArea.getDouble(0.0), -1.91);
+        return 253 * Math.pow(targetArea.getDouble(0.0), -0.353);
     }
 
 
@@ -43,7 +45,7 @@ public class SearchSystem extends SubsystemBase {
      * @return the estimated distance to target
      */
     private double widthEstimateDistance() {
-        return 1299 * Math.pow(targetWidth.getDouble(0.0), -1.01);
+        return 559 * Math.pow(targetWidth.getDouble(0.0), -0.828);
     }
 
     
@@ -53,5 +55,13 @@ public class SearchSystem extends SubsystemBase {
      */
     public void sendEstimatedDistance() {
         powerCellVision.getEntry("estimatedDistance").forceSetDouble(estimateDistance());
+        
+        powerCellVision.getEntry("areaDistance").forceSetDouble(areaEstimateDistance());
+        
+        powerCellVision.getEntry("widthDistance").forceSetDouble(widthEstimateDistance());
+
+        sum += estimateDistance();
+        counter++;
+        powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(sum/counter);
     }
 }
