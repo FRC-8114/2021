@@ -133,10 +133,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    right_motors_inverted.getSelected().schedule();
-    right_encoder_inverted.getSelected().schedule();
-    left_motors_inverted.getSelected().schedule();
-    left_encoder_inverted.getSelected().schedule();
+    right_motors_inverted.getSelected().initialize();
+    right_encoder_inverted.getSelected().initialize();
+    left_motors_inverted.getSelected().initialize();
+    left_encoder_inverted.getSelected().initialize();
 
     m_robotContainer.getDriveSystem().tankDrive(
       m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft),
