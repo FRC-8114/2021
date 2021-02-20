@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.graalvm.compiler.lir.amd64.AMD64Unary.MROp;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -111,7 +113,7 @@ public class Robot extends TimedRobot {
     // Sets up Chooser for inverting of right motors
     right_motors_inverted.setDefaultOption("False", new SetRightMotorsInverted(m_robotContainer.getDriveSystem(), false));
     right_motors_inverted.addOption("True", new SetRightMotorsInverted(m_robotContainer.getDriveSystem(), true));
-    SmartDashboard.putData("Right Moters Inverted", right_motors_inverted);
+    SmartDashboard.putData("Right Motors Inverted", right_motors_inverted);
 
     // Sets up Chooser for inverting of right leader encoder
     right_encoder_inverted.setDefaultOption("False", new SetRightEncoderInverted(m_robotContainer.getDriveSystem(), false));
@@ -121,7 +123,7 @@ public class Robot extends TimedRobot {
     // Sets up Chooser for inverting of left motors
     left_motors_inverted.setDefaultOption("False", new SetLeftMotorsInverted(m_robotContainer.getDriveSystem(), false));
     left_motors_inverted.addOption("True", new SetLeftMotorsInverted(m_robotContainer.getDriveSystem(), true));
-    SmartDashboard.putData("Left Moters Inverted", left_motors_inverted);
+    SmartDashboard.putData("Left Motors Inverted", left_motors_inverted);
 
     // Sets up Chooser for inverting of left leader encoder
     left_encoder_inverted.setDefaultOption("False", new SetLeftEncoderInverted(m_robotContainer.getDriveSystem(), false));
@@ -136,5 +138,7 @@ public class Robot extends TimedRobot {
     right_encoder_inverted.getSelected().schedule();
     left_motors_inverted.getSelected().schedule();
     left_encoder_inverted.getSelected().schedule();
+
+    m_robotContainer.getDriveSystem().getDefaultCommand();
   }
 }
