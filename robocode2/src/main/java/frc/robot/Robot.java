@@ -132,5 +132,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
+    right_motors_inverted.getSelected().schedule();
+    right_encoder_inverted.getSelected().schedule();
+    left_motors_inverted.getSelected().schedule();
+    left_encoder_inverted.getSelected().schedule();
   }
 }
