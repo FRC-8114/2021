@@ -16,52 +16,50 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final int kLeftMotor1Port = 2;
-    public static final int kLeftMotor2Port = 1;
-    public static final int kRightMotor1Port = 3;
-    public static final int kRightMotor2Port = 4;
-    public static final boolean kLeftMotorsInversed = true;
-    public static final boolean kRightMotorsInversed = true;
+    public static final int LEFT_MOTOR_1_PORT = 2;
+    public static final int LEFT_MOTOR_2_PORT = 1;
+    public static final int RIGHT_MOTOR_1_PORT = 3;
+    public static final int RIGHT_MOTOR_2_PORT = 4;
+    public static final boolean LEFT_MOTORS_INVERSED = true;
+    public static final boolean RIGHT_MOTORS_INVERSED = true;
 
-    public static final int[] kLeftEncoderPorts = new int[] {2, 1};
-    public static final int[] kRightEncoderPorts = new int[] {3, 4};
-    public static final boolean kLeftEncoderReversed = true;
-    public static final boolean kRightEncoderReversed = true;
-    public static final double kTrackwidthMeters = 84.01344;
-    public static final DifferentialDriveKinematics kDriveKinematics =
-        new DifferentialDriveKinematics(kTrackwidthMeters);
+    public static final boolean LEFT_ENCODER_REVERSED = true;
+    public static final boolean RIGHT_ENCODER_REVERSED = true;
+    public static final double TRACKWIDTH_METERS = 84.01344;
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
+        new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
-    public static final int kEncoderCPR = 1024;
-    public static final double kPositionConversionFactor = 100;
-    public static final double kVelocityConversionFactor = .001;
-    public static final double kWheelDiameterMeters = 0.15;
-    public static final double kEncoderDistancePerPulse =
+    public static final int ENCODER_CPR = 1024;
+    public static final double POSITION_CONVERSION_FACTOR = 100;
+    public static final double VELOCITY_CONVERSION_FACTOR = .001;
+    public static final double WHEEL_DIAMETER_METERS = 0.15;
+    public static final double ENCODER_DISTANCE_PER_PULSE =
         // Assumes the encoders are directly mounted on the wheel shafts
-        (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR * kPositionConversionFactor;
+        (WHEEL_DIAMETER_METERS * Math.PI) / (double) ENCODER_CPR * POSITION_CONVERSION_FACTOR;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically
     // for *your* robot's drive.
     // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
     // values for your robot.
-    public static final double ksVolts = 0.0967;
-    public static final double kvVoltSecondsPerMeter = 2.78;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.284;
+    public static final double KS_VOLTS = 0.0967;
+    public static final double KV_VOLT_SECONDS_PER_METER = 2.78;
+    public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0.284;
 
     // Example value only - as above, this must be tuned for your drive!
-    public static final double kPDriveVel = 0.00357;
+    public static final double KP_DRIVE_VEL = 0.00357;
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int DRIVER_CONTROLLER_PORT = 0;
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = .5;
-    public static final double kMaxAccelerationMetersPerSecondSquared = .05;
+    public static final double MAX_SPEED_METERS_PER_SECOND = .5;
+    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .05;
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
-    public static final double kRamseteB = 2;
-    public static final double kRamseteZeta = 0.7;
+    public static final double RAMSETE_B = 2;
+    public static final double RAMSETE_ZETA = 0.7;
   }
 }

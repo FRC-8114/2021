@@ -22,12 +22,12 @@ import com.revrobotics.CANEncoder;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  final CANSparkMax leftMotorLeader = new CANSparkMax(Constants.DriveConstants.kLeftMotor1Port, MotorType.kBrushless);
-  final CANSparkMax leftMotorFollower = new CANSparkMax(Constants.DriveConstants.kLeftMotor2Port, MotorType.kBrushless);
+  final CANSparkMax leftMotorLeader = new CANSparkMax(Constants.DriveConstants.LEFT_MOTOR_1_PORT, MotorType.kBrushless);
+  final CANSparkMax leftMotorFollower = new CANSparkMax(Constants.DriveConstants.LEFT_MOTOR_2_PORT, MotorType.kBrushless);
 
   // The motors on the right side of the drive.
-  final CANSparkMax rightMotorLeader = new CANSparkMax(Constants.DriveConstants.kRightMotor1Port, MotorType.kBrushless);
-  final CANSparkMax rightMotorFollower = new CANSparkMax(Constants.DriveConstants.kRightMotor2Port, MotorType.kBrushless);
+  final CANSparkMax rightMotorLeader = new CANSparkMax(Constants.DriveConstants.RIGHT_MOTOR_1_PORT, MotorType.kBrushless);
+  final CANSparkMax rightMotorFollower = new CANSparkMax(Constants.DriveConstants.RIGHT_MOTOR_2_PORT, MotorType.kBrushless);
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(leftMotorLeader, rightMotorLeader);
@@ -51,30 +51,30 @@ public class DriveSubsystem extends SubsystemBase {
     // Left Leader
     leftMotorLeader.restoreFactoryDefaults(); 
     leftMotorLeader.setIdleMode(IdleMode.kBrake);  
-    leftMotorLeader.setInverted(Constants.DriveConstants.kLeftMotorsInversed);
+    leftMotorLeader.setInverted(Constants.DriveConstants.LEFT_MOTORS_INVERSED);
 
     // Left Follower
     leftMotorFollower.restoreFactoryDefaults(); 
     leftMotorFollower.setIdleMode(IdleMode.kBrake);  
-    leftMotorFollower.setInverted(Constants.DriveConstants.kLeftMotorsInversed);
+    leftMotorFollower.setInverted(Constants.DriveConstants.LEFT_MOTORS_INVERSED);
     leftMotorFollower.follow(leftMotorLeader, false);
 
     // Right Leader
     rightMotorLeader.restoreFactoryDefaults(); 
     rightMotorLeader.setIdleMode(IdleMode.kBrake);  
-    rightMotorLeader.setInverted(Constants.DriveConstants.kRightMotorsInversed);
+    rightMotorLeader.setInverted(Constants.DriveConstants.RIGHT_MOTORS_INVERSED);
 
     // Right Follower
     rightMotorFollower.restoreFactoryDefaults(); 
     rightMotorFollower.setIdleMode(IdleMode.kBrake);  
-    rightMotorFollower.setInverted(Constants.DriveConstants.kRightMotorsInversed);
+    rightMotorFollower.setInverted(Constants.DriveConstants.RIGHT_MOTORS_INVERSED);
     rightMotorFollower.follow(rightMotorLeader, false);
 
     // Sets the distance per pulse for the encoders
-    leftLeaderEncoder.setPositionConversionFactor(Constants.DriveConstants.kEncoderDistancePerPulse);
-    leftLeaderEncoder.setVelocityConversionFactor(Constants.DriveConstants.kVelocityConversionFactor);
-    rightLeaderEncoder.setPositionConversionFactor(Constants.DriveConstants.kEncoderDistancePerPulse);
-    rightLeaderEncoder.setVelocityConversionFactor(Constants.DriveConstants.kVelocityConversionFactor);
+    leftLeaderEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_DISTANCE_PER_PULSE);
+    leftLeaderEncoder.setVelocityConversionFactor(Constants.DriveConstants.VELOCITY_CONVERSION_FACTOR);
+    rightLeaderEncoder.setPositionConversionFactor(Constants.DriveConstants.ENCODER_DISTANCE_PER_PULSE);
+    rightLeaderEncoder.setVelocityConversionFactor(Constants.DriveConstants.VELOCITY_CONVERSION_FACTOR);
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
@@ -159,7 +159,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the left encoder's distance 
    */
   public double getLeftEncoderDistance() {
-    return leftLeaderEncoder.getPosition() * (DriveConstants.kLeftEncoderReversed? -1:1);
+    return leftLeaderEncoder.getPosition() * (DriveConstants.LEFT_ENCODER_REVERSED? -1:1);
   }
 
   /**
@@ -168,7 +168,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the left encoder's velocity
    */
   public double getLeftEncoderVelocity() {
-    return leftLeaderEncoder.getVelocity() * (DriveConstants.kLeftEncoderReversed? -1:1);
+    return leftLeaderEncoder.getVelocity() * (DriveConstants.LEFT_ENCODER_REVERSED? -1:1);
   }
 
   /**
@@ -177,7 +177,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the right encoder's distance 
    */
   public double getRightEncoderDistance() {
-    return rightLeaderEncoder.getPosition() * (DriveConstants.kRightEncoderReversed? -1:1);
+    return rightLeaderEncoder.getPosition() * (DriveConstants.RIGHT_ENCODER_REVERSED? -1:1);
   }
 
   /**
@@ -186,7 +186,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the right encoder's velocity
    */
   public double getRightEncoderVelocity() {
-    return rightLeaderEncoder.getVelocity() * (DriveConstants.kRightEncoderReversed? -1:1);
+    return rightLeaderEncoder.getVelocity() * (DriveConstants.RIGHT_ENCODER_REVERSED? -1:1);
   }
 
   /**
