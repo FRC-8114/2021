@@ -46,7 +46,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    // Initialize the moroters
+    // Initialize the drivetrain moters
+
     // Left Leader
     leftMotorLeader.restoreFactoryDefaults(); 
     leftMotorLeader.setIdleMode(IdleMode.kBrake);  
@@ -149,43 +150,16 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the average of the two encoder readings
    */
   public double getAverageEncoderDistance() {
-    return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+    return (leftLeaderEncoder.getPosition() + rightLeaderEncoder.getPosition()) / 2.0;
   }
 
   /**
-   * Gets the left encoder's distance
-   * 
-   * @return the left encoder's distance 
+   * Gets the average velocity of the two encoders.
+   *
+   * @return the average of the two encoder readings
    */
-  public double getLeftEncoderDistance() {
-    return leftLeaderEncoder.getPosition() * (DriveConstants.LEFT_ENCODER_REVERSED? -1:1);
-  }
-
-  /**
-   * Gets the left encoder's velocity
-   * 
-   * @return the left encoder's velocity
-   */
-  public double getLeftEncoderVelocity() {
-    return leftLeaderEncoder.getVelocity() * (DriveConstants.LEFT_ENCODER_REVERSED? -1:1);
-  }
-
-  /**
-   * Gets the right encoder's distance
-   * 
-   * @return the right encoder's distance 
-   */
-  public double getRightEncoderDistance() {
-    return rightLeaderEncoder.getPosition() * (DriveConstants.RIGHT_ENCODER_REVERSED? -1:1);
-  }
-
-  /**
-   * Gets the right encoder's velocity
-   * 
-   * @return the right encoder's velocity
-   */
-  public double getRightEncoderVelocity() {
-    return rightLeaderEncoder.getVelocity() * (DriveConstants.RIGHT_ENCODER_REVERSED? -1:1);
+  public double getAverageEncoderVelocity() {
+    return (leftLeaderEncoder.getVelocity() + rightLeaderEncoder.getVelocity()) / 2.0;
   }
 
   /**
@@ -262,9 +236,9 @@ public class DriveSubsystem extends SubsystemBase {
    * Sends encoder positions and velocities to SmartDashboard
    */
   public void sendEncodersToShuffleboard() {
-    SmartDashboard.putNumber("left_encoder_position", getLeftEncoderDistance());
-    SmartDashboard.putNumber("left_encoder_velocity", getLeftEncoderVelocity());
-    SmartDashboard.putNumber("right_encoder_position", getRightEncoderDistance());
-    SmartDashboard.putNumber("right_encoder_velocity", getRightEncoderVelocity());
+    SmartDashboard.putNumber("left_encoder_position", leftLeaderEncoder.getPosition());
+    SmartDashboard.putNumber("left_encoder_velocity", leftLeaderEncoder.getVelocity());
+    SmartDashboard.putNumber("right_encoder_position", rightLeaderEncoder.getPosition());
+    SmartDashboard.putNumber("right_encoder_velocity", rightLeaderEncoder.getVelocity());
   }
 }
