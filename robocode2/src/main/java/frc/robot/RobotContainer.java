@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
+import frc.robot.commands.driveSubsystem.*;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -38,10 +39,10 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final SearchSystem searchSystem = new SearchSystem();
 
-  private final SendableChooser<Boolean> right_motors_inverted = new SendableChooser<Boolean>();
-  private final SendableChooser<Boolean> right_encoder_inverted = new SendableChooser<Boolean>();
-  private final SendableChooser<Boolean> left_motors_inverted = new SendableChooser<Boolean>();
-  private final SendableChooser<Boolean> left_encoder_inverted = new SendableChooser<Boolean>();
+  private final SendableChooser<Command> right_motors_inverted = new SendableChooser<Command>();
+  private final SendableChooser<Command> right_encoder_inverted = new SendableChooser<Command>();
+  private final SendableChooser<Command> left_motors_inverted = new SendableChooser<Command>();
+  private final SendableChooser<Command> left_encoder_inverted = new SendableChooser<Command>();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
@@ -86,20 +87,20 @@ public class RobotContainer {
    */
   public void configureSendableChoosers() {
     // Sets up Chooser for inverting of right motors
-    right_motors_inverted.setDefaultOption("False", false);
-    right_motors_inverted.setDefaultOption("False", false);
+    right_motors_inverted.setDefaultOption("False", new SetRightMotorsInverted(m_robotDrive, false));
+    right_motors_inverted.addOption("True", new SetRightMotorsInverted(m_robotDrive, true));
 
     // Sets up Chooser for inverting of right leader encoder
-    right_encoder_inverted.setDefaultOption("False", false);
-    right_encoder_inverted.setDefaultOption("False", false);
+    right_encoder_inverted.setDefaultOption("False", new SetRightEncoderInverted(m_robotDrive, false));
+    right_encoder_inverted.addOption("True", new SetRightEncoderInverted(m_robotDrive, true));
 
     // Sets up Chooser for inverting of left motors
-    left_motors_inverted.setDefaultOption("False", false);
-    left_motors_inverted.setDefaultOption("False", false);
+    left_motors_inverted.setDefaultOption("False", new SetLeftMotorsInverted(m_robotDrive, false));
+    left_motors_inverted.addOption("True", new SetLeftMotorsInverted(m_robotDrive, true));
 
     // Sets up Chooser for inverting of left leader encoder
-    left_encoder_inverted.setDefaultOption("False", false);
-    left_encoder_inverted.setDefaultOption("False", false);
+    left_encoder_inverted.setDefaultOption("False", new SetLeftEncoderInverted(m_robotDrive, false));
+    left_encoder_inverted.addOption("True", new SetLeftEncoderInverted(m_robotDrive, true));
   }
 
   /**
