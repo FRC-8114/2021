@@ -179,6 +179,36 @@ public class DriveSubsystem extends SubsystemBase {
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
 
+  /**
+   * Sets the value of the right motor's inverted boolean to the input value
+   */
+  public void setRightMotorsInverted(boolean inverted) {
+    rightMotorLeader.setInverted(inverted);
+    rightMotorFollower.setInverted(inverted);
+  }
+
+  /**
+   * Sets the value of the right motor's inverted boolean to the input value
+   */
+  public void setRightEncoderInverted(boolean inverted) {
+    rightLeaderEncoder.setInverted(inverted);
+  }
+
+  /**
+   * Sets the value of the right motor's inverted boolean to the input value
+   */
+  public void setLeftMotorsInverted(boolean inverted) {
+    leftMotorLeader.setInverted(inverted);
+    leftMotorFollower.setInverted(inverted);
+  }
+
+  /**
+   * Sets the value of the right motor's inverted boolean to the input value
+   */
+  public void setLeftEncoderInverted(boolean inverted) {
+    leftLeaderEncoder.setInverted(inverted);
+  }
+
   /**                 **/
   /**     Getters     **/
   /**                 **/
