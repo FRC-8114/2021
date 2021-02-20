@@ -89,34 +89,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Returns the currently-estimated pose of the robot.
-   *
-   * @return The pose.
-   */
-  public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
-  }
-
-  /**
-   * Returns the current wheel speeds of the robot.
-   *
-   * @return The current wheel speeds.
-   */
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftLeaderEncoder.getVelocity(), rightLeaderEncoder.getVelocity());
-  }
-
-  /**
-   * Resets the odometry to the specified pose.
-   *
-   * @param pose The pose to which to set the odometry.
-   */
-  public void resetOdometry(Pose2d pose) {
-    resetEncoders();
-    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
-  }
-
-  /**
    * Drives the robot using arcade controls.
    *
    * @param fwd the commanded forward movement
@@ -138,10 +110,95 @@ public class DriveSubsystem extends SubsystemBase {
     m_drive.feed();
   }
 
+  /**                              **/
+  /**     Shuffleboard Methods     **/
+  /**                              **/
+
+  /**
+   * Sends encoder positions and velocities to SmartDashboard
+   */
+  public void sendEncodersToShuffleboard() {
+    SmartDashboard.putNumber("left_encoder_position", leftLeaderEncoder.getPosition());
+    SmartDashboard.putNumber("left_encoder_velocity", leftLeaderEncoder.getVelocity());
+    SmartDashboard.putNumber("right_encoder_position", rightLeaderEncoder.getPosition());
+    SmartDashboard.putNumber("right_encoder_velocity", rightLeaderEncoder.getVelocity());
+  }
+
+  /**                 **/
+  /**     Setters     **/
+  /**                 **/
+
+  /**
+   * Sets the max output of the drive to the value of maxOutput;
+   */
+  public void setMaxOutput() {
+    m_drive.setMaxOutput(maxOutput);
+  }
+
+  /**
+   * Increments maxOutput by 0.05 and updates the differential drive's
+   * max output, maxing at 1.0.
+   * 
+   * @param maxOutput
+   */
+  public void incMaxSpeed() {
+    maxOutput = Math.min(maxOutput+0.05, 1.0);
+    setMaxOutput();
+  }
+
+  /**
+   * Decreases maxOutput by 0.05 and updates the differential drive's
+   * max output, stopping at 0.1.
+   * 
+   * @param maxOutput
+   */
+  public void decMaxSpeed() {
+    maxOutput = Math.max(maxOutput-0.05, 0.1);
+    setMaxOutput();
+  }
+
+  /** Zeroes the heading of the robot. */
+  public void zeroHeading() {
+    m_gyro.reset();
+  }
+
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
     leftLeaderEncoder.setPosition(0);
     rightLeaderEncoder.setPosition(0);
+  }
+
+  /**
+   * Resets the odometry to the specified pose.
+   *
+   * @param pose The pose to which to set the odometry.
+   */
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    zeroHeading();
+    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+  }
+
+  /**                 **/
+  /**     Getters     **/
+  /**                 **/
+
+  /**
+   * Returns the current wheel speeds of the robot.
+   *
+   * @return The current wheel speeds.
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(leftLeaderEncoder.getVelocity(), rightLeaderEncoder.getVelocity());
+  }
+
+  /**
+   * Returns the currently-estimated pose of the robot.
+   *
+   * @return The pose.
+   */
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
   }
 
   /**
@@ -181,40 +238,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Increments maxOutput by 0.05 and updates the differential drive's
-   * max output, maxing at 1.0.
-   * 
-   * @param maxOutput
-   */
-  public void incMaxSpeed() {
-    maxOutput = Math.min(maxOutput+0.05, 1.0);
-    setMaxOutput();
-  }
-
-  /**
-   * Decreases maxOutput by 0.05 and updates the differential drive's
-   * max output, stopping at 0.1.
-   * 
-   * @param maxOutput
-   */
-  public void decMaxSpeed() {
-    maxOutput = Math.max(maxOutput-0.05, 0.1);
-    setMaxOutput();
-  }
-
-  /**
-   * Sets the max output of the drive to the value of maxOutput;
-   */
-  public void setMaxOutput() {
-    m_drive.setMaxOutput(maxOutput);
-  }
-
-  /** Zeroes the heading of the robot. */
-  public void zeroHeading() {
-    m_gyro.reset();
-  }
-
-  /**
    * Returns the heading of the robot.
    *
    * @return the robot's heading in degrees, from -180 to 180
@@ -230,15 +253,5 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return -m_gyro.getRate();
-  }
-
-  /**
-   * Sends encoder positions and velocities to SmartDashboard
-   */
-  public void sendEncodersToShuffleboard() {
-    SmartDashboard.putNumber("left_encoder_position", leftLeaderEncoder.getPosition());
-    SmartDashboard.putNumber("left_encoder_velocity", leftLeaderEncoder.getVelocity());
-    SmartDashboard.putNumber("right_encoder_position", rightLeaderEncoder.getPosition());
-    SmartDashboard.putNumber("right_encoder_velocity", rightLeaderEncoder.getVelocity());
   }
 }
