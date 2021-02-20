@@ -5,8 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.driveSubsystem.*;
 import frc.robot.subsystems.SearchSystem;
 
 /**
@@ -20,6 +23,11 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private final SendableChooser<Command> right_motors_inverted = new SendableChooser<Command>();
+  private final SendableChooser<Command> right_encoder_inverted = new SendableChooser<Command>();
+  private final SendableChooser<Command> left_motors_inverted = new SendableChooser<Command>();
+  private final SendableChooser<Command> left_encoder_inverted = new SendableChooser<Command>();
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -99,9 +107,30 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
+    // Sets up Chooser for inverting of right motors
+    right_motors_inverted.setDefaultOption("False", new SetRightMotorsInverted(m_robotContainer.getDriveSystem(), false));
+    right_motors_inverted.addOption("True", new SetRightMotorsInverted(m_robotContainer.getDriveSystem(), true));
+    SmartDashboard.putData("Right Moters Inverted", right_motors_inverted);
+
+    // Sets up Chooser for inverting of right leader encoder
+    right_encoder_inverted.setDefaultOption("False", new SetRightEncoderInverted(m_robotContainer.getDriveSystem(), false));
+    right_encoder_inverted.addOption("True", new SetRightEncoderInverted(m_robotContainer.getDriveSystem(), true));
+    SmartDashboard.putData("Right Encoder Inverted", right_encoder_inverted);
+
+    // Sets up Chooser for inverting of left motors
+    left_motors_inverted.setDefaultOption("False", new SetLeftMotorsInverted(m_robotContainer.getDriveSystem(), false));
+    left_motors_inverted.addOption("True", new SetLeftMotorsInverted(m_robotContainer.getDriveSystem(), true));
+    SmartDashboard.putData("Left Moters Inverted", left_motors_inverted);
+
+    // Sets up Chooser for inverting of left leader encoder
+    left_encoder_inverted.setDefaultOption("False", new SetLeftEncoderInverted(m_robotContainer.getDriveSystem(), false));
+    left_encoder_inverted.addOption("True", new SetLeftEncoderInverted(m_robotContainer.getDriveSystem(), true));
+    SmartDashboard.putData("Left Encoder Inverted", left_encoder_inverted);
   }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 }
