@@ -16,6 +16,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -37,6 +38,11 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final SearchSystem searchSystem = new SearchSystem();
 
+  private final SendableChooser<Boolean> right_motors_inverted = new SendableChooser<Boolean>();
+  private final SendableChooser<Boolean> right_encoder_inverted = new SendableChooser<Boolean>();
+  private final SendableChooser<Boolean> left_motors_inverted = new SendableChooser<Boolean>();
+  private final SendableChooser<Boolean> left_encoder_inverted = new SendableChooser<Boolean>();
+
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
 
@@ -44,6 +50,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    configureSendableChoosers();
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
@@ -71,6 +78,28 @@ public class RobotContainer {
     // Decrement drive speed when the left bumper is pressed
     new JoystickButton(m_driverController, Button.kBumperLeft.value)
         .whenPressed(() -> m_robotDrive.decMaxSpeed());
+  }
+
+  /**
+   * A method to setup sendable choosers, these are used for autonomous determination
+   * and for testing purposes
+   */
+  public void configureSendableChoosers() {
+    // Sets up Chooser for inverting of right motors
+    right_motors_inverted.setDefaultOption("False", false);
+    right_motors_inverted.setDefaultOption("False", false);
+
+    // Sets up Chooser for inverting of right leader encoder
+    right_encoder_inverted.setDefaultOption("False", false);
+    right_encoder_inverted.setDefaultOption("False", false);
+
+    // Sets up Chooser for inverting of left motors
+    left_motors_inverted.setDefaultOption("False", false);
+    left_motors_inverted.setDefaultOption("False", false);
+
+    // Sets up Chooser for inverting of left leader encoder
+    left_encoder_inverted.setDefaultOption("False", false);
+    left_encoder_inverted.setDefaultOption("False", false);
   }
 
   /**
