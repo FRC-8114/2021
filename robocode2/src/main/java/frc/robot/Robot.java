@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import org.graalvm.compiler.lir.amd64.AMD64Unary.MROp;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
