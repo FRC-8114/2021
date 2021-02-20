@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -137,6 +138,8 @@ public class Robot extends TimedRobot {
     left_motors_inverted.getSelected().schedule();
     left_encoder_inverted.getSelected().schedule();
 
-    m_robotContainer.getDriveSystem().getDefaultCommand();
+    m_robotContainer.getDriveSystem().tankDrive(
+      m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft),
+      m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight));
   }
 }
