@@ -4,7 +4,7 @@
     "brushed": False,
     # Ports for motors
     # If doing drive test, treat this as the left side of the drivetrain
-    "motorPorts": [2,1],
+    "motorPorts": [1,2],
     # Only if you are doing drive (leave empty "[]" if not)
     "rightMotorPorts": [3,4],
     # Set motors to inverted or not
