@@ -193,23 +193,9 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Sets the value of the right motor's inverted boolean to the input value
    */
-  public void setRightEncoderInverted(boolean inverted) {
-    rightLeaderEncoder.setInverted(inverted);
-  }
-
-  /**
-   * Sets the value of the right motor's inverted boolean to the input value
-   */
   public void setLeftMotorsInverted(boolean inverted) {
     leftMotorLeader.setInverted(inverted);
     leftMotorFollower.setInverted(inverted);
-  }
-
-  /**
-   * Sets the value of the right motor's inverted boolean to the input value
-   */
-  public void setLeftEncoderInverted(boolean inverted) {
-    leftLeaderEncoder.setInverted(inverted);
   }
 
   /**                 **/

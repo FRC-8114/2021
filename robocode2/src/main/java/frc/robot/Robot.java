@@ -25,9 +25,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private final SendableChooser<Command> right_motors_inverted = new SendableChooser<Command>();
-  private final SendableChooser<Command> right_encoder_inverted = new SendableChooser<Command>();
   private final SendableChooser<Command> left_motors_inverted = new SendableChooser<Command>();
-  private final SendableChooser<Command> left_encoder_inverted = new SendableChooser<Command>();
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -114,29 +112,17 @@ public class Robot extends TimedRobot {
     right_motors_inverted.addOption("True", new SetRightMotorsInverted(m_robotContainer.getDriveSystem(), true));
     SmartDashboard.putData("Right Motors Inverted", right_motors_inverted);
 
-    // Sets up Chooser for inverting of right leader encoder
-    right_encoder_inverted.setDefaultOption("False", new SetRightEncoderInverted(m_robotContainer.getDriveSystem(), false));
-    right_encoder_inverted.addOption("True", new SetRightEncoderInverted(m_robotContainer.getDriveSystem(), true));
-    SmartDashboard.putData("Right Encoder Inverted", right_encoder_inverted);
-
     // Sets up Chooser for inverting of left motors
     left_motors_inverted.setDefaultOption("False", new SetLeftMotorsInverted(m_robotContainer.getDriveSystem(), false));
     left_motors_inverted.addOption("True", new SetLeftMotorsInverted(m_robotContainer.getDriveSystem(), true));
     SmartDashboard.putData("Left Motors Inverted", left_motors_inverted);
-
-    // Sets up Chooser for inverting of left leader encoder
-    left_encoder_inverted.setDefaultOption("False", new SetLeftEncoderInverted(m_robotContainer.getDriveSystem(), false));
-    left_encoder_inverted.addOption("True", new SetLeftEncoderInverted(m_robotContainer.getDriveSystem(), true));
-    SmartDashboard.putData("Left Encoder Inverted", left_encoder_inverted);
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
     right_motors_inverted.getSelected().initialize();
-    right_encoder_inverted.getSelected().initialize();
     left_motors_inverted.getSelected().initialize();
-    left_encoder_inverted.getSelected().initialize();
 
     m_robotContainer.getDriveSystem().tankDrive(
       m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft),
