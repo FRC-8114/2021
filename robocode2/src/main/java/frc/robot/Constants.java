@@ -25,7 +25,7 @@ public final class Constants {
 
     public static final boolean LEFT_ENCODER_REVERSED = true;
     public static final boolean RIGHT_ENCODER_REVERSED = true;
-    public static final double TRACKWIDTH_METERS = 84.01344;
+    public static final double TRACKWIDTH_METERS = 1.2387716;
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
         new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
@@ -42,12 +42,12 @@ public final class Constants {
     // for *your* robot's drive.
     // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
     // values for your robot.
-    public static final double KS_VOLTS = 0.0967;
-    public static final double KV_VOLT_SECONDS_PER_METER = 2.78;
-    public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0.284;
+    public static final double KS_VOLTS = 2.85;
+    public static final double KV_VOLT_SECONDS_PER_METER = 0.197;
+    public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0.998;
 
     // Example value only - as above, this must be tuned for your drive!
-    public static final double KP_DRIVE_VEL = 0.00357;
+    public static final double KP_DRIVE_VEL = 0.00206;
   }
 
   public static final class OIConstants {
