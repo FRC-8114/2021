@@ -51,6 +51,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.analog.adis16470.frc.ADIS16470_IMU;
+
 import java.util.ArrayList; 
 
 public class Robot extends TimedRobot {
@@ -64,7 +66,7 @@ public class Robot extends TimedRobot {
 
   Joystick stick;
   DifferentialDrive drive;
-
+  ADIS16470_IMU gyro;
 
   Supplier<Double> leftEncoderPosition;
   Supplier<Double> leftEncoderRate;
@@ -171,7 +173,8 @@ public class Robot extends TimedRobot {
 
     // Note that the angle from the NavX and all implementors of WPILib Gyro
     // must be negated because getAngle returns a clockwise positive angle
-    Gyro gyro = new AnalogGyro(0);
+    gyro = new ADIS16470_IMU();
+    gyro.calibrate();
     gyroAngleRadians = () -> -1 * Math.toRadians(gyro.getAngle());
 
     // Set the update rate instead of using flush because of a ntcore bug
@@ -205,6 +208,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("l_encoder_rate", leftEncoderRate.get());
     SmartDashboard.putNumber("r_encoder_pos", rightEncoderPosition.get());
     SmartDashboard.putNumber("r_encoder_rate", rightEncoderRate.get());
+    SmartDashboard.putNumber("supplier_gyro_angle", gyroAngleRadians.get());
+    SmartDashboard.putNumber("gyro_gyro_angle", gyro.getAngle());
   }
 
   @Override
