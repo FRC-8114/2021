@@ -11,7 +11,9 @@ Documentation:
 		* WPILibPi - https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/index.html
 	~ WPILib API: https://first.wpi.edu/FRC/roborio/release/docs/java/
 	~ Infinite Recharge At Home Game Manual: https://www.firstinspires.org/resource-library/frc/competition-manual-qa-system
-		
+	~ ADIS16470 IMU Vendordeps Link: http://maven.highcurrent.io/vendordeps/ADIS16470.json
+	
+	
 [[robot_design | Hardware Specifications]]
 
 Robot Wifi Password: 8114WPAKEY
