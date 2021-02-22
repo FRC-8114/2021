@@ -74,6 +74,9 @@ public class RobotContainer {
     // Decrement drive speed when the left bumper is pressed
     new JoystickButton(m_driverController, Button.kBumperLeft.value)
         .whenPressed(() -> m_robotDrive.decMaxSpeed());
+    // Reset odometry when Y is pressed
+    new JoystickButton(m_driverController, Button.kY.value)
+        .whenPressed(new ResetOdometry(m_robotDrive));
   }
 
   /**
