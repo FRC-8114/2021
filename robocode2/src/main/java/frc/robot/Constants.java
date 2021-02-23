@@ -29,10 +29,13 @@ public final class Constants {
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
         new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
-    public static final double GEARING = 10.75;
-    private static final double ENCODER_CONSTANT = 1 / GEARING;
-    public static final double POSITION_CONVERSION_FACTOR = ENCODER_CONSTANT;
-    public static final double VELOCITY_CONVERSION_FACTOR = ENCODER_CONSTANT / 60;
+    public static final int ENCODER_CPR = 1024;
+    public static final double POSITION_CONVERSION_FACTOR = 100;
+    public static final double VELOCITY_CONVERSION_FACTOR = .001;
+    public static final double WHEEL_DIAMETER_METERS = 0.15;
+    public static final double ENCODER_DISTANCE_PER_PULSE =
+        // Assumes the encoders are directly mounted on the wheel shafts
+        (WHEEL_DIAMETER_METERS * Math.PI) / (double) ENCODER_CPR * POSITION_CONVERSION_FACTOR;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically
