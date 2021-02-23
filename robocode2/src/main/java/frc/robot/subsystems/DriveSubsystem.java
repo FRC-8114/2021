@@ -70,9 +70,9 @@ public class DriveSubsystem extends SubsystemBase {
     rightMotorFollower.follow(rightMotorLeader, false);
 
     // Sets the distance per pulse for the encoders
-    leftLeaderEncoder.setPositionConversionFactor(DriveConstants.ENCODER_DISTANCE_PER_PULSE);
+    leftLeaderEncoder.setPositionConversionFactor(DriveConstants.POSITION_CONVERSION_FACTOR);
     leftLeaderEncoder.setVelocityConversionFactor(DriveConstants.VELOCITY_CONVERSION_FACTOR);
-    rightLeaderEncoder.setPositionConversionFactor(DriveConstants.ENCODER_DISTANCE_PER_PULSE);
+    rightLeaderEncoder.setPositionConversionFactor(DriveConstants.POSITION_CONVERSION_FACTOR);
     rightLeaderEncoder.setVelocityConversionFactor(DriveConstants.VELOCITY_CONVERSION_FACTOR);
 
     m_gyro.calibrate();
