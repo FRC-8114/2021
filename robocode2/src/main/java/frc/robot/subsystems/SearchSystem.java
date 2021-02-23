@@ -82,13 +82,13 @@ public class SearchSystem extends SubsystemBase {
     }    
 
     public String pathDetermination() {
-        if(averageDistance() <= 110) {
+        /*if(averageDistance() <= 110) {
             if()
         }
         else if( (averageDistance() >= 110) && (averageDistance() <= 190) ) {
 
         }
-
+*/
         return "";
     }
 

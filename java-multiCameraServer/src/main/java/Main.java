@@ -338,8 +338,7 @@ public final class Main {
                   Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(12));
                   ntinst.getTable("power_cell_vision").getEntry("target_area").forceSetDouble(r.area());
                   ntinst.getTable("power_cell_vision").getEntry("target_width").forceSetDouble(r.width);
-                  if (r.contains(point))
-                    ntinst.getTable("power_cell_vision").getEntry("x_offset").
+                  ntinst.getTable("power_cell_vision").getEntry("target_centerX").forceSetDouble(r.x+(r.width/2));
                 }
       });
       visionThread.start();
