@@ -122,11 +122,14 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Sends encoder positions and velocities to SmartDashboard
    */
-  public void sendEncodersToShuffleboard() {
+  public void sendOdometryToShuffleboard() {
     SmartDashboard.putNumber("left_encoder_position", leftLeaderEncoder.getPosition());
     SmartDashboard.putNumber("left_encoder_velocity", leftLeaderEncoder.getVelocity());
     SmartDashboard.putNumber("right_encoder_position", rightLeaderEncoder.getPosition());
     SmartDashboard.putNumber("right_encoder_velocity", rightLeaderEncoder.getVelocity());
+
+    SmartDashboard.putNumber("gyro_angle", m_gyro.getAngle());
+    SmartDashboard.putNumber("gyro_angle_rate", m_gyro.getRate());
   }
 
   /**                 **/

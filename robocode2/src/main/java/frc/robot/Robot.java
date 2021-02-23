@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     // Send values to Shuffleboard
-    m_robotContainer.getDriveSystem().sendEncodersToShuffleboard();
+    m_robotContainer.getDriveSystem().sendOdometryToShuffleboard();
     m_robotContainer.getSearchSystem().sendEstimatedDistance();
   }
 
