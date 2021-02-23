@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.Timer;
 public class SearchSystem extends SubsystemBase {
     NetworkTableInstance ntinst;
     NetworkTable powerCellVision;
-    NetworkTableEntry targetArea, targetWidth;
-    double distanceAverage = 0;
+    NetworkTableEntry targetArea, targetWidth, centerX;
+    double distanceAverage = 0, targetCenterX = 0;
     int counter = 0;
 
     public SearchSystem() {
@@ -16,6 +16,8 @@ public class SearchSystem extends SubsystemBase {
         powerCellVision = ntinst.getTable("power_cell_vision");
         targetArea = powerCellVision.getEntry("target_area");
         targetWidth = powerCellVision.getEntry("target_width");
+        centerX =  powerCellVision.getEntry("target_centerX");
+        targetCenterX = centerX.getDouble(0.0);
     }
 
     /**
@@ -82,13 +84,18 @@ public class SearchSystem extends SubsystemBase {
     }    
 
     public String pathDetermination() {
-        /*if(averageDistance() <= 110) {
-            if()
+        if(averageDistance() <= 110) {
+            System.out.print(targetCenterX);
+            
         }
         else if( (averageDistance() >= 110) && (averageDistance() <= 190) ) {
-
+            if(targetCenterX < 0) {
+                return "blueVert";
+            }
+            else
+                return "blueHor";
         }
-*/
+
         return "";
     }
 
