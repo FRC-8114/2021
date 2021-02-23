@@ -2,12 +2,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.Timer;
 
 public class SearchSystem extends SubsystemBase {
     NetworkTableInstance ntinst;
     NetworkTable powerCellVision;
     NetworkTableEntry targetArea, targetWidth;
-    double sum = 0;
+    double distanceAverage = 0;
     int counter = 0;
 
     public SearchSystem() {
@@ -60,8 +61,30 @@ public class SearchSystem extends SubsystemBase {
         
         powerCellVision.getEntry("widthDistance").forceSetDouble(widthEstimateDistance());
 
-        sum += estimateDistance();
-        counter++;
-        powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(sum/counter);
+        powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(averageDistance());
     }
+
+    public double averageDistance() {
+        Timer timer = new Timer();
+        timer.start();
+
+        counter++;
+
+        if(timer.get() <= 3) {
+            distanceAverage += estimateDistance();
+            distanceAverage /= counter;
+        }
+        else  {
+            timer.reset();
+            distanceAverage = 0;
+        }
+        return distanceAverage;
+    }    
+
+    public String pathDetermination() {
+        
+        
+        return "";
+    }
+
 }
