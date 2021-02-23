@@ -85,8 +85,8 @@ public class SearchSystem extends SubsystemBase {
 
     public String pathDetermination() {
         if(averageDistance() <= 110) {
-            System.out.print(targetCenterX);
-            
+            //System.out.print(targetCenterX);
+            return "redPath";
         }
         else if( (averageDistance() >= 110) && (averageDistance() <= 190) ) {
             if(targetCenterX < 0) {
