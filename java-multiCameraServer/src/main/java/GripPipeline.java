@@ -14,6 +14,9 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
 import org.opencv.objdetect.*;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 /**
 * GripPipeline class.
 *
@@ -31,6 +34,10 @@ public class GripPipeline {
 	private Mat cvErodeOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
+	private NetworkTableInstance inst = NetworkTableInstance.getDefault();
+	private NetworkTable outputTable = inst.getTable("GRIP/myNetworkTable");
+	private double[] centerX = outputTable.getDefault()
+	private double x_offset = outputTable.getEntry("")
 
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);

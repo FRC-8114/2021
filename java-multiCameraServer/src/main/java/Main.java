@@ -331,12 +331,15 @@ public final class Main {
 
     // start image processing on camera 0 if present
     if (cameras.size() >= 1) {
+      Point point = new Point (0,0);
       VisionThread visionThread = new VisionThread(cameras.get(0),
               new MyPipeline(), pipeline -> {
                 if(pipeline.filterContoursOutput().size() >= 1) {
-                  Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+                  Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(12));
                   ntinst.getTable("power_cell_vision").getEntry("target_area").forceSetDouble(r.area());
                   ntinst.getTable("power_cell_vision").getEntry("target_width").forceSetDouble(r.width);
+                  if (r.contains(point))
+                    ntinst.getTable("power_cell_vision").getEntry("x_offset").
                 }
       });
       visionThread.start();
