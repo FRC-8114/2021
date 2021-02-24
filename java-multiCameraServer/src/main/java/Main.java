@@ -335,7 +335,7 @@ public final class Main {
       VisionThread visionThread = new VisionThread(cameras.get(0),
               new MyPipeline(), pipeline -> {
                 if(pipeline.filterContoursOutput().size() >= 1) {
-                  Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(12));
+                  Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
                   ntinst.getTable("power_cell_vision").getEntry("target_area").forceSetDouble(r.area());
                   ntinst.getTable("power_cell_vision").getEntry("target_width").forceSetDouble(r.width);
                   ntinst.getTable("power_cell_vision").getEntry("target_centerX").forceSetDouble(r.x+(r.width/2));

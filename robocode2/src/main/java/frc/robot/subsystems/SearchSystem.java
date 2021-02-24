@@ -64,6 +64,10 @@ public class SearchSystem extends SubsystemBase {
         powerCellVision.getEntry("widthDistance").forceSetDouble(widthEstimateDistance());
 
         powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(averageDistance());
+
+        powerCellVision.getEntry("centerX").forceSetDouble(centerX.getDouble(0.0));
+
+        powerCellVision.getEntry("determinedPath").forceSetString(pathDetermination());
     }
 
     public double averageDistance() {
@@ -85,11 +89,10 @@ public class SearchSystem extends SubsystemBase {
 
     public String pathDetermination() {
         if(averageDistance() <= 110) {
-            //System.out.print(targetCenterX);
             return "redPath";
         }
         else if( (averageDistance() >= 110) && (averageDistance() <= 190) ) {
-            if(targetCenterX < 0) {
+            if(targetCenterX < 80) {
                 return "blueVert";
             }
             else
