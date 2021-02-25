@@ -86,6 +86,8 @@ public class RobotContainer {
     
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
+    SmartDashboard.putData(new RunCommand(() -> incIndex()));
+    SmartDashboard.putData(new RunCommand(() -> decIndex()));
   }
 
   /**
@@ -156,6 +158,24 @@ public class RobotContainer {
   }
 
   /**
+   * Increments the index from which the Trajectory.State is derived, constrained within the number
+   * of Trajectory.States avalable
+   */
+  public void incIndex() {
+      index++;
+      index %= exampleTrajectory.getStates().size();
+  }
+
+  /**
+   * Increments the index from which the Trajectory.State is derived, constrained within the number
+   * of Trajectory.States avalable
+   */
+  public void decIndex() {
+    index--;
+    index %= exampleTrajectory.getStates().size();
+  }
+
+  /**
    * Returns the autonomous trajectory
    * 
    * @return the autonomous trajectory
@@ -167,11 +187,20 @@ public class RobotContainer {
   /**
    * Returns a specific trajectory state of the autonomous trajectory
    * 
-   * @param index
-   * @return
+   * @param index the index of the state to get from Trajectory.getStates
+   * @return the state at the specified index
    */
   public Trajectory.State getTrajectoryState(int index) {
       return exampleTrajectory.getStates().get(index%exampleTrajectory.getStates().size());
+  }
+
+  /**
+   * Returns the trajectory state of the autonomous trajectory at index
+   * 
+   * @return the state at index
+   */
+  public Trajectory.State getTrajectoryStateAtIndex() {
+      return exampleTrajectory.getStates().get(index);
   }
 
   /**
@@ -192,5 +221,14 @@ public class RobotContainer {
    */
   public SearchSystem getSearchSystem() {
       return searchSystem;
+  }
+
+  /**
+   * Returns the index of the trajectory from which the state is given
+   * 
+   * @return the index
+   */
+  public int getIndex() {
+      return index;
   }
 }
