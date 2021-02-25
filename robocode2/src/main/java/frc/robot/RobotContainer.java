@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 import frc.robot.commands.driveSubsystem.*;
-import frc.robot.commands.searchSystem.GetAverageDistance;
+import frc.robot.commands.searchSystem.*;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
