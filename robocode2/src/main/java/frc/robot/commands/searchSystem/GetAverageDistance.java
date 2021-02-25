@@ -24,10 +24,11 @@ public class GetAverageDistance extends CommandBase {
 
     public void execute() {
         average = (average + searchSystem.estimateDistance()) /2;
+        searchSystem.averageEstimatedDisatnce = average;
     }
 
     public void end() {
-        searchSystem.powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(average);
+        searchSystem.averageEstimatedDisatnce = average;
     }
 
     public boolean isFinished() {

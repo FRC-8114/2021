@@ -155,8 +155,23 @@ public class RobotContainer {
     return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
   }
 
+  /**
+   * Returns the autonomous trajectory
+   * 
+   * @return the autonomous trajectory
+   */
   public Trajectory getTrajectory() {
       return exampleTrajectory;
+  }
+
+  /**
+   * Returns a specific trajectory state of the autonomous trajectory
+   * 
+   * @param index
+   * @return
+   */
+  public Trajectory.State getTrajectoryState(int index) {
+      return exampleTrajectory.getStates().get(index%exampleTrajectory.getStates().size());
   }
 
   /**
