@@ -85,7 +85,7 @@ public class RobotContainer {
         .whenPressed(new ResetOdometry(m_robotDrive));
     
     // Adds the GetAveragedistance command to SmartDashboard
-    SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
+    SmartDashboard.putData(new GetAverageDistance(searchSystem, 3000));
   }
 
   /**
