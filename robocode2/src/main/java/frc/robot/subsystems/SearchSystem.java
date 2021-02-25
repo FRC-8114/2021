@@ -5,11 +5,10 @@ import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SearchSystem extends SubsystemBase {
-    NetworkTableInstance ntinst;
-    NetworkTable powerCellVision;
-    NetworkTableEntry targetArea, targetWidth, centerX;
-    double distanceAverage = 0, targetCenterX = 0;
-    int counter = 0;
+    private NetworkTableInstance ntinst;
+    public NetworkTable powerCellVision;
+    private NetworkTableEntry targetArea, targetWidth, centerX;
+    private double targetCenterX;
 
     public SearchSystem() {
         ntinst = NetworkTableInstance.getDefault();
@@ -63,35 +62,20 @@ public class SearchSystem extends SubsystemBase {
         
         powerCellVision.getEntry("widthDistance").forceSetDouble(widthEstimateDistance());
 
-        powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(averageDistance());
+        //powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(averageDistance());
 
         powerCellVision.getEntry("centerX").forceSetDouble(centerX.getDouble(0.0));
 
         powerCellVision.getEntry("determinedPath").forceSetString(pathDetermination());
     }
 
-    public double averageDistance() {
-        Timer timer = new Timer();
-        timer.start();
-
-        counter++;
-
-        if(timer.get() <= 3) {
-            distanceAverage += estimateDistance();
-            distanceAverage /= counter;
-        }
-        else  {
-            timer.reset();
-            distanceAverage = 0;
-        }
-        return distanceAverage;
-    }    
-
     public String pathDetermination() {
-        if(averageDistance() <= 110) {
+        double averageDistance = powerCellVision.getEntry("averageEstimatedDisatnce").getDouble(0.0);
+
+        if((averageDistance) <= 110) {
             return "redPath";
         }
-        else if( (averageDistance() >= 110) && (averageDistance() <= 190) ) {
+        else if( (averageDistance >= 110) && (averageDistance <= 190) ) {
             if(targetCenterX < 80) {
                 return "blueVert";
             }

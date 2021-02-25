@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 import frc.robot.commands.driveSubsystem.*;
+import frc.robot.commands.searchSystem.GetAverageDistance;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -41,6 +42,7 @@ public class RobotContainer {
   private final SearchSystem searchSystem = new SearchSystem();
 
   private Trajectory exampleTrajectory;
+  private int index;
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
@@ -81,6 +83,9 @@ public class RobotContainer {
     // Reset odometry when Y is pressed
     new JoystickButton(m_driverController, Button.kY.value)
         .whenPressed(new ResetOdometry(m_robotDrive));
+    
+    // Adds the GetAveragedistance command to SmartDashboard
+    SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
   }
 
   /**
