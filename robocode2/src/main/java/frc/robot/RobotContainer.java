@@ -86,8 +86,8 @@ public class RobotContainer {
     
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
-    SmartDashboard.putData("incIndex", new RunCommand(() -> incIndex()));
-    SmartDashboard.putData("decIndex", new RunCommand(() -> decIndex()));
+    SmartDashboard.putData("incIndex", new IncTrajectoryStateIndex(this));
+    SmartDashboard.putData("decIndex", new DecTrajectoryStateIndex(this)));
   }
 
   /**
