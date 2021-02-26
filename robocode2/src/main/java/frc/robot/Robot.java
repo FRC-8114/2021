@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.getDriveSystem().sendOdometryToShuffleboard();
     m_robotContainer.getSearchSystem().sendEstimatedDistance();
 
+    SmartDashboard.putNumber("trajectoryStates", m_robotContainer.getTrajectory().getStates().size());
     SmartDashboard.putNumber("trajectoryStateIndex", m_robotContainer.getIndex());
     SmartDashboard.putNumber("trajectoryStateAcceleration", m_robotContainer.getTrajectoryStateAtIndex().accelerationMetersPerSecondSq);
     SmartDashboard.putNumber("trajectoryStateCurvature", m_robotContainer.getTrajectoryStateAtIndex().curvatureRadPerMeter);
