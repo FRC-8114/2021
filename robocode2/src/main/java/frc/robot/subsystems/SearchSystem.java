@@ -26,7 +26,7 @@ public class SearchSystem extends SubsystemBase {
      * @return the estimated distance to target
      */
     public double estimateDistance() {
-        return (widthEstimateDistance());
+        return widthEstimateDistance();
     }
 
     /**
@@ -52,7 +52,7 @@ public class SearchSystem extends SubsystemBase {
 
     
     /**
-     * Sends the estimated distance to the power_cell_vision
+     * Sends the estimated distances to the power_cell_vision
      * networktable
      */
     public void sendEstimatedDistance() {
@@ -70,15 +70,29 @@ public class SearchSystem extends SubsystemBase {
     }
 
     public String pathDetermination() {
-        double averageDistance = powerCellVision.getEntry("averageEstimatedDisatnce").getDouble(0.0);
+        double averageDistance = powerCellVision.getEntry("averageEstimatedDistance").getDouble(0.0);
 
-        if((averageDistance) <= 110) {
-            return "redPath";
+        // If the average distance to the ball is <= 110 inches (the midpoint between the red and blue starting points) it will be a red path.
+        // This ensures it is not a blue path.
+        if(averageDistance <= 110) {
+
+            // If the center of the ball is in the left half of the image it will assume it is the red horizontal path.
+            if (targetCenterX < 80)
+                return "redHor";
+            
+            // If the center of the ball is in the middle or right half of the image it will assume it is the red vertical path.
+            else
+                return "redVert";
         }
-        else if( (averageDistance >= 110) && (averageDistance <= 190) ) {
-            if(targetCenterX < 80) {
+
+        // If the average distance to the ball is >= 110 inches and it is <= 190 inches it will be a blue path.
+        // This ensures it is not a red path and that it is not catching a ball in the background.
+        else if(averageDistance >= 110 && averageDistance <= 190) {
+            // If the center of the ball is in the left half of the image it will assume it is the blue vertical path
+            if(targetCenterX < 80)
                 return "blueVert";
-            }
+            
+            // If the center of the ball is in the middle or right half of the image it will run the blue horizontal path
             else
                 return "blueHor";
         }
