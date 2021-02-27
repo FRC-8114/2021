@@ -56,15 +56,6 @@ public class Robot extends TimedRobot {
     // Send values to Shuffleboard
     m_robotContainer.getDriveSystem().sendOdometryToShuffleboard();
     m_robotContainer.getSearchSystem().sendEstimatedDistance();
-
-    SmartDashboard.putNumber("trajectoryStates", m_robotContainer.getTrajectory().getStates().size());
-    SmartDashboard.putNumber("trajectoryStateIndex", m_robotContainer.getIndex());
-    SmartDashboard.putNumber("trajectoryStateAcceleration", m_robotContainer.getTrajectoryStateAtIndex().accelerationMetersPerSecondSq);
-    SmartDashboard.putNumber("trajectoryStateCurvature", m_robotContainer.getTrajectoryStateAtIndex().curvatureRadPerMeter);
-    SmartDashboard.putNumber("trajectoryStatePositionX", m_robotContainer.getTrajectoryStateAtIndex().poseMeters.getX());
-    SmartDashboard.putNumber("trajectoryStatePositionY", m_robotContainer.getTrajectoryStateAtIndex().poseMeters.getY());
-    SmartDashboard.putNumber("trajectoryStateTime", m_robotContainer.getTrajectoryStateAtIndex().timeSeconds);
-    SmartDashboard.putNumber("trajectoryStateVelocity", m_robotContainer.getTrajectoryStateAtIndex().velocityMetersPerSecond);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
