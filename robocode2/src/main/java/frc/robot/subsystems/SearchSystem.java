@@ -69,7 +69,9 @@ public class SearchSystem extends SubsystemBase {
     }
 
     public String pathDetermination() {
-        double averageDistance = powerCellVision.getEntry("averageEstimatedDistance").getDouble(0.0);
+        double averageDistance = estimateDistance();
+        //powerCellVision.getEntry("averageEstimatedDistance").getDouble(0.0);
+        targetCenterX = powerCellVision.getEntry("target_centerX").getDouble(0.0);
 
         // If the average distance to the ball is <= 110 inches (the midpoint between the red and blue starting points) it will be a red path.
         // This ensures it is not a blue path.
