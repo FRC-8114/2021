@@ -1,5 +1,7 @@
 package frc.robot.commands.searchSystem;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,15 +21,17 @@ public class GetAverageDistance extends CommandBase {
 
     public void initialize() {
         timer.start();
+        average = 0;
         average = searchSystem.estimateDistance();
     }
 
     public void execute() {
-        average = (average + searchSystem.estimateDistance()) /2;
+        average = (average + searchSystem.estimateDistance()) / 2;
     }
 
     public void end() {
         searchSystem.powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(average);
+        timer.reset();
     }
 
     public boolean isFinished() {

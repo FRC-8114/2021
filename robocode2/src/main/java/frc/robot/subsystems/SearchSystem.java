@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.*;
-import edu.wpi.first.wpilibj.Timer;
 
 public class SearchSystem extends SubsystemBase {
     private NetworkTableInstance ntinst;
@@ -62,7 +61,7 @@ public class SearchSystem extends SubsystemBase {
         
         powerCellVision.getEntry("widthDistance").forceSetDouble(widthEstimateDistance());
 
-        //powerCellVision.getEntry("averageEstimatedDistance").forceSetDouble(averageDistance());
+        powerCellVision.getEntry("averageEstimatedDistance");
 
         powerCellVision.getEntry("centerX").forceSetDouble(centerX.getDouble(0.0));
 
@@ -70,7 +69,9 @@ public class SearchSystem extends SubsystemBase {
     }
 
     public String pathDetermination() {
-        double averageDistance = powerCellVision.getEntry("averageEstimatedDistance").getDouble(0.0);
+        double averageDistance = estimateDistance();
+        //powerCellVision.getEntry("averageEstimatedDistance").getDouble(0.0);
+        targetCenterX = powerCellVision.getEntry("target_centerX").getDouble(0.0);
 
         // If the average distance to the ball is <= 110 inches (the midpoint between the red and blue starting points) it will be a red path.
         // This ensures it is not a blue path.
@@ -88,6 +89,7 @@ public class SearchSystem extends SubsystemBase {
         // If the average distance to the ball is >= 110 inches and it is <= 190 inches it will be a blue path.
         // This ensures it is not a red path and that it is not catching a ball in the background.
         else if(averageDistance >= 110 && averageDistance <= 190) {
+
             // If the center of the ball is in the left half of the image it will assume it is the blue vertical path
             if(targetCenterX < 80)
                 return "blueVert";
