@@ -14,9 +14,6 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
 import org.opencv.objdetect.*;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
 /**
 * GripPipeline class.
 *
@@ -27,11 +24,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class GripPipeline {
 
 	//Outputs
-	private Mat cvResizeOutput = new Mat();
-	private Mat rgbThresholdOutput = new Mat();
-	private Mat maskOutput = new Mat();
+	private Mat cvGaussianblurOutput = new Mat();
 	private Mat hsvThresholdOutput = new Mat();
+	private Mat maskOutput = new Mat();
+	private Mat rgbThresholdOutput = new Mat();
 	private Mat cvErodeOutput = new Mat();
+	private Mat cvDilateOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
@@ -43,44 +41,53 @@ public class GripPipeline {
 	 * This is the primary method that runs the entire pipeline and updates the outputs.
 	 */
 	public void process(Mat source0) {
-		// Step CV_resize0:
-		Mat cvResizeSrc = source0;
-		Size cvResizeDsize = new Size(0, 0);
-		double cvResizeFx = 1.0;
-		double cvResizeFy = 1.0;
-		int cvResizeInterpolation = Imgproc.INTER_LINEAR;
-		cvResize(cvResizeSrc, cvResizeDsize, cvResizeFx, cvResizeFy, cvResizeInterpolation, cvResizeOutput);
-
-		// Step RGB_Threshold0:
-		Mat rgbThresholdInput = cvResizeOutput;
-		double[] rgbThresholdRed = {165.10791366906474, 255.0};
-		double[] rgbThresholdGreen = {144.46942446043167, 209.9242424242424};
-		double[] rgbThresholdBlue = {71.08812949640287, 164.84848484848484};
-		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
-
-		// Step Mask0:
-		Mat maskInput = cvResizeOutput;
-		Mat maskMask = rgbThresholdOutput;
-		mask(maskInput, maskMask, maskOutput);
+		// Step CV_GaussianBlur0:
+		Mat cvGaussianblurSrc = source0;
+		Size cvGaussianblurKsize = new Size(1, 1);
+		double cvGaussianblurSigmax = 300.0;
+		double cvGaussianblurSigmay = 300.0;
+		int cvGaussianblurBordertype = Core.BORDER_DEFAULT;
+		cvGaussianblur(cvGaussianblurSrc, cvGaussianblurKsize, cvGaussianblurSigmax, cvGaussianblurSigmay, cvGaussianblurBordertype, cvGaussianblurOutput);
 
 		// Step HSV_Threshold0:
-		Mat hsvThresholdInput = maskOutput;
-		double[] hsvThresholdHue = {9.71223021582734, 66.36363636363635};
-		double[] hsvThresholdSaturation = {89.43345323741006, 149.82323232323233};
-		double[] hsvThresholdValue = {158.22841726618702, 216.36363636363637};
+		Mat hsvThresholdInput = cvGaussianblurOutput;
+		double[] hsvThresholdHue = {4.856115107913669, 36.06060606060605};
+		double[] hsvThresholdSaturation = {80.26079136690647, 160.55555555555557};
+		double[] hsvThresholdValue = {130.71043165467623, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
+		// Step Mask0:
+		Mat maskInput = cvGaussianblurOutput;
+		Mat maskMask = hsvThresholdOutput;
+		mask(maskInput, maskMask, maskOutput);
+
+		// Step RGB_Threshold0:
+		Mat rgbThresholdInput = maskOutput;
+		double[] rgbThresholdRed = {0.0, 255.0};
+		double[] rgbThresholdGreen = {0.0, 237.82828282828282};
+		double[] rgbThresholdBlue = {55.03597122302158, 169.14141414141415};
+		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
+
 		// Step CV_erode0:
-		Mat cvErodeSrc = hsvThresholdOutput;
+		Mat cvErodeSrc = rgbThresholdOutput;
 		Mat cvErodeKernel = new Mat();
 		Point cvErodeAnchor = new Point(-1, -1);
-		double cvErodeIterations = 1;
-		int cvErodeBordertype = Core.BORDER_CONSTANT;
+		double cvErodeIterations = 2.0;
+		int cvErodeBordertype = Core.BORDER_REFLECT;
 		Scalar cvErodeBordervalue = new Scalar(-1);
 		cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);
 
+		// Step CV_dilate0:
+		Mat cvDilateSrc = cvErodeOutput;
+		Mat cvDilateKernel = new Mat();
+		Point cvDilateAnchor = new Point(-1, -1);
+		double cvDilateIterations = 6.0;
+		int cvDilateBordertype = Core.BORDER_CONSTANT;
+		Scalar cvDilateBordervalue = new Scalar(-1);
+		cvDilate(cvDilateSrc, cvDilateKernel, cvDilateAnchor, cvDilateIterations, cvDilateBordertype, cvDilateBordervalue, cvDilateOutput);
+
 		// Step Find_Contours0:
-		Mat findContoursInput = cvErodeOutput;
+		Mat findContoursInput = cvDilateOutput;
 		boolean findContoursExternalOnly = false;
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
@@ -88,8 +95,8 @@ public class GripPipeline {
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
 		double filterContoursMinArea = 0.0;
 		double filterContoursMinPerimeter = 0.0;
-		double filterContoursMinWidth = 0.0;
-		double filterContoursMaxWidth = 200.0;
+		double filterContoursMinWidth = 10.0;
+		double filterContoursMaxWidth = 110.0;
 		double filterContoursMinHeight = 0.0;
 		double filterContoursMaxHeight = 1000.0;
 		double[] filterContoursSolidity = {0, 100};
@@ -102,27 +109,11 @@ public class GripPipeline {
 	}
 
 	/**
-	 * This method is a generated getter for the output of a CV_resize.
-	 * @return Mat output from CV_resize.
+	 * This method is a generated getter for the output of a CV_GaussianBlur.
+	 * @return Mat output from CV_GaussianBlur.
 	 */
-	public Mat cvResizeOutput() {
-		return cvResizeOutput;
-	}
-
-	/**
-	 * This method is a generated getter for the output of a RGB_Threshold.
-	 * @return Mat output from RGB_Threshold.
-	 */
-	public Mat rgbThresholdOutput() {
-		return rgbThresholdOutput;
-	}
-
-	/**
-	 * This method is a generated getter for the output of a Mask.
-	 * @return Mat output from Mask.
-	 */
-	public Mat maskOutput() {
-		return maskOutput;
+	public Mat cvGaussianblurOutput() {
+		return cvGaussianblurOutput;
 	}
 
 	/**
@@ -134,11 +125,35 @@ public class GripPipeline {
 	}
 
 	/**
+	 * This method is a generated getter for the output of a Mask.
+	 * @return Mat output from Mask.
+	 */
+	public Mat maskOutput() {
+		return maskOutput;
+	}
+
+	/**
+	 * This method is a generated getter for the output of a RGB_Threshold.
+	 * @return Mat output from RGB_Threshold.
+	 */
+	public Mat rgbThresholdOutput() {
+		return rgbThresholdOutput;
+	}
+
+	/**
 	 * This method is a generated getter for the output of a CV_erode.
 	 * @return Mat output from CV_erode.
 	 */
 	public Mat cvErodeOutput() {
 		return cvErodeOutput;
+	}
+
+	/**
+	 * This method is a generated getter for the output of a CV_dilate.
+	 * @return Mat output from CV_dilate.
+	 */
+	public Mat cvDilateOutput() {
+		return cvDilateOutput;
 	}
 
 	/**
@@ -159,47 +174,20 @@ public class GripPipeline {
 
 
 	/**
-	 * Resizes an image.
-	 * @param src The image to resize.
-	 * @param dSize size to set the image.
-	 * @param fx scale factor along X axis.
-	 * @param fy scale factor along Y axis.
-	 * @param interpolation type of interpolation to use.
-	 * @param dst output image.
+	 * Performs a Gaussian blur on the image.
+	 * @param src the image to blur.
+	 * @param kSize the kernel size.
+	 * @param sigmaX the deviation in X for the Gaussian blur.
+	 * @param sigmaY the deviation in Y for the Gaussian blur.
+	 * @param borderType pixel extrapolation method.
+	 * @param dst the output image.
 	 */
-	private void cvResize(Mat src, Size dSize, double fx, double fy, int interpolation,
-		Mat dst) {
-		if (dSize==null) {
-			dSize = new Size(0,0);
+	private void cvGaussianblur(Mat src, Size kSize, double sigmaX, double sigmaY,
+		int	borderType, Mat dst) {
+		if (kSize == null) {
+			kSize = new Size(1,1);
 		}
-		Imgproc.resize(src, dst, dSize, fx, fy, interpolation);
-	}
-
-	/**
-	 * Segment an image based on color ranges.
-	 * @param input The image on which to perform the RGB threshold.
-	 * @param red The min and max red.
-	 * @param green The min and max green.
-	 * @param blue The min and max blue.
-	 * @param output The image in which to store the output.
-	 */
-	private void rgbThreshold(Mat input, double[] red, double[] green, double[] blue,
-		Mat out) {
-		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2RGB);
-		Core.inRange(out, new Scalar(red[0], green[0], blue[0]),
-			new Scalar(red[1], green[1], blue[1]), out);
-	}
-
-	/**
-	 * Filter out an area of an image using a binary mask.
-	 * @param input The image on which the mask filters.
-	 * @param mask The binary image that is used to filter.
-	 * @param output The image in which to store the output.
-	 */
-	private void mask(Mat input, Mat mask, Mat output) {
-		mask.convertTo(mask, CvType.CV_8UC1);
-		Core.bitwise_xor(output, output, output);
-		input.copyTo(output, mask);
+		Imgproc.GaussianBlur(src, dst, kSize, sigmaX, sigmaY, borderType);
 	}
 
 	/**
@@ -216,6 +204,33 @@ public class GripPipeline {
 		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
 		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
 			new Scalar(hue[1], sat[1], val[1]), out);
+	}
+
+	/**
+	 * Filter out an area of an image using a binary mask.
+	 * @param input The image on which the mask filters.
+	 * @param mask The binary image that is used to filter.
+	 * @param output The image in which to store the output.
+	 */
+	private void mask(Mat input, Mat mask, Mat output) {
+		mask.convertTo(mask, CvType.CV_8UC1);
+		Core.bitwise_xor(output, output, output);
+		input.copyTo(output, mask);
+	}
+
+	/**
+	 * Segment an image based on color ranges.
+	 * @param input The image on which to perform the RGB threshold.
+	 * @param red The min and max red.
+	 * @param green The min and max green.
+	 * @param blue The min and max blue.
+	 * @param output The image in which to store the output.
+	 */
+	private void rgbThreshold(Mat input, double[] red, double[] green, double[] blue,
+		Mat out) {
+		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2RGB);
+		Core.inRange(out, new Scalar(red[0], green[0], blue[0]),
+			new Scalar(red[1], green[1], blue[1]), out);
 	}
 
 	/**
@@ -240,6 +255,30 @@ public class GripPipeline {
 			borderValue = new Scalar(-1);
 		}
 		Imgproc.erode(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
+	}
+
+	/**
+	 * Expands area of higher value in an image.
+	 * @param src the Image to dilate.
+	 * @param kernel the kernel for dilation.
+	 * @param anchor the center of the kernel.
+	 * @param iterations the number of times to perform the dilation.
+	 * @param borderType pixel extrapolation method.
+	 * @param borderValue value to be used for a constant border.
+	 * @param dst Output Image.
+	 */
+	private void cvDilate(Mat src, Mat kernel, Point anchor, double iterations,
+	int borderType, Scalar borderValue, Mat dst) {
+		if (kernel == null) {
+			kernel = new Mat();
+		}
+		if (anchor == null) {
+			anchor = new Point(-1,-1);
+		}
+		if (borderValue == null){
+			borderValue = new Scalar(-1);
+		}
+		Imgproc.dilate(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
 	}
 
 	/**
@@ -317,3 +356,4 @@ public class GripPipeline {
 
 
 }
+
