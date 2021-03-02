@@ -36,7 +36,7 @@ public class SearchSystem extends SubsystemBase {
      * @return the estimated distance to target
      */
     private double areaEstimateDistance() {
-        return 253 * Math.pow(targetArea.getDouble(0.0), -0.353);
+        return 5998 * Math.pow(targetArea.getDouble(0.0), -0.722);
     }
 
 
@@ -47,7 +47,7 @@ public class SearchSystem extends SubsystemBase {
      * @return the estimated distance to target
      */
     private double widthEstimateDistance() {
-        return 559 * Math.pow(targetWidth.getDouble(0.0), -0.828);
+        return 7239 * Math.pow(targetWidth.getDouble(0.0), -1.44);
     }
 
     
