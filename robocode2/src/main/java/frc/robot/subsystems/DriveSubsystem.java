@@ -45,7 +45,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    // Initialize the drivetrain moters
+    // Initialize the drivetrain motors
 
     // Left Leader
     leftMotorLeader.restoreFactoryDefaults(); 

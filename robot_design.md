@@ -4,6 +4,9 @@ Back Left - 1
 Front Right - 3
 Back Right - 4
 
+Intake Controller - 8
+Index Controller - 9
+
 Built in Encoders:
 Front Left
 Back Left

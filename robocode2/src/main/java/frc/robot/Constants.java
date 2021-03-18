@@ -62,4 +62,8 @@ public final class Constants {
     public static final double RAMSETE_B = 2;
     public static final double RAMSETE_ZETA = 0.7;
   }
+
+  public static final class IntakeConstants {
+    public static final int INTAKE_CONTROLLER_PORT = 8;
+  }
 }
