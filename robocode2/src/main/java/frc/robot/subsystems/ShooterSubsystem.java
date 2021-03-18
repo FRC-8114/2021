@@ -13,10 +13,12 @@ public class ShooterSubsystem extends SubsystemBase {
     // Shooter motor controller
     final CANSparkMax leftShooterController = new CANSparkMax(ShooterConstants.LEFT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
     final CANSparkMax rightShooterController = new CANSparkMax(ShooterConstants.RIGHT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
+    final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
 
     // Shooter motor controller encoder
     final CANEncoder leftShooterControllerEncoder = leftShooterController.getEncoder();
     final CANEncoder rightShooterControllerEncoder = rightShooterController.getEncoder();
+    final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
 
     // Creates the ShooterSubsystem
     public ShooterSubsystem() {
@@ -26,11 +28,16 @@ public class ShooterSubsystem extends SubsystemBase {
         rightShooterController.restoreFactoryDefaults(); 
         rightShooterController.setIdleMode(IdleMode.kCoast);
 
+        kickerController.restoreFactoryDefaults();
+        kickerController.setIdleMode(IdleMode.kBrake);
+
         leftShooterControllerEncoder.setPositionConversionFactor(ShooterConstants.ENCODER_DISTANCE_PER_PULSE);
         leftShooterControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
 
         rightShooterControllerEncoder.setPositionConversionFactor(ShooterConstants.ENCODER_DISTANCE_PER_PULSE);
         rightShooterControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+
+        
 
     }
 
@@ -42,5 +49,10 @@ public class ShooterSubsystem extends SubsystemBase {
     public void ShooterStop() {
         leftShooterController.stopMotor();
         rightShooterController.stopMotor();
+    }
+
+    public void ShooterReverse(double speed) {
+        leftShooterController.set(-speed);
+        rightShooterController.set(-speed);
     }
 }

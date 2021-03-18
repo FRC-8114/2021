@@ -68,12 +68,14 @@ public final class Constants {
   }
 
   public static final class IndexConstants {
-    public static final int INDEX_CONTROLLER_PORT = 9;
+    public static final int FRONT_INDEX_CONTROLLER_PORT = 12;
+    public static final int TOWER_INDEX_CONTROLLER_PORT = 13;
   }
 
   public static final class ShooterConstants {
-    public static final int LEFT_SHOOTER_CONTROLLER_PORT = 10;
-    public static final int RIGHT_SHOOTER_CONTROLLER_PORT = 11;
+    public static final int LEFT_SHOOTER_CONTROLLER_PORT = 17;
+    public static final int RIGHT_SHOOTER_CONTROLLER_PORT = 18;
+    public static final int KICKER_CONTROLLER_PORT = 19;
 
     public static final int ENCODER_DISTANCE_PER_PULSE = 0;
     public static final int VELOCITY_CONVERSION_FACTOR = 0;
