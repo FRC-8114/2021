@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
@@ -11,27 +13,53 @@ import frc.robot.Constants.IndexConstants;
 
 public class IndexSubsystem extends SubsystemBase {
     // Index motor controller
-    final CANSparkMax frontIndexController = new CANSparkMax(IndexConstants.FRONT_INDEX_CONTROLLER_PORT, MotorType.kBrushless);
+    final PWMVictorSPX frontIndexController = new PWMVictorSPX(IndexConstants.FRONT_INDEX_CONTROLLER_PORT);
+    final CANSparkMax towerIndexController = new CANSparkMax(IndexConstants.TOWER_INDEX_CONTROLLER_PORT, MotorType.kBrushless);
 
-    // Index motor controller encoder
-    final CANEncoder indexControllerEncoder = indexController.getEncoder();
+    final CANEncoder towerIndexControllEncoder = towerIndexController.getEncoder();
 
     // Creates the IndexSubsystem
     public IndexSubsystem() {
-        indexController.restoreFactoryDefaults(); 
-        indexController.setIdleMode(IdleMode.kBrake);
-
+        towerIndexController.restoreFactoryDefaults();
+        towerIndexController.setIdleMode(IdleMode.kBrake);
     }
 
-    public void IndexRun(double speed) {
-        indexController.set(speed);
+    public void FrontIndexRun (double speed) {
+        frontIndexController.set(speed);
     }
 
-    public void IndexStop() {
-        indexController.stopMotor();
+    public void TowerIndexRun (double speed) {
+        towerIndexController.set(speed);
     }
 
-    public void IndexReverse(double speed) {
-        indexController.set(-speed);
+    public void AllIndexRun (double speed) {
+        FrontIndexRun(speed);
+        TowerIndexRun(speed);
+    }
+
+    public void FrontIndexStop() {
+        frontIndexController.stopMotor();
+    }
+
+    public void TowerIndexStop() {
+        towerIndexController.stopMotor();
+    }
+
+    public void AllIndexStop() {
+        FrontIndexStop();
+        TowerIndexStop();
+    }
+
+    public void FrontIndexReverse(double speed) {
+        frontIndexController.set(-speed);
+    }
+
+    public void TowerIndexReverse(double speed) {
+        towerIndexController.set(-speed);
+    }
+
+    public void AllIndexReverse(double speed) {
+        FrontIndexReverse(speed);
+        TowerIndexReverse(speed);
     }
 }
