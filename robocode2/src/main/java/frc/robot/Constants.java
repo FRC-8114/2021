@@ -66,4 +66,8 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int INTAKE_CONTROLLER_PORT = 8;
   }
+
+  public static final class IndexConstants {
+    public static final int INDEX_CONTROLLER_PORT = 9;
+  }
 }
