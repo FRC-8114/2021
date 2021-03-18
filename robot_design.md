@@ -5,7 +5,13 @@ Front Right - 3
 Back Right - 4
 
 Intake Controller - 8
-Index Controller - 9
+Front Index Controller - 12
+Tower Index Controller - 13
+
+Left Shooter Controller - 17
+Right Shooter Controller - 18
+Kicker Controller - 19
+
 
 Built in Encoders:
 Front Left

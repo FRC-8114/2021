@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
         //set to factory default and idle so we know what we're working with 
         intakeController.restoreFactoryDefaults(); 
-        intakeController.setIdleMode(IdleMode.kBrake);
+        intakeController.setIdleMode(IdleMode.kCoast);
 
         //encoders?
 
