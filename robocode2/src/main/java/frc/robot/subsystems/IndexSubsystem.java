@@ -13,13 +13,16 @@ import frc.robot.Constants.IndexConstants;
 
 public class IndexSubsystem extends SubsystemBase {
     // Index motor controller
-    final PWMVictorSPX frontIndexController = new PWMVictorSPX(IndexConstants.FRONT_INDEX_CONTROLLER_PORT);
+    final CANSparkMax frontIndexController = new CANSparkMax(IndexConstants.FRONT_INDEX_CONTROLLER_PORT, MotorType.kBrushed);
     final CANSparkMax towerIndexController = new CANSparkMax(IndexConstants.TOWER_INDEX_CONTROLLER_PORT, MotorType.kBrushless);
 
     final CANEncoder towerIndexControllEncoder = towerIndexController.getEncoder();
 
     // Creates the IndexSubsystem
     public IndexSubsystem() {
+        frontIndexController.restoreFactoryDefaults();
+        frontIndexController.setIdleMode(IdleMode.kBrake);
+
         towerIndexController.restoreFactoryDefaults();
         towerIndexController.setIdleMode(IdleMode.kBrake);
     }
