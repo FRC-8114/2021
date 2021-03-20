@@ -76,6 +76,7 @@ public final class Constants {
     public static final int LEFT_SHOOTER_CONTROLLER_PORT = 17;
     public static final int RIGHT_SHOOTER_CONTROLLER_PORT = 18;
     public static final int KICKER_CONTROLLER_PORT = 19;
+    public static final int HOOD_CONTROLLER_PORT = 20;
 
     public static final int ENCODER_DISTANCE_PER_PULSE = 0;
     public static final int VELOCITY_CONVERSION_FACTOR = 0;

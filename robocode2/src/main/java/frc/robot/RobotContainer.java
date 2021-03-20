@@ -40,6 +40,8 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final SearchSystem searchSystem = new SearchSystem();
+  private final IndexSubsystem indexSubsystem = new IndexSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   private Trajectory exampleTrajectory;
   private int index;
@@ -77,12 +79,23 @@ public class RobotContainer {
     // Increment drive speed when the right bumper is pressed
     new JoystickButton(m_driverController, Button.kBumperRight.value)
         .whenPressed(() -> m_robotDrive.incMaxSpeed());
+
     // Decrement drive speed when the left bumper is pressed
     new JoystickButton(m_driverController, Button.kBumperLeft.value)
         .whenPressed(() -> m_robotDrive.decMaxSpeed());
-    // Reset odometry when Y is pressed
+
+    // Run the intake when Y is pressed
     new JoystickButton(m_driverController, Button.kY.value)
-        .whenPressed(new ResetOdometry(m_robotDrive));
+        .whenPressed(() -> intakeSubsystem.IntakeRun(.5));
+
+    new JoystickButton(m_driverController, Button.kB.value)
+        .whenPressed(() -> intakeSubsystem.IntakeStop());
+
+    new JoystickButton(m_driverController, Button.kX.value)
+        .whenPressed(() -> indexSubsystem.AllIndexRun(.5));
+
+    new JoystickButton(m_driverController, Button.kA.value)
+        .whenPressed(() -> indexSubsystem.AllIndexStop());
     
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));

@@ -23,8 +23,6 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeController.restoreFactoryDefaults(); 
         intakeController.setIdleMode(IdleMode.kCoast);
 
-        //encoders?
-
     }
 
     public void IntakeRun(double speed) {
