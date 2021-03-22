@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.wpilibj.XboxController.Button;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -42,6 +43,7 @@ public class RobotContainer {
   private final SearchSystem searchSystem = new SearchSystem();
   private final IndexSubsystem indexSubsystem = new IndexSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
   private Trajectory exampleTrajectory;
   private int index;
@@ -62,8 +64,8 @@ public class RobotContainer {
         new RunCommand(
             () ->
                 m_robotDrive.tankDrive(
-                    m_driverController.getY(GenericHID.Hand.kLeft),
-                    m_driverController.getY(GenericHID.Hand.kRight)),
+                    m_driverController.getY(GenericHID.Hand.kRight),
+                    m_driverController.getY(GenericHID.Hand.kLeft)),
             m_robotDrive));
 
     setupTrajectory();
@@ -77,25 +79,39 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Increment drive speed when the right bumper is pressed
-    new JoystickButton(m_driverController, Button.kBumperRight.value)
-        .whenPressed(() -> m_robotDrive.incMaxSpeed());
+    // new JoystickButton(m_driverController, Button.kBumperRight.value)
+    //     .whenPressed(() -> m_robotDrive.incMaxSpeed());
 
-    // Decrement drive speed when the left bumper is pressed
-    new JoystickButton(m_driverController, Button.kBumperLeft.value)
-        .whenPressed(() -> m_robotDrive.decMaxSpeed());
+    // // Decrement drive speed when the left bumper is pressed
+    // new JoystickButton(m_driverController, Button.kBumperLeft.value)
+    //     .whenPressed(() -> m_robotDrive.decMaxSpeed());
 
     // Run the intake when Y is pressed
     new JoystickButton(m_driverController, Button.kY.value)
-        .whenPressed(() -> intakeSubsystem.IntakeRun(.5));
+        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(.1))
+        .whenReleased(() -> shooterSubsystem.StopHood());
 
     new JoystickButton(m_driverController, Button.kB.value)
-        .whenPressed(() -> intakeSubsystem.IntakeStop());
+        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(.1))
+        .whenReleased(() -> shooterSubsystem.StopHood());
 
     new JoystickButton(m_driverController, Button.kX.value)
-        .whenPressed(() -> indexSubsystem.AllIndexRun(.5));
+        .whenPressed(() -> indexSubsystem.AllIndexReverse(.25))
+        .whenReleased(() -> indexSubsystem.AllIndexStop());
 
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(() -> indexSubsystem.AllIndexStop());
+        .whenPressed(() -> shooterSubsystem.KickerRun(0.85))
+        .whenReleased(() -> shooterSubsystem.KickerStop());
+
+    new JoystickButton(m_driverController, 6)
+        .whenPressed(() -> shooterSubsystem.ShooterRun(1))
+        .whenReleased(() -> shooterSubsystem.ShooterStop());
+
+    new JoystickButton(m_driverController, 5)
+        .whenPressed(() -> indexSubsystem.AllIndexRun(0.25))
+        .whenReleased(() -> indexSubsystem.AllIndexStop());
+
+
     
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));

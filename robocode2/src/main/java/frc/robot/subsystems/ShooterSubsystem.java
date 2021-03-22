@@ -29,12 +29,14 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem() {
         leftShooterController.restoreFactoryDefaults(); 
         leftShooterController.setIdleMode(IdleMode.kCoast);
+        leftShooterController.setInverted(true);
 
         rightShooterController.restoreFactoryDefaults(); 
         rightShooterController.setIdleMode(IdleMode.kCoast);
 
         kickerController.restoreFactoryDefaults();
         kickerController.setIdleMode(IdleMode.kBrake);
+        kickerController.setInverted(true);
 
         hoodController.restoreFactoryDefaults();
         hoodController.setIdleMode(IdleMode.kBrake);
@@ -58,9 +60,17 @@ public class ShooterSubsystem extends SubsystemBase {
         rightShooterController.set(speed);
     }
 
+    public void KickerRun(double speed) {
+        kickerController.set(speed);
+    }
+
     public void ShooterStop() {
         leftShooterController.stopMotor();
         rightShooterController.stopMotor();
+    }
+
+    public void KickerStop() {
+        kickerController.stopMotor();
     }
 
     public void ShooterReverse(double speed) {
@@ -68,7 +78,35 @@ public class ShooterSubsystem extends SubsystemBase {
         rightShooterController.set(-speed);
     }
 
-    public void SetHoodPosition(double rotations) {
+    public void KickerReverse(double speed) {
+        kickerController.set(-speed);
+    }
+
+    public void IncreaseHoodPosition(double speed) {
+        hoodController.set(speed);
+    }
+
+    public void StopHood() {
+        hoodController.stopMotor();
+    }
+
+    public void LowerHoodPosition(double speed) {
+        hoodController.set(-speed);
+    }
+
+    public void SetHoodPosition(double degrees) {
+        double arc_length = hoodControllerEncoder.getPosition();
+
+        double current_angle = arc_length / ShooterConstants.HOOD_RADIUS;
+
+        for (double ca = current_angle; current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE ||
+               current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE; ca = arc_length/ShooterConstants.HOOD_RADIUS)
+        {
+            if (ca <= degrees-ShooterConstants.DEGREE_TOLERANCE)
+                hoodController.set(0.1);
+            else if (ca >= degrees+ShooterConstants.DEGREE_TOLERANCE)
+                hoodController.set(-0.1);
+        }
     }
 
     public void AutoShoot(double speed) {

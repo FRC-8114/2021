@@ -24,6 +24,7 @@ public class IndexSubsystem extends SubsystemBase {
         frontIndexController.setIdleMode(IdleMode.kBrake);
 
         towerIndexController.restoreFactoryDefaults();
+        towerIndexController.setInverted(true);
         towerIndexController.setIdleMode(IdleMode.kBrake);
     }
 
@@ -36,7 +37,7 @@ public class IndexSubsystem extends SubsystemBase {
     }
 
     public void AllIndexRun (double speed) {
-        FrontIndexRun(speed);
+        FrontIndexRun(1);
         TowerIndexRun(speed);
     }
 
