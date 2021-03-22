@@ -9,6 +9,7 @@ import static edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -100,21 +101,33 @@ public class RobotContainer {
         .whenReleased(() -> indexSubsystem.AllIndexStop());
 
     new JoystickButton(m_driverController, Button.kA.value)
+        .whenPressed(() -> intakeSubsystem.IntakeReverse(0.85))
+        .whenReleased(() -> intakeSubsystem.IntakeStop());
+
+    new JoystickButton(m_driverController, 6)
         .whenPressed(() -> shooterSubsystem.KickerRun(0.85))
         .whenReleased(() -> shooterSubsystem.KickerStop());
 
-    new JoystickButton(m_driverController, 6)
-        .whenPressed(() -> shooterSubsystem.ShooterRun(1))
-        .whenReleased(() -> shooterSubsystem.ShooterStop());
-
     new JoystickButton(m_driverController, 5)
-        .whenPressed(() -> indexSubsystem.AllIndexRun(0.25))
-        .whenReleased(() -> indexSubsystem.AllIndexStop());
+        .whenPressed(() -> intakeSubsystem.IntakeRun(0.65))
+        .whenReleased(() -> intakeSubsystem.IntakeStop());
 
 
     
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
+  }
+
+  public void periodic() {
+    if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
+        indexSubsystem.AllIndexRun(.25);
+        indexSubsystem.AllIndexStop();
+    }
+
+    if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
+        shooterSubsystem.ShooterRun(1);
+        shooterSubsystem.ShooterStop();
+    }
   }
 
   /**
