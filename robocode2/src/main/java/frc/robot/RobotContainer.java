@@ -121,13 +121,16 @@ public class RobotContainer {
   public void periodic() {
     if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
         indexSubsystem.AllIndexRun(.25);
-        indexSubsystem.AllIndexStop();
     }
+    else if(m_driverController.getTriggerAxis(Hand.kLeft) != 1)
+        indexSubsystem.AllIndexStop();
 
     if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
         shooterSubsystem.ShooterRun(1);
-        shooterSubsystem.ShooterStop();
     }
+    else if (m_driverController.getTriggerAxis(Hand.kRight) != 1)
+        shooterSubsystem.ShooterStop();
+
   }
 
   /**
