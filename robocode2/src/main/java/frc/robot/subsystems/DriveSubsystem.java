@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import com.analog.adis16470.frc.ADIS16470_IMU;
 import com.revrobotics.CANEncoder;
+import edu.wpi.first.wpilibj.Timer;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
@@ -42,6 +44,7 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
   private double maxOutput;
+  private double[] currentSpeeds = new double[2];
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -91,6 +94,21 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(), leftLeaderEncoder.getPosition(), rightLeaderEncoder.getPosition());
   }
 
+  public void emergencyStop(double time) {
+    double startLeft = -currentSpeeds[0]/3, startRight = -currentSpeeds[1]/3;
+    double signLeft = startLeft/Math.abs(startLeft), signRight = startRight/Math.abs(startRight);
+    
+    tankDrive(0, 0);
+    Timer timer = new Timer();
+    timer.start();
+
+    for ( ; timer.get() < time ; ) {
+      tankDrive(startLeft + signLeft * timer.get(), startRight + signRight * timer.get());
+    }
+
+    tankDrive(0,0);
+  }
+
   /**
    * Drives the robot using arcade controls.
    *
@@ -98,6 +116,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
+    currentSpeeds[0] = leftSpeed;
+    currentSpeeds[1] = rightSpeed;
     m_drive.tankDrive(leftSpeed, rightSpeed);
   }
 

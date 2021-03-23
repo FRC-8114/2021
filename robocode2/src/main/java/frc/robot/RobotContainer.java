@@ -112,6 +112,9 @@ public class RobotContainer {
         .whenPressed(() -> intakeSubsystem.IntakeRun(0.65))
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
+    new JoystickButton(m_driverController, Button.kStart.value)
+        .whenPressed(() -> m_robotDrive.emergencyStop(.15));
+
 
     
     // Adds the GetAveragedistance command to SmartDashboard
