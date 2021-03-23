@@ -95,15 +95,16 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void emergencyStop(double time) {
-    double startLeft = -currentSpeeds[0]/3, startRight = -currentSpeeds[1]/3;
-    double signLeft = startLeft/Math.abs(startLeft), signRight = startRight/Math.abs(startRight);
+    double startLeft = -currentSpeeds[0]/5, startRight = -currentSpeeds[1]/5;
+    //double signLeft = startLeft/Math.abs(startLeft), signRight = startRight/Math.abs(startRight);
     
     tankDrive(0, 0);
     Timer timer = new Timer();
     timer.start();
+    Timer.delay(.15);
 
     for ( ; timer.get() < time ; ) {
-      tankDrive(startLeft + signLeft * timer.get(), startRight + signRight * timer.get());
+      tankDrive(startLeft, startRight);
     }
 
     tankDrive(0,0);
