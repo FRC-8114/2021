@@ -66,8 +66,8 @@ public class RobotContainer {
         new RunCommand(
             () ->
                 m_robotDrive.cheesyDrive(
-                    m_driverController.getY(GenericHID.Hand.kLeft),
-                    m_driverController.getX(GenericHID.Hand.kRight),
+                    (m_driverController.getY(GenericHID.Hand.kLeft) > 0.2)? m_driverController.getY(GenericHID.Hand.kLeft):0,
+                    (m_driverController.getY(GenericHID.Hand.kLeft) > 0.2)? m_driverController.getY(GenericHID.Hand.kLeft):0,
                     isQuickTurn),
             m_robotDrive));
 
@@ -99,7 +99,7 @@ public class RobotContainer {
         .whenReleased(() -> shooterSubsystem.StopHood());
 
     new JoystickButton(m_driverController, Button.kX.value)
-        .whenPressed(() -> indexSubsystem.AllIndexReverse(.25))
+        .whenPressed(() -> indexSubsystem.AllIndexReverse(.4))
         .whenReleased(() -> indexSubsystem.AllIndexStop());
 
     new JoystickButton(m_driverController, Button.kA.value)
