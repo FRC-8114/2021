@@ -60,19 +60,8 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
-    // Set the default drive command to split-stick arcade drive
-    m_robotDrive.setDefaultCommand(
-        // A split-stick arcade command, with forward/backward controlled by the left
-        // hand, and turning controlled by the right.
-        new RunCommand(
-            () ->
-                m_robotDrive.cheesyDrive(
-                    (m_driverController.getY(GenericHID.Hand.kLeft) > 0.02 || m_driverController.getY(GenericHID.Hand.kLeft) < -0.02)? m_driverController.getY(GenericHID.Hand.kLeft):0,
-                    (m_driverController.getX(GenericHID.Hand.kRight) > 0.02 || m_driverController.getX(GenericHID.Hand.kRight) < -0.02)? m_driverController.getX(GenericHID.Hand.kRight):0,
-                    isQuickTurn),
-            m_robotDrive));
 
-    setupTrajectory();
+    //setupTrajectory();
   }
 
   /**
@@ -195,6 +184,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  /*
   public Command getAutonomousCommand() {
     RamseteCommand ramseteCommand =
         new RamseteCommand(
@@ -219,6 +209,7 @@ public class RobotContainer {
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
   }
+  */
 
   public Trajectory getTrajectory() {
       return exampleTrajectory;
