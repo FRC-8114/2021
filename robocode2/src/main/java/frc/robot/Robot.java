@@ -4,88 +4,176 @@
 
 package frc.robot;
 
+import java.io.*;
+import java.nio.file.*;
+import java.util.Scanner;
+
 import edu.wpi.first.wpilibj.GenericHID;
+
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.driveSubsystem.*;
-import frc.robot.subsystems.SearchSystem;
+import frc.robot.subsystems.Mimicking;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+  public Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  public RobotContainer m_robotContainer;
 
-  private final SendableChooser<Command> right_motors_inverted = new SendableChooser<Command>();
-  private final SendableChooser<Command> left_motors_inverted = new SendableChooser<Command>();
-  
+  public final SendableChooser<String> recordingChooser = new SendableChooser<String>();
+  public boolean isRecording, wasRecording;
+  public File recording, driveSystemFile;
+  public FileOutputStream driveSystemWriter;
+  public Timer recordingTimer;
+  public String recordingName;
+  public int recordingTicks;
+
+  public Scanner playbackScanner;
+
   /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    recordingTimer = new Timer();
+
+    recordingName = "default";
+    Mimicking.updateRecordingName(this);
+    Mimicking.setupRecordingChooser(this);
+    Shuffleboard.getTab("Mimicking").add("Is recording", false).withWidget(BuiltInWidgets.kToggleButton).getEntry()
+        .addListener(event -> {
+          isRecording = event.value.getBoolean();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    Shuffleboard.getTab("Mimicking").add("Update The Recording Name", false).withWidget(BuiltInWidgets.kToggleButton)
+        .getEntry().addListener(event -> {
+          Mimicking.updateRecordingName(this);
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    Shuffleboard.getTab("Mimicking").add("Recording Name", "default").withWidget(BuiltInWidgets.kTextView).getEntry()
+        .addListener(event -> {
+          recordingName = event.value.getString();
+          System.out.println(event.value.getString());
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    Shuffleboard.getTab("Mimicking").add(recordingChooser);
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like diagnostics that you want ran during disabled, autonomous,
+   * teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
     // Send values to Shuffleboard
     m_robotContainer.getDriveSystem().sendOdometryToShuffleboard();
     m_robotContainer.getSearchSystem().sendEstimatedDistance();
+
+    if (isRecording && driveSystemFile != null && recordingName != null) {
+      try {
+        String toWrite = "";
+        toWrite += "," + ((m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft) > .05)
+            ? m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft)
+            : 0);
+        toWrite += "," + ((m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight) > .05)
+            ? m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight)
+            : 0);
+        toWrite += "," + recordingTimer.get() + "," + recordingTicks;
+        toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderDistance();
+        toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderVelocity();
+        toWrite += "," + m_robotContainer.getDriveSystem().getHeading();
+        toWrite += "," + m_robotContainer.getDriveSystem().getTurnRate() + "\n";
+        System.out.print(toWrite);
+
+        driveSystemWriter = new FileOutputStream(driveSystemFile, true);
+        recordingTimer.reset();
+        recordingTimer.start();
+
+        driveSystemWriter.write(toWrite.getBytes());
+        driveSystemWriter.flush();
+        driveSystemWriter.close();
+
+        wasRecording = true;
+        recordingTicks++;
+      } catch (IOException e) {
+        System.out.println("Error: " + e.getMessage());
+      }
+    } else if (wasRecording) {
+      wasRecording = false;
+      recordingTimer.stop();
+      recordingTicks = 0;
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /**
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
+   */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    try {
+      playbackScanner = new Scanner(new File(recordingChooser.getSelected()));
+    } catch (FileNotFoundException e) {
+      System.out.println("Error: "+ e.getMessage());
     }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    double[] controllerInputs = new double[2];
+    if(playbackScanner.hasNextLine()) {
+      String[] values = playbackScanner.nextLine().split(",");
+      controllerInputs[0] = Integer.parseInt(values[0]);
+      controllerInputs[1] = Integer.parseInt(values[1]);
+    } else {
+      controllerInputs[0] = 0;
+      controllerInputs[1] = 0;
+    }
+    m_robotContainer.getDriveSystem().tankDrive(controllerInputs[0], controllerInputs[1]);
+  }
 
   @Override
   public void teleopInit() {
@@ -100,34 +188,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    m_robotContainer.periodic();
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-
-    // Sets up Chooser for inverting of right motors
-    right_motors_inverted.setDefaultOption("False", new SetRightMotorsInverted(m_robotContainer.getDriveSystem(), false));
-    right_motors_inverted.addOption("True", new SetRightMotorsInverted(m_robotContainer.getDriveSystem(), true));
-    SmartDashboard.putData("Right Motors Inverted", right_motors_inverted);
-
-    // Sets up Chooser for inverting of left motors
-    left_motors_inverted.setDefaultOption("False", new SetLeftMotorsInverted(m_robotContainer.getDriveSystem(), false));
-    left_motors_inverted.addOption("True", new SetLeftMotorsInverted(m_robotContainer.getDriveSystem(), true));
-    SmartDashboard.putData("Left Motors Inverted", left_motors_inverted);
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    right_motors_inverted.getSelected().initialize();
-    left_motors_inverted.getSelected().initialize();
-
-    m_robotContainer.getDriveSystem().tankDrive(
-      m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft),
-      m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight));
   }
 }
