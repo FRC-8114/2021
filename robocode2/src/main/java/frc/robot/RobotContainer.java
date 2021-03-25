@@ -48,6 +48,7 @@ public class RobotContainer {
 
   private Trajectory exampleTrajectory;
   private int index;
+  public boolean isQuickTurn = false;
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
@@ -64,9 +65,10 @@ public class RobotContainer {
         // hand, and turning controlled by the right.
         new RunCommand(
             () ->
-                m_robotDrive.tankDrive(
-                    m_driverController.getY(GenericHID.Hand.kRight),
-                    m_driverController.getY(GenericHID.Hand.kLeft)),
+                m_robotDrive.cheesyDrive(
+                    m_driverController.getY(GenericHID.Hand.kLeft),
+                    m_driverController.getX(GenericHID.Hand.kRight),
+                    isQuickTurn),
             m_robotDrive));
 
     setupTrajectory();
@@ -115,6 +117,8 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kStart.value)
         .whenPressed(() -> m_robotDrive.emergencyStop(.15));
 
+    new JoystickButton(m_driverController, Button.kStickRight.value)
+      .whenPressed(() -> isQuickTurn = !isQuickTurn);
 
     
     // Adds the GetAveragedistance command to SmartDashboard

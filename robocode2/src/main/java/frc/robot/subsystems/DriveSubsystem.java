@@ -111,7 +111,17 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Drives the robot using arcade controls.
+   * Drives the robot using cheesy drive controls.
+   *
+   * @param fwd the commanded forward movement
+   * @param rot the commanded rotation
+   */
+  public void cheesyDrive(double speed, double rotation, boolean quickTurn) {
+    m_drive.curvatureDrive(speed, rotation, quickTurn);
+  }
+
+  /**
+   * Drives the robot using tank drive controls.
    *
    * @param fwd the commanded forward movement
    * @param rot the commanded rotation
