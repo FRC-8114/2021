@@ -66,8 +66,8 @@ public class RobotContainer {
         new RunCommand(
             () ->
                 m_robotDrive.cheesyDrive(
-                    (m_driverController.getY(GenericHID.Hand.kLeft) > 0.2)? m_driverController.getY(GenericHID.Hand.kLeft):0,
-                    (m_driverController.getY(GenericHID.Hand.kLeft) > 0.2)? m_driverController.getY(GenericHID.Hand.kLeft):0,
+                    (m_driverController.getY(GenericHID.Hand.kLeft) > 0.02 || m_driverController.getY(GenericHID.Hand.kLeft) < -0.02)? m_driverController.getY(GenericHID.Hand.kLeft):0,
+                    (m_driverController.getX(GenericHID.Hand.kRight) > 0.02 || m_driverController.getX(GenericHID.Hand.kRight) < -0.02)? m_driverController.getX(GenericHID.Hand.kRight):0,
                     isQuickTurn),
             m_robotDrive));
 
