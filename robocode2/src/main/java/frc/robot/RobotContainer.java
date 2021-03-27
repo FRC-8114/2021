@@ -119,6 +119,7 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, Button.kStickRight.value)
       .whenPressed(() -> isQuickTurn = !isQuickTurn);
+      
 
     
     // Adds the GetAveragedistance command to SmartDashboard
@@ -126,6 +127,8 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    shooterSubsystem.periodic();
+
     if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
         indexSubsystem.AllIndexRun(.25);
     }

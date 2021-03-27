@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
@@ -22,6 +23,8 @@ public class ShooterSubsystem extends SubsystemBase {
     final CANEncoder rightShooterControllerEncoder = rightShooterController.getEncoder();
     final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
     final CANEncoder hoodControllerEncoder = hoodController.getEncoder();
+
+    private double current_angle = 0;
 
     PIDController shooterPid = new PIDController(0,0,0);
 
@@ -49,10 +52,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
         hoodControllerEncoder.setPositionConversionFactor(ShooterConstants.ENCODER_DISTANCE_PER_PULSE);
         hoodControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
+        HoodZero();
 
         shooterPid.setTolerance(0.5);
         shooterPid.setSetpoint(calculateDesiredVelocity());
+    }
 
+    public void periodic() {
+        SmartDashboard.putNumber("hoodDegrees", hoodControllerEncoder.getPosition());   
     }
 
     public void ShooterRun(double speed) {
@@ -94,13 +101,15 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodController.set(-speed);
     }
 
-    public void SetHoodPosition(double degrees) {
-        double arc_length = hoodControllerEncoder.getPosition();
+    public void HoodZero() {
+        hoodControllerEncoder.setPosition(0);
+    }
 
-        double current_angle = arc_length / ShooterConstants.HOOD_RADIUS;
+    public void SetHoodPosition(double degrees) {
+        current_angle = hoodControllerEncoder.getPosition()/18.88;
 
         for (double ca = current_angle; current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE ||
-               current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE; ca = arc_length/ShooterConstants.HOOD_RADIUS)
+               current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE; ca = current_angle/ShooterConstants.HOOD_RADIUS)
         {
             if (ca <= degrees-ShooterConstants.DEGREE_TOLERANCE)
                 hoodController.set(0.1);
@@ -108,6 +117,8 @@ public class ShooterSubsystem extends SubsystemBase {
                 hoodController.set(-0.1);
         }
     }
+
+    
 
     public void AutoShoot(double speed) {
         leftShooterController.set(shooterPid.calculate(leftShooterControllerEncoder.getVelocity()));
