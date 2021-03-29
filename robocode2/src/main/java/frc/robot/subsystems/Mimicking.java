@@ -31,7 +31,7 @@ public class Mimicking {
         File recordings = new File("/home/lvuser/recordings/");
         for (File recording : recordings.listFiles()) {
             if (recording.isDirectory()) {
-                robot.recordingChooser.addOption(recording.toString(), recording.getAbsolutePath());
+                robot.recordingChooser.addOption(recording.getName(), recording.getAbsolutePath());
             }
         }
     }

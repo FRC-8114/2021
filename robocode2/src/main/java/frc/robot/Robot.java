@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpiutil.math.Num;
 import frc.robot.subsystems.Mimicking;
 
 /**
@@ -42,6 +44,7 @@ public class Robot extends TimedRobot {
   public int recordingTicks;
 
   public Scanner playbackScanner;
+  public ArrayList<String> toFollow;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -105,12 +108,13 @@ public class Robot extends TimedRobot {
     if (isRecording && driveSystemFile != null && recordingName != null) {
       try {
         String toWrite = "";
-        toWrite += "," + ((m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft) > .05)
+        toWrite += ((Math.abs(m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft)) > .02)
             ? m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft)
             : 0);
-        toWrite += "," + ((m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight) > .05)
-            ? m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight)
+        toWrite += "," + ((Math.abs(m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight)) > .02)
+            ? m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight)
             : 0);
+        toWrite += "," + m_robotContainer.isQuickTurn;
         toWrite += "," + recordingTimer.get() + "," + recordingTicks;
         toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderDistance();
         toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderVelocity();
@@ -154,7 +158,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     try {
-      playbackScanner = new Scanner(new File(recordingChooser.getSelected()));
+      toFollow = new ArrayList<String>();
+      playbackScanner = new Scanner(new File(recordingChooser.getSelected() +"/driveSystem"));
+
+      while(playbackScanner.hasNextLine()) {
+        toFollow.add(playbackScanner.nextLine());
+      }
     } catch (FileNotFoundException e) {
       System.out.println("Error: "+ e.getMessage());
     }
@@ -164,15 +173,27 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     double[] controllerInputs = new double[2];
-    if(playbackScanner.hasNextLine()) {
-      String[] values = playbackScanner.nextLine().split(",");
-      controllerInputs[0] = Integer.parseInt(values[0]);
-      controllerInputs[1] = Integer.parseInt(values[1]);
-    } else {
-      controllerInputs[0] = 0;
-      controllerInputs[1] = 0;
+    controllerInputs[0] = 0;
+    controllerInputs[1] = 0;
+    boolean quickTurn = false;
+
+    if(toFollow.size() != 0) {
+      try {
+        String[] line = toFollow.remove(0).split(",");
+        for(String s : line) {
+          System.out.print(s +",");
+        }
+        System.out.println("");
+
+        controllerInputs[0] = Double.parseDouble(line[0]);
+        controllerInputs[1] = Double.parseDouble(line[1]);
+        quickTurn = Boolean.parseBoolean(line[2]);
+      } catch(NumberFormatException e) {
+        //System.out.println("Error: "+ e.getMessage());
+      }
     }
-    m_robotContainer.getDriveSystem().tankDrive(controllerInputs[0], controllerInputs[1]);
+
+    m_robotContainer.getDriveSystem().cheesyDrive(controllerInputs[0], controllerInputs[1], quickTurn);
   }
 
   @Override
