@@ -28,8 +28,9 @@ public class ShooterSubsystem extends SubsystemBase {
     final CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
     private double current_angle = 0;
+    private double degrees = 30;
 
-    PIDController shooterPid = new PIDController(0,0,0);
+    PIDController hoodPid = new PIDController(0,0,0);
 
     // Creates the ShooterSubsystem
     public ShooterSubsystem() {
@@ -57,19 +58,37 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
         HoodZero();
 
-        shooterPid.setTolerance(0.5);
-        shooterPid.setSetpoint(calculateDesiredVelocity());
+        hoodPid.setTolerance(0.5);
 
         Shuffleboard.getTab("Shooting").add("Reset Hood Angle", false)
             .withWidget(BuiltInWidgets.kCommand).getEntry()
             .addListener(event -> {
                 HoodZero();
             }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        Shuffleboard.getTab("Driving").add("HoodPID P", 1)
+            .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+            .addListener(event -> {
+                hoodPid.setP(event.value.getDouble());
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        Shuffleboard.getTab("Driving").add("HoodPID I", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+            .addListener(event -> {
+                hoodPid.setI(event.value.getDouble());
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        Shuffleboard.getTab("Driving").add("HoodPID D", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+            .addListener(event -> {
+                hoodPid.setD(event.value.getDouble());
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
     public void periodic() {
         SmartDashboard.putNumber("encoderDegrees", hoodControllerEncoder.getPosition());
-        SmartDashboard.putNumber("hoodAngle", current_angle);   
+        SmartDashboard.putNumber("hoodAngle", current_angle);
+        CalculateHoodPID(current_angle, degrees);
     }
 
     public void ShooterRun(double speed) {
@@ -115,23 +134,32 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setPosition(0);
     }
 
+    public double CalculateHoodPID(double measurement, double setpoint) {
+        return hoodPid.calculate(measurement,setpoint);
+    }
+
     public void SetHoodPosition(double degrees) {
+        this.degrees = degrees;
         current_angle = hoodControllerEncoder.getPosition();
 
-        if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE ||
-               current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
-        {
-            if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE)
-                hoodController.set(0.1);
-            else if (current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
-                hoodController.set(-0.1);
-        }
+        hoodController.set(CalculateHoodPID(current_angle, degrees));
+
+        SmartDashboard.putNumber("pidCalculate", CalculateHoodPID(current_angle, degrees));
+
+        // if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE ||
+        //        current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
+        // {
+        //     if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE)
+        //         hoodController.set(CalculateHoodPID(current_angle, degrees));
+        //     else if (current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
+        //         hoodController.set(CalculateHoodPID(current_angle, degrees));
+        // }
     }
 
     
 
     public void AutoShoot(double speed) {
-        leftShooterController.set(shooterPid.calculate(leftShooterControllerEncoder.getVelocity()));
+        leftShooterController.set(hoodPid.calculate(leftShooterControllerEncoder.getVelocity()));
     }
 
     public double calculateDesiredVelocity() {
