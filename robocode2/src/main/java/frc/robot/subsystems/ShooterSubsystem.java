@@ -59,7 +59,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("hoodDegrees", hoodControllerEncoder.getPosition());   
+        SmartDashboard.putNumber("encoderDegrees", hoodControllerEncoder.getPosition());
+        SmartDashboard.putNumber("hoodAngle", current_angle);   
     }
 
     public void ShooterRun(double speed) {
@@ -106,14 +107,14 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void SetHoodPosition(double degrees) {
-        current_angle = hoodControllerEncoder.getPosition()/18.88;
+        current_angle = hoodControllerEncoder.getPosition();
 
-        for (double ca = current_angle; current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE ||
-               current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE; ca = current_angle/ShooterConstants.HOOD_RADIUS)
+        if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE ||
+               current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
         {
-            if (ca <= degrees-ShooterConstants.DEGREE_TOLERANCE)
+            if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE)
                 hoodController.set(0.1);
-            else if (ca >= degrees+ShooterConstants.DEGREE_TOLERANCE)
+            else if (current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
                 hoodController.set(-0.1);
         }
     }

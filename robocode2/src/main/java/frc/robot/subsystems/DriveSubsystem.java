@@ -9,6 +9,8 @@ import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -18,6 +20,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import com.analog.adis16470.frc.ADIS16470_IMU;
 import com.revrobotics.CANEncoder;
+
+import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.wpilibj.Timer;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -83,8 +87,15 @@ public class DriveSubsystem extends SubsystemBase {
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
-    maxOutput = 0.45;
+    maxOutput = 0.6;
     setMaxOutput();
+    Shuffleboard.getTab("Driving").add("Speed Control", 0.5)
+        .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+        .addListener(event -> {
+          maxOutput = event.value.getDouble();
+          setMaxOutput();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
   }
 
   @Override

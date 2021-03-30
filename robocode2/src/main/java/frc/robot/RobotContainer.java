@@ -103,8 +103,9 @@ public class RobotContainer {
         .whenReleased(() -> indexSubsystem.AllIndexStop());
 
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(() -> intakeSubsystem.IntakeReverse(0.85))
-        .whenReleased(() -> intakeSubsystem.IntakeStop());
+        // .whenPressed(() -> intakeSubsystem.IntakeReverse(0.85))
+        // .whenReleased(() -> intakeSubsystem.IntakeStop());
+        .whenPressed(() -> shooterSubsystem.StopHood());
 
     new JoystickButton(m_driverController, 6)
         .whenPressed(() -> shooterSubsystem.KickerRun(0.85))
@@ -115,11 +116,10 @@ public class RobotContainer {
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     new JoystickButton(m_driverController, Button.kStart.value)
-        .whenPressed(() -> m_robotDrive.emergencyStop(.15));
+        .whenPressed(() -> shooterSubsystem.SetHoodPosition(30));
 
     new JoystickButton(m_driverController, Button.kStickRight.value)
-      .whenPressed(() -> isQuickTurn = !isQuickTurn);
-      
+      .whenPressed(() -> isQuickTurn = !isQuickTurn);      
 
     
     // Adds the GetAveragedistance command to SmartDashboard
