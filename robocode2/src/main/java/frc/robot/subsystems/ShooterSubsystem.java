@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -56,6 +59,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterPid.setTolerance(0.5);
         shooterPid.setSetpoint(calculateDesiredVelocity());
+
+        Shuffleboard.getTab("Shooting").add("Reset Hood Angle", false)
+            .withWidget(BuiltInWidgets.kCommand).getEntry()
+            .addListener(event -> {
+                HoodZero();
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
     public void periodic() {
