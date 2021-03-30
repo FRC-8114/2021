@@ -103,9 +103,8 @@ public class RobotContainer {
         .whenReleased(() -> indexSubsystem.AllIndexStop());
 
     new JoystickButton(m_driverController, Button.kA.value)
-        // .whenPressed(() -> intakeSubsystem.IntakeReverse(0.85))
-        // .whenReleased(() -> intakeSubsystem.IntakeStop());
-        .whenPressed(() -> shooterSubsystem.StopHood());
+        .whenPressed(() -> intakeSubsystem.IntakeReverse(0.85))
+        .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     new JoystickButton(m_driverController, 6)
         .whenPressed(() -> shooterSubsystem.KickerRun(0.85))
@@ -116,7 +115,8 @@ public class RobotContainer {
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     new JoystickButton(m_driverController, Button.kStart.value)
-        .whenPressed(() -> shooterSubsystem.SetHoodPosition(30));
+        .whileHeld(() -> shooterSubsystem.SetHoodPosition(30))
+        .whenReleased(() -> shooterSubsystem.StopHood());
 
     new JoystickButton(m_driverController, Button.kStickRight.value)
       .whenPressed(() -> isQuickTurn = !isQuickTurn);      

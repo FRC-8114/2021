@@ -83,6 +83,6 @@ public final class Constants {
 
     public static final double HOOD_ENCODER_DISTANCE_PER_PULSE = 90;
     public static final double HOOD_RADIUS = .19812;
-    public static final double DEGREE_TOLERANCE = 0.05;
+    public static final double DEGREE_TOLERANCE = 0.25;
   }
 }
