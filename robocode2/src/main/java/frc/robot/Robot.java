@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
   public boolean isRecording, wasRecording;
   public File recording, driveSystemFile;
   public FileOutputStream driveSystemWriter;
-  public Timer recordingTimer;
   public String recordingName;
   public int recordingTicks;
 
@@ -56,8 +55,6 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    recordingTimer = new Timer();
 
     recordingName = "default";
     Mimicking.updateRecordingName(this);
@@ -115,7 +112,7 @@ public class Robot extends TimedRobot {
             ? m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight)
             : 0);
         toWrite += "," + m_robotContainer.isQuickTurn;
-        toWrite += "," + recordingTimer.get() + "," + recordingTicks;
+        toWrite += "," + Timer.getFPGATimestamp() + "," + recordingTicks;
         toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderDistance();
         toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderVelocity();
         toWrite += "," + m_robotContainer.getDriveSystem().getHeading();
@@ -123,8 +120,6 @@ public class Robot extends TimedRobot {
         System.out.print(toWrite);
 
         driveSystemWriter = new FileOutputStream(driveSystemFile, true);
-        recordingTimer.reset();
-        recordingTimer.start();
 
         driveSystemWriter.write(toWrite.getBytes());
         driveSystemWriter.flush();
@@ -137,7 +132,6 @@ public class Robot extends TimedRobot {
       }
     } else if (wasRecording) {
       wasRecording = false;
-      recordingTimer.stop();
       recordingTicks = 0;
     }
   }
