@@ -141,6 +141,7 @@ public class RobotContainer {
     else if (m_driverController.getTriggerAxis(Hand.kRight) != 1)
         shooterSubsystem.ShooterStop();
 
+    SmartDashboard.putBoolean("isQuickTurn", isQuickTurn);
   }
 
   /**
