@@ -71,7 +71,7 @@ public class RobotContainer {
                     isQuickTurn),
             m_robotDrive));
 
-    setupTrajectory();
+    //setupTrajectory();
   }
 
   /**
@@ -185,6 +185,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  /*
   public Command getAutonomousCommand() {
     RamseteCommand ramseteCommand =
         new RamseteCommand(
@@ -209,6 +210,7 @@ public class RobotContainer {
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
   }
+  */
 
   public Trajectory getTrajectory() {
       return exampleTrajectory;

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -41,6 +42,7 @@ public class Robot extends TimedRobot {
   public FileOutputStream driveSystemWriter;
   public String recordingName;
   public int recordingTicks;
+  public double[] controllerInputs;
 
   public Scanner playbackScanner;
   public ArrayList<String> toFollow;
@@ -161,33 +163,40 @@ public class Robot extends TimedRobot {
     } catch (FileNotFoundException e) {
       System.out.println("Error: "+ e.getMessage());
     }
+
+    controllerInputs = new double[2];
+    controllerInputs[0] = 0;
+    controllerInputs[1] = 0;
+
+    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Velocity").forceSetDouble(0);
+        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Quick Turn").forceSetDouble(0);
+        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Arcade?").forceSetBoolean(false);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    double[] controllerInputs = new double[2];
-    controllerInputs[0] = 0;
-    controllerInputs[1] = 0;
     boolean quickTurn = false;
 
     if(toFollow.size() != 0) {
       try {
         String[] line = toFollow.remove(0).split(",");
-        for(String s : line) {
-          System.out.print(s +",");
-        }
-        System.out.println("");
 
         controllerInputs[0] = Double.parseDouble(line[0]);
         controllerInputs[1] = Double.parseDouble(line[1]);
         quickTurn = Boolean.parseBoolean(line[2]);
+
+        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Velocity").forceSetDouble(controllerInputs[0]);
+        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Curvature").forceSetDouble(controllerInputs[1]);
+        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Arcade?").forceSetBoolean(quickTurn);
+        //System.out.println(controllerInputs[0] +" "+ controllerInputs[1] +" "+ quickTurn);
       } catch(NumberFormatException e) {
-        //System.out.println("Error: "+ e.getMessage());
+        System.out.println("Error: "+ e.getMessage());
       }
     }
 
-    m_robotContainer.getDriveSystem().cheesyDrive(controllerInputs[0], controllerInputs[1], quickTurn);
+    //m_robotContainer.getDriveSystem().cheesyDrive(controllerInputs[0], controllerInputs[1], quickTurn);
+    m_robotContainer.getDriveSystem().tankDrive(controllerInputs[0], controllerInputs[0]);
   }
 
   @Override
