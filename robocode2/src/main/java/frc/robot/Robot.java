@@ -168,9 +168,9 @@ public class Robot extends TimedRobot {
     controllerInputs[0] = 0;
     controllerInputs[1] = 0;
 
-    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Velocity").forceSetDouble(0);
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Quick Turn").forceSetDouble(0);
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Arcade?").forceSetBoolean(false);
+    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Speed").forceSetDouble(0);
+    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Quick_Turn").forceSetDouble(0);
+    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Arcade?").forceSetBoolean(false);
   }
 
   /** This function is called periodically during autonomous. */
@@ -186,9 +186,9 @@ public class Robot extends TimedRobot {
         controllerInputs[1] = Double.parseDouble(line[1]);
         quickTurn = Boolean.parseBoolean(line[2]);
 
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Velocity").forceSetDouble(controllerInputs[0]);
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Curvature").forceSetDouble(controllerInputs[1]);
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Arcade?").forceSetBoolean(quickTurn);
+        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Speed").forceSetDouble(controllerInputs[0]);
+        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Quick_Turn").forceSetDouble(controllerInputs[1]);
+        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Arcade?").forceSetBoolean(quickTurn);
         //System.out.println(controllerInputs[0] +" "+ controllerInputs[1] +" "+ quickTurn);
       } catch(NumberFormatException e) {
         System.out.println("Error: "+ e.getMessage());

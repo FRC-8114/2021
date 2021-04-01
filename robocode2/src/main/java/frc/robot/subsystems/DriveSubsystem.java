@@ -18,6 +18,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import com.analog.adis16470.frc.ADIS16470_IMU;
 import com.revrobotics.CANEncoder;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -46,8 +49,15 @@ public class DriveSubsystem extends SubsystemBase {
   private double maxOutput;
   private double[] currentSpeeds = new double[2];
 
+  // NetworkTable Entries for debugging mimicking
+  private final NetworkTableEntry speedEntry, curvatureEntry, isArcadeEntry;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    speedEntry = NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Drive_Speed");
+    curvatureEntry = NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Drive_Quick_Turn");
+    isArcadeEntry = NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Drive_Arcade?");
+
     // Initialize the drivetrain motors
 
     // Left Leader
@@ -116,8 +126,12 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fwd the commanded forward movement
    * @param rot the commanded rotation
    */
-  public void cheesyDrive(double speed, double rotation, boolean quickTurn) {
-    m_drive.curvatureDrive(speed, rotation, quickTurn);
+  public void cheesyDrive(double speed, double curvature, boolean isArcade) {
+    m_drive.curvatureDrive(speed, curvature, isArcade);
+
+    speedEntry.forceSetDouble(speed);
+    curvatureEntry.forceSetDouble(curvature);
+    isArcadeEntry.forceSetBoolean(isArcade);
   }
 
   /**
