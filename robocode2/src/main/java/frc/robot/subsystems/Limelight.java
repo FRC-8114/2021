@@ -7,8 +7,8 @@ import edu.wpi.first.networktables.*;
 public class Limelight extends SubsystemBase {
   private NetworkTable limelightTable;
   private NetworkTableEntry tx, ty, ta, ledMode;
-  private final double TARGET_HEIGHT = 81.0625, LIMELIGHT_HEIGHT = 8.5, HEIGHT_DIFFERENCE = TARGET_HEIGHT - LIMELIGHT_HEIGHT; // Measurements in inches
-  private final double LIMELIGHT_HORIZONTAL_ANGLE = 34.324911622; // Measured in degrees
+  private final double TARGET_HEIGHT = 96.5, LIMELIGHT_HEIGHT = 35, HEIGHT_DIFFERENCE = TARGET_HEIGHT - LIMELIGHT_HEIGHT; // Measurements in inches
+  private final double LIMELIGHT_HORIZONTAL_ANGLE = 30; // Measured in degrees
   private final double TRIGONOMIC_WEIGHT = 0; 
 
   /**
@@ -39,8 +39,8 @@ public class Limelight extends SubsystemBase {
    * Runs operations that should occur
    */
   public void periodic() {
-    SmartDashboard.putNumber("Distance to Target", approximateDistance());
-
+    //SmartDashboard.putNumber("Distance to Target", approximateDistance());
+    SmartDashboard.putNumber("Limelight Trigonometric Distance", trigonomicDistance());
 
   }
 

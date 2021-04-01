@@ -45,6 +45,7 @@ public class RobotContainer {
   private final IndexSubsystem indexSubsystem = new IndexSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final Limelight limelightSubsystem = new Limelight("limelight_eleven");
 
   private Trajectory exampleTrajectory;
   private int index;
@@ -128,6 +129,7 @@ public class RobotContainer {
 
   public void periodic() {
     shooterSubsystem.periodic();
+    limelightSubsystem.periodic();
 
     if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
         indexSubsystem.AllIndexRun(.25);
