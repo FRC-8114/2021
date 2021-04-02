@@ -55,7 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     speedEntry = NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Drive_Speed");
-    curvatureEntry = NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Drive_Quick_Turn");
+    curvatureEntry = NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Drive_Curvature");
     isArcadeEntry = NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Drive_Arcade?");
 
     // Initialize the drivetrain motors
@@ -93,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase {
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
-    maxOutput = 0.45;
+    maxOutput = 0.1;
     setMaxOutput();
   }
 
@@ -129,9 +129,11 @@ public class DriveSubsystem extends SubsystemBase {
   public void cheesyDrive(double speed, double curvature, boolean isArcade) {
     m_drive.curvatureDrive(speed, curvature, isArcade);
 
+    /*
     speedEntry.forceSetDouble(speed);
     curvatureEntry.forceSetDouble(curvature);
     isArcadeEntry.forceSetBoolean(isArcade);
+    */
   }
 
   /**

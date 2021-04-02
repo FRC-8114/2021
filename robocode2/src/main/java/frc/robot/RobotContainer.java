@@ -6,20 +6,22 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj.XboxController.Button;
 
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 import frc.robot.commands.driveSubsystem.*;
+import frc.robot.commands.mimicking.*;
 import frc.robot.commands.searchSystem.GetAverageDistance;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -27,7 +29,6 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
@@ -40,18 +41,19 @@ import java.util.List;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final SearchSystem searchSystem = new SearchSystem();
-  private final IndexSubsystem indexSubsystem = new IndexSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  public final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  public final SearchSystem searchSystem = new SearchSystem();
+  public final IndexSubsystem indexSubsystem = new IndexSubsystem();
+  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  public final Mimicking mimicking = new Mimicking();
 
-  private Trajectory exampleTrajectory;
-  private int index;
+  public Trajectory exampleTrajectory;
+  public int index;
   public boolean isQuickTurn = false;
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
+  public XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -63,6 +65,7 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
+        
         new RunCommand(
             () ->
                 m_robotDrive.cheesyDrive(
@@ -70,7 +73,7 @@ public class RobotContainer {
                     (m_driverController.getX(GenericHID.Hand.kRight) > 0.02 || m_driverController.getX(GenericHID.Hand.kRight) < -0.02)? -m_driverController.getX(GenericHID.Hand.kRight):0,
                     isQuickTurn),
             m_robotDrive));
-
+        
     //setupTrajectory();
   }
 
@@ -119,11 +122,16 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, Button.kStickRight.value)
       .whenPressed(() -> isQuickTurn = !isQuickTurn);
-      
-
-    
+  
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
+  }
+
+  /**
+   * Runs periodically to allow for path recording
+   */
+  public void recordingPeriodic() {
+    mimicking.record(this);
   }
 
   public void periodic() {
@@ -140,44 +148,6 @@ public class RobotContainer {
     }
     else if (m_driverController.getTriggerAxis(Hand.kRight) != 1)
         shooterSubsystem.ShooterStop();
-
-  }
-
-  /**
-   * Creates the proper objects to initialize the trajectory so the trajectory can be ready before
-   * the autonomous command is requested
-   */
-  public void setupTrajectory() {
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(
-                DriveConstants.KS_VOLTS,
-                DriveConstants.KV_VOLT_SECONDS_PER_METER,
-                DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-            DriveConstants.DRIVE_KINEMATICS,
-            10);
-
-    // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(
-                AutoConstants.MAX_SPEED_METERS_PER_SECOND,
-                AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.DRIVE_KINEMATICS)
-            // Apply the voltage constraint
-            .addConstraint(autoVoltageConstraint);
-
-    // An example trajectory to follow.  All units in meters.
-    exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        // Pass config
-        config);
   }
 
   /**
@@ -185,35 +155,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  /*
   public Command getAutonomousCommand() {
-    RamseteCommand ramseteCommand =
-        new RamseteCommand(
-            exampleTrajectory,
-            m_robotDrive::getPose,
-            new RamseteController(AutoConstants.RAMSETE_B, AutoConstants.RAMSETE_ZETA),
-            new SimpleMotorFeedforward(
-                DriveConstants.KS_VOLTS,
-                DriveConstants.KV_VOLT_SECONDS_PER_METER,
-                DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-            DriveConstants.DRIVE_KINEMATICS,
-            m_robotDrive::getWheelSpeeds,
-            new PIDController(DriveConstants.KP_DRIVE_VEL, 0, 0),
-            new PIDController(DriveConstants.KP_DRIVE_VEL, 0, 0),
-            // RamseteCommand passes volts to the callback
-            m_robotDrive::tankDriveVolts,
-            m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // Run path following command, then stop at the end.
-    return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
-  }
-  */
-
-  public Trajectory getTrajectory() {
-      return exampleTrajectory;
+    return new Playback(mimicking, this);
   }
 
   /**

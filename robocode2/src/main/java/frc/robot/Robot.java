@@ -32,20 +32,9 @@ import frc.robot.subsystems.Mimicking;
  * project.
  */
 public class Robot extends TimedRobot {
-  public Command m_autonomousCommand;
+  public Command autonomousCommand;
 
-  public RobotContainer m_robotContainer;
-
-  public final SendableChooser<String> recordingChooser = new SendableChooser<String>();
-  public boolean isRecording, wasRecording;
-  public File recording, driveSystemFile;
-  public FileOutputStream driveSystemWriter;
-  public String recordingName;
-  public int recordingTicks;
-  public double[] controllerInputs;
-
-  public Scanner playbackScanner;
-  public ArrayList<String> toFollow;
+  public RobotContainer robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -56,28 +45,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-
-    recordingName = "default";
-    Mimicking.updateRecordingName(this);
-    Mimicking.setupRecordingChooser(this);
-    Shuffleboard.getTab("Mimicking").add("Is recording", false).withWidget(BuiltInWidgets.kToggleButton).getEntry()
-        .addListener(event -> {
-          isRecording = event.value.getBoolean();
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-    Shuffleboard.getTab("Mimicking").add("Update The Recording Name", false).withWidget(BuiltInWidgets.kToggleButton)
-        .getEntry().addListener(event -> {
-          Mimicking.updateRecordingName(this);
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-    Shuffleboard.getTab("Mimicking").add("Recording Name", "default").withWidget(BuiltInWidgets.kTextView).getEntry()
-        .addListener(event -> {
-          recordingName = event.value.getString();
-          System.out.println(event.value.getString());
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-    Shuffleboard.getTab("Mimicking").add(recordingChooser);
+    robotContainer = new RobotContainer();
   }
 
   /**
@@ -101,41 +69,10 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     // Send values to Shuffleboard
-    m_robotContainer.getDriveSystem().sendOdometryToShuffleboard();
-    m_robotContainer.getSearchSystem().sendEstimatedDistance();
+    robotContainer.getDriveSystem().sendOdometryToShuffleboard();
+    robotContainer.getSearchSystem().sendEstimatedDistance();
 
-    if (isRecording && driveSystemFile != null && recordingName != null) {
-      try {
-        String toWrite = "";
-        toWrite += ((Math.abs(m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft)) > .02)
-            ? m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft)
-            : 0);
-        toWrite += "," + ((Math.abs(m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight)) > .02)
-            ? m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight)
-            : 0);
-        toWrite += "," + m_robotContainer.isQuickTurn;
-        toWrite += "," + Timer.getFPGATimestamp() + "," + recordingTicks;
-        toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderDistance();
-        toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderVelocity();
-        toWrite += "," + m_robotContainer.getDriveSystem().getHeading();
-        toWrite += "," + m_robotContainer.getDriveSystem().getTurnRate() + "\n";
-        System.out.print(toWrite);
-
-        driveSystemWriter = new FileOutputStream(driveSystemFile, true);
-
-        driveSystemWriter.write(toWrite.getBytes());
-        driveSystemWriter.flush();
-        driveSystemWriter.close();
-
-        wasRecording = true;
-        recordingTicks++;
-      } catch (IOException e) {
-        System.out.println("Error: " + e.getMessage());
-      }
-    } else if (wasRecording) {
-      wasRecording = false;
-      recordingTicks = 0;
-    }
+    robotContainer.recordingPeriodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -147,56 +84,23 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
   }
 
-  /**
+  /**>
    * This autonomous runs the autonomous command selected by your
    * {@link RobotContainer} class.
    */
   @Override
   public void autonomousInit() {
-    try {
-      toFollow = new ArrayList<String>();
-      playbackScanner = new Scanner(new File(recordingChooser.getSelected() +"/driveSystem"));
+    autonomousCommand = robotContainer.getAutonomousCommand();
 
-      while(playbackScanner.hasNextLine()) {
-        toFollow.add(playbackScanner.nextLine());
-      }
-    } catch (FileNotFoundException e) {
-      System.out.println("Error: "+ e.getMessage());
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
     }
-
-    controllerInputs = new double[2];
-    controllerInputs[0] = 0;
-    controllerInputs[1] = 0;
-
-    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Speed").forceSetDouble(0);
-    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Quick_Turn").forceSetDouble(0);
-    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Arcade?").forceSetBoolean(false);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    boolean quickTurn = false;
-
-    if(toFollow.size() != 0) {
-      try {
-        String[] line = toFollow.remove(0).split(",");
-
-        controllerInputs[0] = Double.parseDouble(line[0]);
-        controllerInputs[1] = Double.parseDouble(line[1]);
-        quickTurn = Boolean.parseBoolean(line[2]);
-
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Speed").forceSetDouble(controllerInputs[0]);
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Quick_Turn").forceSetDouble(controllerInputs[1]);
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Arcade?").forceSetBoolean(quickTurn);
-        //System.out.println(controllerInputs[0] +" "+ controllerInputs[1] +" "+ quickTurn);
-      } catch(NumberFormatException e) {
-        System.out.println("Error: "+ e.getMessage());
-      }
-    }
-
-    //m_robotContainer.getDriveSystem().cheesyDrive(controllerInputs[0], controllerInputs[1], quickTurn);
-    m_robotContainer.getDriveSystem().tankDrive(controllerInputs[0], controllerInputs[0]);
+    //m_robotContainer.getDriveSystem().tankDrive(controllerInputs[0], controllerInputs[0]);
   }
 
   @Override
@@ -205,8 +109,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
   }
 
