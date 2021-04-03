@@ -68,27 +68,23 @@ public class DriveSubsystem extends SubsystemBase {
     leftMotorLeader.restoreFactoryDefaults();
     leftMotorLeader.setIdleMode(IdleMode.kCoast);  
     leftMotorLeader.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
-    leftMotorLeader.setOpenLoopRampRate(DriveConstants.RAMP_RATE);
 
     // Left Follower
     leftMotorFollower.restoreFactoryDefaults();
     leftMotorFollower.setIdleMode(IdleMode.kCoast);  
     leftMotorFollower.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
     leftMotorFollower.follow(leftMotorLeader, false);
-    leftMotorFollower.setOpenLoopRampRate(DriveConstants.RAMP_RATE);
 
     // Right Leader
     rightMotorLeader.restoreFactoryDefaults();
     rightMotorLeader.setIdleMode(IdleMode.kCoast);  
     rightMotorLeader.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
-    rightMotorLeader.setOpenLoopRampRate(DriveConstants.RAMP_RATE);
 
     // Right Follower
     rightMotorFollower.restoreFactoryDefaults();
     rightMotorFollower.setIdleMode(IdleMode.kCoast);  
     rightMotorFollower.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
     rightMotorFollower.follow(rightMotorLeader, false);
-    rightMotorFollower.setOpenLoopRampRate(DriveConstants.RAMP_RATE);
 
     // Sets the distance per pulse for the encoders
     leftLeaderEncoder.setPositionConversionFactor(DriveConstants.ENCODER_DISTANCE_PER_PULSE);
@@ -105,6 +101,7 @@ public class DriveSubsystem extends SubsystemBase {
     curvatureMaxCurvature = DriveConstants.INITIAL_CURVATURE_MAX_CURVATURE;
     arcadeMaxCurvature = DriveConstants.INITIAL_ARCADE_MAX_CURVATURE;
     setMaxOutput();
+    setRampRate(DriveConstants.INITIAL_RAMP_RATE);
 
     Shuffleboard.getTab("Driving").add("Speed Control", DriveConstants.INITIAL_MAX_VELOCITY)
         .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
@@ -117,10 +114,15 @@ public class DriveSubsystem extends SubsystemBase {
         .addListener(event -> {
           curvatureMaxCurvature = event.value.getDouble();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        Shuffleboard.getTab("Driving").add("Arcade Max Curvature", DriveConstants.INITIAL_ARCADE_MAX_CURVATURE)
+    Shuffleboard.getTab("Driving").add("Arcade Max Curvature", DriveConstants.INITIAL_ARCADE_MAX_CURVATURE)
         .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
         .addListener(event -> {
           arcadeMaxCurvature = event.value.getDouble();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    Shuffleboard.getTab("Driving").add("Ramp Rate", DriveConstants.INITIAL_RAMP_RATE)
+        .withWidget(BuiltInWidgets.kTextView).getEntry()
+        .addListener(event -> {
+          setRampRate(event.value.getDouble());
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
 
@@ -214,6 +216,13 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setMaxOutput() {
     m_drive.setMaxOutput(maxVelocity);
+  }
+
+  public void setRampRate(double rampRate) {
+    rightMotorLeader.setOpenLoopRampRate(rampRate);
+    rightMotorFollower.setOpenLoopRampRate(rampRate);
+    leftMotorLeader.setOpenLoopRampRate(rampRate);
+    leftMotorFollower.setOpenLoopRampRate(rampRate);
   }
 
   /**
