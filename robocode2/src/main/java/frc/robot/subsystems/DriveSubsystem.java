@@ -134,8 +134,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    currentSpeeds[0] = leftSpeed;
-    currentSpeeds[1] = rightSpeed;
     m_drive.tankDrive(leftSpeed, rightSpeed);
   }
 

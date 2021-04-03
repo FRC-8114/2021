@@ -85,4 +85,8 @@ public final class Constants {
     public static final double HOOD_RADIUS = .19812;
     public static final double DEGREE_TOLERANCE = 0.01;
   }
+
+  public static final class LimelightConstants {
+    public static final double AUTO_CENTER_TOLERANCE = 0.15;
+  }
 }

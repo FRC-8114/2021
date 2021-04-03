@@ -1,13 +1,14 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LimelightConstants;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
 
 public class Limelight extends SubsystemBase {
-  private DriveSubsystem m_drive;
+  private DriveSubsystem driveSubsystem;
   private NetworkTable limelightTable;
   private NetworkTableEntry tx, ty, ta, thor, ledMode;
   private final double TARGET_HEIGHT = 90, LIMELIGHT_HEIGHT = 35, HEIGHT_DIFFERENCE = TARGET_HEIGHT - LIMELIGHT_HEIGHT; // Measurements in inches
@@ -141,13 +142,5 @@ public class Limelight extends SubsystemBase {
    */
   public double dataDrivenDistance() {
     return (-99.9 * Math.log(getTargetArea())) + 162;
-  }
-
-  public void autoCenter(DriveSubsystem m_drive) {
-    this.m_drive = m_drive;
-    if (getTargetXAngle() > 0.15)
-      m_drive.tankDrive(.1,-.1);
-    else if (getTargetXAngle() < -0.15)
-      m_drive.tankDrive(-.1,.1);
   }
 }

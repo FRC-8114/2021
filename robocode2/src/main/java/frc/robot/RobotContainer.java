@@ -102,14 +102,12 @@ public class RobotContainer {
 
     // X Button
     new JoystickButton(m_driverController, Button.kX.value)
-        .whileHeld(() -> limelightSubsystem.autoCenter(m_robotDrive))
-        .whenReleased(() -> m_robotDrive.tankDrive(0, 0));
+        .whileHeld(new AutoCenter(m_robotDrive, limelightSubsystem));
         
     // A Button
     new JoystickButton(m_driverController, Button.kA.value)
-        .whileHeld(() -> shooterSubsystem.AutoShoot(limelightSubsystem.areaDistance(), 98))
-        .whenReleased(() -> shooterSubsystem.StopHood());
-
+        .whenPressed(() -> shooterSubsystem.AutoShoot(limelightSubsystem.areaDistance(), 100));
+        
     // Right Bumper
     new JoystickButton(m_driverController, 6)
         .whenPressed(() -> shooterSubsystem.KickerRun(0.85))

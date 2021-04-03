@@ -165,9 +165,11 @@ public class ShooterSubsystem extends SubsystemBase {
         double g = 9.81;
         x = InchesToMeters(x);
         y = InchesToMeters(y);
+
         double angle = Math.toDegrees(Math.atan((Math.pow(startingVelocity, 2)
                 + Math.sqrt(Math.pow(startingVelocity, 4) - g * (g * Math.pow(x, 2)) + 2 * y * Math.pow(startingVelocity, 2)))
                 / (g * x)));
+                
         if (angle < 0)
             angle = Math.toDegrees(Math.atan((Math.pow(startingVelocity, 2)
                 - Math.sqrt(Math.pow(startingVelocity, 4) - g * (g * Math.pow(x, 2)) + 2 * y * Math.pow(startingVelocity, 2)))
