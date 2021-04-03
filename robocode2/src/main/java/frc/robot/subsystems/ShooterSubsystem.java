@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.shooterSubsystem.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -12,7 +13,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANEncoder;
 
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.shooterSubsystem.SetHoodPosition;
 
 public class ShooterSubsystem extends SubsystemBase {
     // Shooter motor controllers
@@ -29,6 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private double current_angle = 0;
     private double startingVelocity = 20.5; //meters per second
+    public static double angle = 0;
 
     //PIDController hoodPid = new PIDController(0,0,0);
 
@@ -89,6 +90,7 @@ public class ShooterSubsystem extends SubsystemBase {
         current_angle = hoodControllerEncoder.getPosition();
         SmartDashboard.putNumber("encoderDegrees", hoodControllerEncoder.getPosition());
         SmartDashboard.putNumber("hoodAngle", current_angle);
+        SmartDashboard.putNumber("desiredAngle", angle);
     }
 
     public void ShooterRun(double speed) {
@@ -146,12 +148,32 @@ public class ShooterSubsystem extends SubsystemBase {
         return inches / 39.37;
     }
 
-    public void AutoShoot(double x, double y) {
+    public void SetHoodPosition(double degrees) {
+        current_angle = hoodControllerEncoder.getPosition();
+
+        // hoodController.set(CalculateHoodPID(current_angle, degrees));
+        // SmartDashboard.putNumber("pidCalculate", CalculateHoodPID(current_angle, degrees));
+
+        if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE ||
+               current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
+        {
+            if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE)
+                hoodController.set(.05);
+            else if (current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
+                hoodController.set(-.05);
+        }
+        else
+            hoodController.set(0);
+    }
+
+    
+
+    public double CalculateAutoAngle(double x, double y) {
         double g = 9.81;
         x = InchesToMeters(x);
         y = InchesToMeters(y);
 
-        double angle = Math.toDegrees(Math.atan((Math.pow(startingVelocity, 2)
+        angle = Math.toDegrees(Math.atan((Math.pow(startingVelocity, 2)
                 + Math.sqrt(Math.pow(startingVelocity, 4) - g * (g * Math.pow(x, 2)) + 2 * y * Math.pow(startingVelocity, 2)))
                 / (g * x)));
 
@@ -162,8 +184,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
         angle = 45 - (90 - angle) / 2;
 
-        SmartDashboard.putNumber("targetAngle", angle);
-        new SetHoodPosition(this, angle);
+        periodic();
+        
+        return angle;
     }
 
     public double calculateDesiredVelocity() {

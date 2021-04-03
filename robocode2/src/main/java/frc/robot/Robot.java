@@ -213,6 +213,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    m_robotContainer.periodic();
     m_robotContainer.getDriveSystem().cheesyDrive(
                     (m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft) > 0.02 || m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft) < -0.02)? m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft):0,
                     (m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight) > 0.02 || m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight) < -0.02)? m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight):0,
