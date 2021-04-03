@@ -22,15 +22,12 @@ public class AutoCenter extends CommandBase {
 
     public void execute() {
         System.out.println("X Offset = " + limelightSubsystem.getTargetXAngle());
-        if (limelightSubsystem.getTargetXAngle() < -LimelightConstants.AUTO_CENTER_TOLERANCE)
-            System.out.println("Lower");    
-        //driveSystem.tankDrive(-.1, .1);
+        if (limelightSubsystem.getTargetXAngle() < -LimelightConstants.AUTO_CENTER_TOLERANCE)    
+            driveSystem.tankDrive(-.1, .1);
         else if (limelightSubsystem.getTargetXAngle() > LimelightConstants.AUTO_CENTER_TOLERANCE)
-            System.out.println("Higher");   
-        //driveSystem.tankDrive(.1, -.1);
+            driveSystem.tankDrive(.1, -.1);
         else
-            System.out.println("Perfect");
-            //driveSystem.tankDrive(0, 0);
+            driveSystem.tankDrive(0, 0);
     }
 
     public boolean isFinished() {

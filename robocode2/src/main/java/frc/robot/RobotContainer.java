@@ -17,6 +17,8 @@ import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 import frc.robot.commands.driveSubsystem.*;
 import frc.robot.commands.searchSystem.GetAverageDistance;
+import frc.robot.commands.shooterSubsystem.SetAutoAngle;
+import frc.robot.commands.shooterSubsystem.SetHoodPosition;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -96,7 +98,7 @@ public class RobotContainer {
     // A Button
     new JoystickButton(m_driverController, Button.kA.value)
         .whenPressed(() -> shooterSubsystem.AutoShoot(limelightSubsystem.areaDistance(), 100));
-        
+
     // Right Bumper
     new JoystickButton(m_driverController, 6)
         .whenPressed(() -> shooterSubsystem.KickerRun(0.85))
@@ -109,8 +111,7 @@ public class RobotContainer {
 
     // Start Button
     new JoystickButton(m_driverController, Button.kStart.value)
-        .whileHeld(() -> shooterSubsystem.SetHoodPosition(30))
-        .whenReleased(() -> shooterSubsystem.StopHood());
+        .whenPressed(new SetHoodPosition(shooterSubsystem, 30));
 
     // Right Joystick Button
     new JoystickButton(m_driverController, Button.kStickRight.value)

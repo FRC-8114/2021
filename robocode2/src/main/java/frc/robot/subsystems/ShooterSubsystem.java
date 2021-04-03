@@ -12,13 +12,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANEncoder;
 
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.shooterSubsystem.SetHoodPosition;
 
 public class ShooterSubsystem extends SubsystemBase {
     // Shooter motor controllers
     final CANSparkMax leftShooterController = new CANSparkMax(ShooterConstants.LEFT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
     final CANSparkMax rightShooterController = new CANSparkMax(ShooterConstants.RIGHT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
     final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
-    final CANSparkMax hoodController = new CANSparkMax(ShooterConstants.HOOD_CONTROLLER_PORT, MotorType.kBrushless);
+    public final CANSparkMax hoodController = new CANSparkMax(ShooterConstants.HOOD_CONTROLLER_PORT, MotorType.kBrushless);
 
     // Shooter motor controller encoders
     final CANEncoder leftShooterControllerEncoder = leftShooterController.getEncoder();
@@ -133,6 +134,10 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setPosition(0);
     }
 
+    public double GetHoodEncoderPosition() {
+        return hoodControllerEncoder.getPosition();
+    }
+
     // public double CalculateHoodPID(double measurement, double setpoint) {
     //     return hoodPid.calculate(measurement,setpoint);
     // }
@@ -140,26 +145,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public double InchesToMeters(double inches) {
         return inches / 39.37;
     }
-
-    public void SetHoodPosition(double degrees) {
-        current_angle = hoodControllerEncoder.getPosition();
-
-        // hoodController.set(CalculateHoodPID(current_angle, degrees));
-        // SmartDashboard.putNumber("pidCalculate", CalculateHoodPID(current_angle, degrees));
-
-        if (current_angle < degrees-ShooterConstants.DEGREE_TOLERANCE ||
-               current_angle > degrees+ShooterConstants.DEGREE_TOLERANCE)
-        {
-            if (current_angle < degrees-ShooterConstants.DEGREE_TOLERANCE)
-                hoodController.set(.1);
-            else if (current_angle > degrees+ShooterConstants.DEGREE_TOLERANCE)
-                hoodController.set(-.1);
-        }
-        else
-            hoodController.set(0);
-    }
-
-    
 
     public void AutoShoot(double x, double y) {
         double g = 9.81;
@@ -169,16 +154,16 @@ public class ShooterSubsystem extends SubsystemBase {
         double angle = Math.toDegrees(Math.atan((Math.pow(startingVelocity, 2)
                 + Math.sqrt(Math.pow(startingVelocity, 4) - g * (g * Math.pow(x, 2)) + 2 * y * Math.pow(startingVelocity, 2)))
                 / (g * x)));
-                
+
         if (angle < 0)
             angle = Math.toDegrees(Math.atan((Math.pow(startingVelocity, 2)
                 - Math.sqrt(Math.pow(startingVelocity, 4) - g * (g * Math.pow(x, 2)) + 2 * y * Math.pow(startingVelocity, 2)))
                 / (g * x)));
 
-        angle = 47 - (90 - angle);
+        angle = 45 - (90 - angle) / 2;
 
         SmartDashboard.putNumber("targetAngle", angle);
-        SetHoodPosition(angle);
+        new SetHoodPosition(this, angle);
     }
 
     public double calculateDesiredVelocity() {
