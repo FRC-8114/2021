@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
 
 public class Limelight extends SubsystemBase {
-  private DriveSubsystem driveSubsystem;
   private NetworkTable limelightTable;
   private NetworkTableEntry tx, ty, ta, thor, ledMode;
   private final double TARGET_HEIGHT = 90, LIMELIGHT_HEIGHT = 35, HEIGHT_DIFFERENCE = TARGET_HEIGHT - LIMELIGHT_HEIGHT; // Measurements in inches

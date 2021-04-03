@@ -49,7 +49,6 @@ public class RobotContainer {
   private final Limelight limelightSubsystem = new Limelight("limelight-eleven");
 
   private Trajectory exampleTrajectory;
-  private int index;
   public boolean isQuickTurn = false;
 
   // The driver's controller

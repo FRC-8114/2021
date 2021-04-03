@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.shooterSubsystem.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -27,11 +26,8 @@ public class ShooterSubsystem extends SubsystemBase {
     final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
     final CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
-    private double current_angle = 0;
-    private double startingVelocity = 20.5; //meters per second
-    public static double angle = 0;
-
-    //PIDController hoodPid = new PIDController(0,0,0);
+    private double current_angle = 0, startingVelocity = 20.5;
+    public double angle = 0;
 
     // Creates the ShooterSubsystem
     public ShooterSubsystem() {
@@ -41,6 +37,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         rightShooterController.restoreFactoryDefaults(); 
         rightShooterController.setIdleMode(IdleMode.kCoast);
+        rightShooterController.follow(leftShooterController, false);
 
         kickerController.restoreFactoryDefaults();
         kickerController.setIdleMode(IdleMode.kBrake);
@@ -59,31 +56,11 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
         HoodZero();
 
-        //hoodPid.setTolerance(0.5);
-
         Shuffleboard.getTab("Shooting").add("Reset Hood Angle", false)
             .withWidget(BuiltInWidgets.kCommand).getEntry()
             .addListener(event -> {
                 HoodZero();
             }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-        // Shuffleboard.getTab("Driving").add("HoodPID P", 1)
-        //     .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
-        //     .addListener(event -> {
-        //         hoodPid.setP(event.value.getDouble());
-        //     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-        // Shuffleboard.getTab("Driving").add("HoodPID I", 0)
-        //     .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
-        //     .addListener(event -> {
-        //         hoodPid.setI(event.value.getDouble());
-        //     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-        // Shuffleboard.getTab("Driving").add("HoodPID D", 0)
-        //     .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
-        //     .addListener(event -> {
-        //         hoodPid.setD(event.value.getDouble());
-        //     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
     public void periodic() {
@@ -95,7 +72,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void ShooterRun(double speed) {
         leftShooterController.set(speed);
-        rightShooterController.set(speed);
     }
 
     public void KickerRun(double speed) {
@@ -104,7 +80,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void ShooterStop() {
         leftShooterController.stopMotor();
-        rightShooterController.stopMotor();
     }
 
     public void KickerStop() {
@@ -113,7 +88,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void ShooterReverse(double speed) {
         leftShooterController.set(-speed);
-        rightShooterController.set(-speed);
     }
 
     public void KickerReverse(double speed) {
@@ -140,33 +114,9 @@ public class ShooterSubsystem extends SubsystemBase {
         return hoodControllerEncoder.getPosition();
     }
 
-    // public double CalculateHoodPID(double measurement, double setpoint) {
-    //     return hoodPid.calculate(measurement,setpoint);
-    // }
-
     public double InchesToMeters(double inches) {
         return inches / 39.37;
     }
-
-    public void SetHoodPosition(double degrees) {
-        current_angle = hoodControllerEncoder.getPosition();
-
-        // hoodController.set(CalculateHoodPID(current_angle, degrees));
-        // SmartDashboard.putNumber("pidCalculate", CalculateHoodPID(current_angle, degrees));
-
-        if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE ||
-               current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
-        {
-            if (current_angle <= degrees-ShooterConstants.DEGREE_TOLERANCE)
-                hoodController.set(.05);
-            else if (current_angle >= degrees+ShooterConstants.DEGREE_TOLERANCE)
-                hoodController.set(-.05);
-        }
-        else
-            hoodController.set(0);
-    }
-
-    
 
     public double CalculateAutoAngle(double x, double y) {
         double g = 9.81;
@@ -190,7 +140,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double calculateDesiredVelocity() {
-        
         return 0;
     }
 }
