@@ -1,15 +1,19 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
 
 public class Limelight extends SubsystemBase {
+  private DriveSubsystem m_drive;
   private NetworkTable limelightTable;
-  private NetworkTableEntry tx, ty, ta, ledMode;
-  private final double TARGET_HEIGHT = 96.5, LIMELIGHT_HEIGHT = 35, HEIGHT_DIFFERENCE = TARGET_HEIGHT - LIMELIGHT_HEIGHT; // Measurements in inches
-  private final double LIMELIGHT_HORIZONTAL_ANGLE = 30; // Measured in degrees
-  private final double TRIGONOMIC_WEIGHT = 0; 
+  private NetworkTableEntry tx, ty, ta, thor, ledMode;
+  private final double TARGET_HEIGHT = 90, LIMELIGHT_HEIGHT = 35, HEIGHT_DIFFERENCE = TARGET_HEIGHT - LIMELIGHT_HEIGHT; // Measurements in inches
+  private final double LIMELIGHT_HORIZONTAL_ANGLE = 20; // Measured in degrees
+  private final double TRIGONOMIC_WEIGHT = 0;
+  private double trigDist = 0;
 
   /**
    * Initalizes the Networktable pulling for the Limelight subsystem on the RoboRio
@@ -32,6 +36,7 @@ public class Limelight extends SubsystemBase {
     tx = limelightTable.getEntry("tx");
     ty = limelightTable.getEntry("ty");
     ta = limelightTable.getEntry("ta");
+    thor = limelightTable.getEntry("thor");
     ledMode = limelightTable.getEntry("ledMode");
   }
 
@@ -40,7 +45,12 @@ public class Limelight extends SubsystemBase {
    */
   public void periodic() {
     //SmartDashboard.putNumber("Distance to Target", approximateDistance());
-    SmartDashboard.putNumber("Limelight Trigonometric Distance", trigonomicDistance());
+    trigDist = trigonomicDistance();
+    SmartDashboard.putNumber("Limelight Trigonometric Distance", trigDist);
+    SmartDashboard.putNumber("Width Distance", widthDistance());
+    SmartDashboard.putNumber("Area Distance", areaDistance());
+    SmartDashboard.putNumber("Limelight Angle", LIMELIGHT_HORIZONTAL_ANGLE + getTargetYAngle());
+    SmartDashboard.putNumber("Height Difference", HEIGHT_DIFFERENCE);
 
   }
 
@@ -54,6 +64,10 @@ public class Limelight extends SubsystemBase {
     return tx.getDouble(0.0);
   }
 
+  public double getTargetWidth() {
+    return thor.getDouble(0.0);
+  }
+
   /*
    * Returns the y angle of the target relative to the center of the camera's
    * view
@@ -61,7 +75,7 @@ public class Limelight extends SubsystemBase {
    * @return    The angle in degrees
    */
   public double getTargetYAngle() {
-    return ty.getDouble(0.0);
+    return limelightTable.getEntry("ty").getDouble(0.0);
   }
 
   /*
@@ -112,6 +126,14 @@ public class Limelight extends SubsystemBase {
     return HEIGHT_DIFFERENCE / Math.tan(angleToHorizontal);
   }
 
+  public double widthDistance() {
+    return 536 + -9.07*getTargetWidth() + 0.0474 * (Math.pow(getTargetWidth(), 2));
+  }
+
+  public double areaDistance() {
+    return 209*(Math.pow(getTargetArea(), -.564));
+  }
+
   /*
    * Calculates the target's approximate distance from the robot through a formula calculated using Area:Distance datapoints
    * 
@@ -119,5 +141,13 @@ public class Limelight extends SubsystemBase {
    */
   public double dataDrivenDistance() {
     return (-99.9 * Math.log(getTargetArea())) + 162;
+  }
+
+  public void autoCenter(DriveSubsystem m_drive) {
+    this.m_drive = m_drive;
+    if (getTargetXAngle() > 0.15)
+      m_drive.tankDrive(.1,-.1);
+    else if (getTargetXAngle() < -0.15)
+      m_drive.tankDrive(-.1,.1);
   }
 }

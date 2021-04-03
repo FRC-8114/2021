@@ -55,23 +55,19 @@ public class DriveSubsystem extends SubsystemBase {
     // Initialize the drivetrain motors
 
     // Left Leader
-    leftMotorLeader.restoreFactoryDefaults(); 
     leftMotorLeader.setIdleMode(IdleMode.kCoast);  
     leftMotorLeader.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
 
     // Left Follower
-    leftMotorFollower.restoreFactoryDefaults(); 
     leftMotorFollower.setIdleMode(IdleMode.kCoast);  
     leftMotorFollower.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
     leftMotorFollower.follow(leftMotorLeader, false);
 
     // Right Leader
-    rightMotorLeader.restoreFactoryDefaults(); 
     rightMotorLeader.setIdleMode(IdleMode.kCoast);  
     rightMotorLeader.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
 
     // Right Follower
-    rightMotorFollower.restoreFactoryDefaults(); 
     rightMotorFollower.setIdleMode(IdleMode.kCoast);  
     rightMotorFollower.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
     rightMotorFollower.follow(rightMotorLeader, false);

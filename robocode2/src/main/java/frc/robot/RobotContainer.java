@@ -45,7 +45,7 @@ public class RobotContainer {
   private final IndexSubsystem indexSubsystem = new IndexSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  private final Limelight limelightSubsystem = new Limelight("limelight_eleven");
+  private final Limelight limelightSubsystem = new Limelight("limelight-eleven");
 
   private Trajectory exampleTrajectory;
   private int index;
@@ -95,30 +95,37 @@ public class RobotContainer {
         .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(.1))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
+    // B Button
     new JoystickButton(m_driverController, Button.kB.value)
         .whenPressed(() -> shooterSubsystem.LowerHoodPosition(.1))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
+    // X Button
     new JoystickButton(m_driverController, Button.kX.value)
-        .whenPressed(() -> indexSubsystem.AllIndexReverse(.4))
-        .whenReleased(() -> indexSubsystem.AllIndexStop());
-
+        .whileHeld(() -> limelightSubsystem.autoCenter(m_robotDrive))
+        .whenReleased(() -> m_robotDrive.tankDrive(0, 0));
+        
+    // A Button
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(() -> intakeSubsystem.IntakeReverse(0.85))
-        .whenReleased(() -> intakeSubsystem.IntakeStop());
+        .whileHeld(() -> shooterSubsystem.AutoShoot(limelightSubsystem.areaDistance(), 98))
+        .whenReleased(() -> shooterSubsystem.StopHood());
 
+    // Right Bumper
     new JoystickButton(m_driverController, 6)
         .whenPressed(() -> shooterSubsystem.KickerRun(0.85))
         .whenReleased(() -> shooterSubsystem.KickerStop());
 
+    // Left Bumper
     new JoystickButton(m_driverController, 5)
         .whenPressed(() -> intakeSubsystem.IntakeRun(0.65))
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
+    // Start Button
     new JoystickButton(m_driverController, Button.kStart.value)
         .whileHeld(() -> shooterSubsystem.SetHoodPosition(30))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
+    // Right Joystick Button
     new JoystickButton(m_driverController, Button.kStickRight.value)
       .whenPressed(() -> isQuickTurn = !isQuickTurn);      
 
@@ -131,12 +138,14 @@ public class RobotContainer {
     shooterSubsystem.periodic();
     limelightSubsystem.periodic();
 
+    // Left Trigger
     if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
         indexSubsystem.AllIndexRun(.25);
     }
     else if(m_driverController.getTriggerAxis(Hand.kLeft) != 1)
         indexSubsystem.AllIndexStop();
 
+    // Right Trigger
     if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
         shooterSubsystem.ShooterRun(1);
     }
