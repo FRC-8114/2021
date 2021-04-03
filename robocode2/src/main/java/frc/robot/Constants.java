@@ -16,6 +16,11 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
   public static final class DriveConstants {
+    public static final double RAMP_RATE = 1;
+    public static final double INITIAL_MAX_VELOCITY = 0.6;
+    public static final double INITIAL_CURVATURE_MAX_CURVATURE = 0.6;
+    public static final double INITIAL_ARCADE_MAX_CURVATURE = 0.6;
+
     public static final int LEFT_MOTOR_1_PORT = 2;
     public static final int LEFT_MOTOR_2_PORT = 1;
     public static final int RIGHT_MOTOR_1_PORT = 3;

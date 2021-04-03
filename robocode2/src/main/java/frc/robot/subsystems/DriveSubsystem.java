@@ -50,7 +50,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
-  private double maxOutput;
+  private double maxVelocity, curvatureMaxCurvature, arcadeMaxCurvature;
   private double[] currentSpeeds = new double[2];
 
   // NetworkTable Entries for debugging mimicking
@@ -64,23 +64,31 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Initialize the drivetrain motors
 
-    // Left Leader
+    // Left
+    leftMotorLeader.restoreFactoryDefaults();
     leftMotorLeader.setIdleMode(IdleMode.kCoast);  
     leftMotorLeader.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
+    leftMotorLeader.setOpenLoopRampRate(DriveConstants.RAMP_RATE);
 
     // Left Follower
+    leftMotorFollower.restoreFactoryDefaults();
     leftMotorFollower.setIdleMode(IdleMode.kCoast);  
     leftMotorFollower.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
     leftMotorFollower.follow(leftMotorLeader, false);
+    leftMotorFollower.setOpenLoopRampRate(DriveConstants.RAMP_RATE);
 
     // Right Leader
+    rightMotorLeader.restoreFactoryDefaults();
     rightMotorLeader.setIdleMode(IdleMode.kCoast);  
     rightMotorLeader.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
+    rightMotorLeader.setOpenLoopRampRate(DriveConstants.RAMP_RATE);
 
     // Right Follower
+    rightMotorFollower.restoreFactoryDefaults();
     rightMotorFollower.setIdleMode(IdleMode.kCoast);  
     rightMotorFollower.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
     rightMotorFollower.follow(rightMotorLeader, false);
+    rightMotorFollower.setOpenLoopRampRate(DriveConstants.RAMP_RATE);
 
     // Sets the distance per pulse for the encoders
     leftLeaderEncoder.setPositionConversionFactor(DriveConstants.ENCODER_DISTANCE_PER_PULSE);
@@ -93,15 +101,27 @@ public class DriveSubsystem extends SubsystemBase {
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
-    maxOutput = 0.6;
+    maxVelocity = DriveConstants.INITIAL_MAX_VELOCITY;
+    curvatureMaxCurvature = DriveConstants.INITIAL_CURVATURE_MAX_CURVATURE;
+    arcadeMaxCurvature = DriveConstants.INITIAL_ARCADE_MAX_CURVATURE;
     setMaxOutput();
-    Shuffleboard.getTab("Driving").add("Speed Control", 0.5)
+
+    Shuffleboard.getTab("Driving").add("Speed Control", DriveConstants.INITIAL_MAX_VELOCITY)
         .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
         .addListener(event -> {
-          maxOutput = event.value.getDouble();
+          maxVelocity = event.value.getDouble();
           setMaxOutput();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
+    Shuffleboard.getTab("Driving").add("Curvature Max Curvature", DriveConstants.INITIAL_CURVATURE_MAX_CURVATURE)
+        .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+        .addListener(event -> {
+          curvatureMaxCurvature = event.value.getDouble();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        Shuffleboard.getTab("Driving").add("Arcade Max Curvature", DriveConstants.INITIAL_ARCADE_MAX_CURVATURE)
+        .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+        .addListener(event -> {
+          arcadeMaxCurvature = event.value.getDouble();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
 
   @Override
@@ -134,7 +154,12 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void cheesyDrive(double speed, double curvature, boolean isArcade) {
-    m_drive.curvatureDrive(speed, curvature, isArcade);
+    if(!isArcade) {
+      // Applies a maximum curvature to curvature mode, limiting the minimum turn radius
+      m_drive.curvatureDrive(speed, curvature * curvatureMaxCurvature, isArcade);
+    } else {
+      m_drive.curvatureDrive(speed, curvature * arcadeMaxCurvature, isArcade);
+    }
 
     speedEntry.forceSetDouble(speed);
     curvatureEntry.forceSetDouble(curvature);
@@ -188,17 +213,17 @@ public class DriveSubsystem extends SubsystemBase {
    * Sets the max output of the drive to the value of maxOutput;
    */
   public void setMaxOutput() {
-    m_drive.setMaxOutput(maxOutput);
+    m_drive.setMaxOutput(maxVelocity);
   }
 
   /**
    * Increments maxOutput by 0.05 and updates the differential drive's
    * max output, maxing at 1.0.
    * 
-   * @param maxOutput
+   * @param maxVelocity
    */
   public void incMaxSpeed() {
-    maxOutput = Math.min(maxOutput+0.05, 1.0);
+    maxVelocity = Math.min(maxVelocity+0.05, 1.0);
     setMaxOutput();
   }
 
@@ -206,10 +231,10 @@ public class DriveSubsystem extends SubsystemBase {
    * Decreases maxOutput by 0.05 and updates the differential drive's
    * max output, stopping at 0.1.
    * 
-   * @param maxOutput
+   * @param maxVelocity
    */
   public void decMaxSpeed() {
-    maxOutput = Math.max(maxOutput-0.05, 0.1);
+    maxVelocity = Math.max(maxVelocity-0.05, 0.1);
     setMaxOutput();
   }
 
