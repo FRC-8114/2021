@@ -83,13 +83,16 @@ public final class Constants {
     public static final int KICKER_CONTROLLER_PORT = 19;
     public static final int HOOD_CONTROLLER_PORT = 20;
 
+    public static final double SHOOTER_DISTANCE_PER_PULSE = 2.5 * (Math.PI/2);
     public static final int ENCODER_DISTANCE_PER_PULSE = 0;
     public static final int VELOCITY_CONVERSION_FACTOR = 0;
 
     public static final double HOOD_ENCODER_DISTANCE_PER_PULSE = 90;
     public static final double HOOD_RADIUS = .19812;
     public static final double DEGREE_TOLERANCE = 0.015;
-    public static final double BALL_VELOCITY = 20.5;
+    public static final double BALL_VELOCITY = 23.788107;
+
+    public static double MAX_INPUT = 1;
   }
 
   public static final class LimelightConstants {

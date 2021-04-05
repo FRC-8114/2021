@@ -81,21 +81,21 @@ public class RobotContainer {
 
     // Run the intake when Y is pressed
     new JoystickButton(m_driverController, Button.kY.value)
-        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(.1))
+        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(.225))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
     // B Button
     new JoystickButton(m_driverController, Button.kB.value)
-        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(.1))
+        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(.225))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
     // X Button
     new JoystickButton(m_driverController, Button.kX.value)
-        .whileHeld(new AutoCenter(m_robotDrive, limelightSubsystem));
+        .whenPressed(new AutoCenter(m_robotDrive, limelightSubsystem));
         
     // A Button
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(() -> shooterSubsystem.CalculateAutoAngle(limelightSubsystem.areaDistance(), 100));
+        .whenPressed(() -> shooterSubsystem.CalculateAutoAngle(limelightSubsystem.areaDistance(), 92));
 
     // Right Bumper
     new JoystickButton(m_driverController, 6)

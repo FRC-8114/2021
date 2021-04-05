@@ -37,7 +37,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         rightShooterController.restoreFactoryDefaults(); 
         rightShooterController.setIdleMode(IdleMode.kCoast);
-        rightShooterController.follow(leftShooterController, false);
+        rightShooterController.follow(leftShooterController, true);
 
         kickerController.restoreFactoryDefaults();
         kickerController.setIdleMode(IdleMode.kBrake);
@@ -46,20 +46,26 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodController.restoreFactoryDefaults();
         hoodController.setIdleMode(IdleMode.kBrake);
 
-        leftShooterControllerEncoder.setPositionConversionFactor(ShooterConstants.ENCODER_DISTANCE_PER_PULSE);
+        leftShooterControllerEncoder.setPositionConversionFactor(ShooterConstants.SHOOTER_DISTANCE_PER_PULSE);
         leftShooterControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
 
-        rightShooterControllerEncoder.setPositionConversionFactor(ShooterConstants.ENCODER_DISTANCE_PER_PULSE);
+        rightShooterControllerEncoder.setPositionConversionFactor(ShooterConstants.SHOOTER_DISTANCE_PER_PULSE);
         rightShooterControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
 
         hoodControllerEncoder.setPositionConversionFactor(ShooterConstants.ENCODER_DISTANCE_PER_PULSE);
         hoodControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
         HoodZero();
 
-        Shuffleboard.getTab("Shooting").add("Reset Hood Angle", false)
+        Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false)
             .withWidget(BuiltInWidgets.kCommand).getEntry()
             .addListener(event -> {
                 HoodZero();
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        Shuffleboard.getTab("Shooting").add("Shooter Control", ShooterConstants.MAX_INPUT)
+            .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+            .addListener(event -> {
+              ShooterConstants.MAX_INPUT = event.value.getDouble();
             }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
@@ -70,12 +76,19 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("desiredAngle", angle);
     }
 
+    public double verifyVelocity(double speed) {
+        int sign = (int) (speed / Math.abs(speed));
+        if (Math.abs(speed) > ShooterConstants.MAX_INPUT)
+            return sign * ShooterConstants.MAX_INPUT;
+        return speed;
+    }
+
     public void ShooterRun(double speed) {
-        leftShooterController.set(speed);
+        leftShooterController.set(verifyVelocity(speed));
     }
 
     public void KickerRun(double speed) {
-        kickerController.set(speed);
+        kickerController.set(verifyVelocity(speed));
     }
 
     public void ShooterStop() {
@@ -87,15 +100,15 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void ShooterReverse(double speed) {
-        leftShooterController.set(-speed);
+        leftShooterController.set(-verifyVelocity(speed));
     }
 
     public void KickerReverse(double speed) {
-        kickerController.set(-speed);
+        kickerController.set(-verifyVelocity(speed));
     }
 
     public void IncreaseHoodPosition(double speed) {
-        hoodController.set(speed);
+        hoodController.set(verifyVelocity(speed));
     }
 
     public void StopHood() {
@@ -103,11 +116,11 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void LowerHoodPosition(double speed) {
-        hoodController.set(-speed);
+        hoodController.set(-verifyVelocity(speed));
     }
 
     public void HoodZero() {
-        hoodControllerEncoder.setPosition(0);
+        hoodControllerEncoder.setPosition(7.3456);
     }
 
     public double GetHoodEncoderPosition() {
@@ -122,6 +135,7 @@ public class ShooterSubsystem extends SubsystemBase {
         double g = 9.81;
         x = InchesToMeters(x);
         y = InchesToMeters(y);
+        startingVelocity = ShooterConstants.MAX_INPUT * startingVelocity;
 
         angle = Math.toDegrees(Math.atan((Math.pow(startingVelocity, 2)
                 + Math.sqrt(Math.pow(startingVelocity, 4) - g * (g * Math.pow(x, 2)) + 2 * y * Math.pow(startingVelocity, 2)))
@@ -139,7 +153,20 @@ public class ShooterSubsystem extends SubsystemBase {
         return angle;
     }
 
-    public double calculateDesiredVelocity() {
+    /**
+     * Calculates desired velocity given angle, x, y
+     * Should prioritize changing velocity over changing angle when possible
+     * If return is greater than max velocity then change to max velocity and run find angle
+     * @param angle
+     * @param x
+     * @param y
+     * @return desired velocity
+     */
+    public double calculateDesiredVelocity(double angle, double x, double y) {
+        // double desired_velocity =
+        // (tanangle * g * x)^2 = v^4 +- v^4 - g^2 * x^2 - 2*g*y*v^2
+        // (tanangle * g * x)^2 + g^2 * x^2 = v^4 +- v^4 - 2*g*y*v^2
+        // ((tanangle * g * x)^2 + g^2 * x^2) / 2*g*y = v^4 +- v^4 - v^2
         return 0;
     }
 }
