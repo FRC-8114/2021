@@ -24,9 +24,9 @@ public class AutoCenter extends CommandBase {
 
     public void execute() {
         System.out.println("X Offset = " + limelightSubsystem.getTargetXAngle());
-        if (limelightSubsystem.getTargetXAngle() < -2.5 -LimelightConstants.AUTO_CENTER_TOLERANCE) {  
+        if (limelightSubsystem.getTargetXAngle() < -3.5 -LimelightConstants.AUTO_CENTER_TOLERANCE) {  
             driveSystem.cheesyDrive(0, -.2, true);
-        } else if (limelightSubsystem.getTargetXAngle() > -2.5 + LimelightConstants.AUTO_CENTER_TOLERANCE) {
+        } else if (limelightSubsystem.getTargetXAngle() > -3.5 + LimelightConstants.AUTO_CENTER_TOLERANCE) {
             driveSystem.cheesyDrive(0, +.2, true);
         } else {
             driveSystem.tankDrive(0, 0);
@@ -34,8 +34,8 @@ public class AutoCenter extends CommandBase {
     }
 
     public boolean isFinished() {
-        if (limelightSubsystem.getTargetXAngle() < -2.5 + LimelightConstants.AUTO_CENTER_TOLERANCE
-            && limelightSubsystem.getTargetXAngle() > -2.5 -LimelightConstants.AUTO_CENTER_TOLERANCE) {
+        if (limelightSubsystem.getTargetXAngle() < -3.5 + LimelightConstants.AUTO_CENTER_TOLERANCE
+            && limelightSubsystem.getTargetXAngle() > -3.5 -LimelightConstants.AUTO_CENTER_TOLERANCE) {
             return true;
         }
         return false;

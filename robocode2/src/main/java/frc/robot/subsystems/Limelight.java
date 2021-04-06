@@ -13,7 +13,7 @@ public class Limelight extends SubsystemBase {
   private final double TARGET_HEIGHT = 90, LIMELIGHT_HEIGHT = 35, HEIGHT_DIFFERENCE = TARGET_HEIGHT - LIMELIGHT_HEIGHT; // Measurements in inches
   private final double LIMELIGHT_HORIZONTAL_ANGLE = 20; // Measured in degrees
   private final double TRIGONOMIC_WEIGHT = 0;
-  private double trigDist = 0;
+  private double trigDist = 0, autoCenterTolerance, autoCenterFakeCenter;
 
   /**
    * Initalizes the Networktable pulling for the Limelight subsystem on the RoboRio
@@ -32,6 +32,20 @@ public class Limelight extends SubsystemBase {
 
     limelightTable = NetworkTableInstance.getDefault().getTable(limelightTableName); // The instance is not given a variable all limelights are on the same instance
     
+    autoCenterTolerance = LimelightConstants.AUTO_CENTER_TOLERANCE;
+    autoCenterFakeCenter = LimelightConstants.AUTO_CENTER_FAKECENTER;
+
+    Shuffleboard.getTab("Limelight").add("Speed Control", LimelightConstants.AUTO_CENTER_TOLERANCE)
+        .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+        .addListener(event -> {
+          autoCenterTolerance = event.value.getDouble();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    Shuffleboard.getTab("Limelight").add("Auto Center Fakecenter", LimelightConstants.AUTO_CENTER_FAKECENTER)
+        .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+        .addListener(event -> {
+          autoCenterFakeCenter = event.value.getDouble();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
     // The following variales are named after the values they access as opposed to what said values represent
     tx = limelightTable.getEntry("tx");
     ty = limelightTable.getEntry("ty");
