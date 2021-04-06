@@ -13,6 +13,9 @@ public class AutoCenter extends CommandBase {
         this.driveSystem = driveSystem;
         this.limelightSubsystem = limelightSubsystem;
         System.out.println("Constructor");
+
+        m_requirements.add(driveSystem);
+        m_requirements.add(limelightSubsystem);
     }
 
     public void initialize() {
@@ -21,25 +24,20 @@ public class AutoCenter extends CommandBase {
 
     public void execute() {
         System.out.println("X Offset = " + limelightSubsystem.getTargetXAngle());
-        if (limelightSubsystem.getTargetXAngle() < -LimelightConstants.AUTO_CENTER_TOLERANCE) {  
-            System.out.println("I DO THE DRIVE");
-            driveSystem.tankDrive(-.1, .1);
-        } else if (limelightSubsystem.getTargetXAngle() > LimelightConstants.AUTO_CENTER_TOLERANCE) {
-            System.out.println("I DRIVE THE DO");
-            driveSystem.tankDrive(.1, -.1);
+        if (limelightSubsystem.getTargetXAngle() < -2.5 -LimelightConstants.AUTO_CENTER_TOLERANCE) {  
+            driveSystem.cheesyDrive(0, -.2, true);
+        } else if (limelightSubsystem.getTargetXAngle() > -2.5 + LimelightConstants.AUTO_CENTER_TOLERANCE) {
+            driveSystem.cheesyDrive(0, +.2, true);
         } else {
-            System.out.println("I print therefore I am");
             driveSystem.tankDrive(0, 0);
         }
     }
 
     public boolean isFinished() {
-        if (limelightSubsystem.getTargetXAngle() < LimelightConstants.AUTO_CENTER_TOLERANCE
-            && limelightSubsystem.getTargetXAngle() > -LimelightConstants.AUTO_CENTER_TOLERANCE) {
-            System.out.println("IS FINISH");
+        if (limelightSubsystem.getTargetXAngle() < -2.5 + LimelightConstants.AUTO_CENTER_TOLERANCE
+            && limelightSubsystem.getTargetXAngle() > -2.5 -LimelightConstants.AUTO_CENTER_TOLERANCE) {
             return true;
         }
-        System.out.println("IS SWEEDISH");
         return false;
     }
 }

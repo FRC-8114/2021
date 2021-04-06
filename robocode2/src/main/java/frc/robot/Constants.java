@@ -96,6 +96,6 @@ public final class Constants {
   }
 
   public static final class LimelightConstants {
-    public static final double AUTO_CENTER_TOLERANCE = 0.15;
+    public static final double AUTO_CENTER_TOLERANCE = .5;
   }
 }
