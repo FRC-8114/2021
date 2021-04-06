@@ -16,8 +16,15 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 import frc.robot.commands.driveSubsystem.*;
+import frc.robot.commands.indexSubsystem.IndexRun;
+import frc.robot.commands.indexSubsystem.StopIndex;
 import frc.robot.commands.searchSystem.GetAverageDistance;
+import frc.robot.commands.shooterSubsystem.*;
+import frc.robot.commands.shooterSubsystem.KickerRun;
 import frc.robot.commands.shooterSubsystem.SetHoodPosition;
+import frc.robot.commands.shooterSubsystem.ShooterRun;
+import frc.robot.commands.shooterSubsystem.ShootingRoutine;
+import frc.robot.commands.*;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -93,9 +100,9 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kX.value)
         .whenPressed(new AutoCenter(m_robotDrive, limelightSubsystem));
         
-    // A Button
+    //A Button
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(() -> shooterSubsystem.CalculateAutoAngle(limelightSubsystem.areaDistance(), 92));
+        .whenPressed(new ShooterRun(shooterSubsystem, 0.8));    //     .whenPressed(() -> shooterSubsystem.CalculateAutoAngle(limelightSubsystem.areaDistance(), 92, ShooterConstants.BALL_VELOCITY));
 
     // Right Bumper
     new JoystickButton(m_driverController, 6)
@@ -108,8 +115,8 @@ public class RobotContainer {
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     // Start Button
-    new JoystickButton(m_driverController, Button.kStart.value)
-        .whenPressed(new SetHoodPosition(shooterSubsystem, shooterSubsystem.CalculateAutoAngle(limelightSubsystem.areaDistance(), 100)));
+    // new JoystickButton(m_driverController, Button.kStart.value)
+    //     .whenPressed(new ShootingRoutine(shooterSubsystem, limelightSubsystem, indexSubsystem));
 
     // Right Joystick Button
     new JoystickButton(m_driverController, Button.kStickRight.value)

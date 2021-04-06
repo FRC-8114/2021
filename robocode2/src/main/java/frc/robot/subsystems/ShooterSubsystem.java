@@ -15,9 +15,9 @@ import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
     // Shooter motor controllers
-    final CANSparkMax leftShooterController = new CANSparkMax(ShooterConstants.LEFT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
+    public final CANSparkMax leftShooterController = new CANSparkMax(ShooterConstants.LEFT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
     final CANSparkMax rightShooterController = new CANSparkMax(ShooterConstants.RIGHT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
-    final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
+    public final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
     public final CANSparkMax hoodController = new CANSparkMax(ShooterConstants.HOOD_CONTROLLER_PORT, MotorType.kBrushless);
 
     // Shooter motor controller encoders
@@ -26,8 +26,8 @@ public class ShooterSubsystem extends SubsystemBase {
     final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
     final CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
-    private double current_angle = 0, startingVelocity = 20.5;
-    public double angle = 0;
+    private double current_angle = 0;
+    public double angle = 0, velocity = 0, speed = leftShooterController.getAppliedOutput();
 
     // Creates the ShooterSubsystem
     public ShooterSubsystem() {
@@ -74,6 +74,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("encoderDegrees", hoodControllerEncoder.getPosition());
         SmartDashboard.putNumber("hoodAngle", current_angle);
         SmartDashboard.putNumber("desiredAngle", angle);
+        SmartDashboard.putNumber("desiredVelocity", velocity);
+        SmartDashboard.putNumber("actualVelocity", speed);
     }
 
     public double verifyVelocity(double speed) {
@@ -84,6 +86,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void ShooterRun(double speed) {
+        this.speed = leftShooterController.getAppliedOutput();
+        periodic();
         leftShooterController.set(verifyVelocity(speed));
     }
 
@@ -131,7 +135,7 @@ public class ShooterSubsystem extends SubsystemBase {
         return inches / 39.37;
     }
 
-    public double CalculateAutoAngle(double x, double y) {
+    public double CalculateAutoAngle(double x, double y, double startingVelocity) {
         double g = 9.81;
         x = InchesToMeters(x);
         y = InchesToMeters(y);
@@ -153,20 +157,21 @@ public class ShooterSubsystem extends SubsystemBase {
         return angle;
     }
 
-    /**
-     * Calculates desired velocity given angle, x, y
-     * Should prioritize changing velocity over changing angle when possible
-     * If return is greater than max velocity then change to max velocity and run find angle
-     * @param angle
-     * @param x
-     * @param y
-     * @return desired velocity
-     */
-    public double calculateDesiredVelocity(double angle, double x, double y) {
-        // double desired_velocity =
-        // (tanangle * g * x)^2 = v^4 +- v^4 - g^2 * x^2 - 2*g*y*v^2
-        // (tanangle * g * x)^2 + g^2 * x^2 = v^4 +- v^4 - 2*g*y*v^2
-        // ((tanangle * g * x)^2 + g^2 * x^2) / 2*g*y = v^4 +- v^4 - v^2
-        return 0;
+    public double CalculateAutoVelocity(double x, double y, double angle) {
+        double g = 9.81;
+        x = InchesToMeters(x);
+        y = InchesToMeters(y);
+        angle = hoodControllerEncoder.getPosition();
+
+        velocity = Math.sqrt(((g*Math.pow(x,2)) * (Math.pow(Math.tan(angle), 2) + 1) / 
+                            (2 * (x * Math.tan(angle) - y))));
+        
+        if (velocity < 0)
+            velocity = -1 * Math.sqrt(((g*Math.pow(x,2)) * (Math.pow(Math.tan(angle), 2) + 1) / 
+                        (2 * (x * Math.tan(angle) - y))));
+
+        periodic();
+
+        return velocity;
     }
 }

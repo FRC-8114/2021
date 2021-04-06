@@ -127,7 +127,7 @@ public class Limelight extends SubsystemBase {
    * @return    The weighted average distance
    */
   public double approximateDistance() {
-    return TRIGONOMIC_WEIGHT*trigonomicDistance() + (1-TRIGONOMIC_WEIGHT)*dataDrivenDistance();
+    return (widthDistance() + areaDistance()) / 2;
   }
 
   /*
