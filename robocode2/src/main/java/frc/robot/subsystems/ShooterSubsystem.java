@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import java.security.KeyStore.Entry;
+
 import com.revrobotics.CANEncoder;
 
 import frc.robot.Constants.ShooterConstants;
@@ -17,17 +20,15 @@ public class ShooterSubsystem extends SubsystemBase {
     // Shooter motor controllers
     public final CANSparkMax leftShooterController = new CANSparkMax(ShooterConstants.LEFT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
     final CANSparkMax rightShooterController = new CANSparkMax(ShooterConstants.RIGHT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
-    public final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
     public final CANSparkMax hoodController = new CANSparkMax(ShooterConstants.HOOD_CONTROLLER_PORT, MotorType.kBrushless);
 
     // Shooter motor controller encoders
     final CANEncoder leftShooterControllerEncoder = leftShooterController.getEncoder();
     final CANEncoder rightShooterControllerEncoder = rightShooterController.getEncoder();
-    final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
     final CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
     private double current_angle = 0;
-    public double angle = 0, velocity = 0, speed = leftShooterController.getAppliedOutput();
+    public double angle = 0, velocity = 0, speed = leftShooterController.getAppliedOutput(), shooterDesiredSpeed = 1;
 
     // Creates the ShooterSubsystem
     public ShooterSubsystem() {
@@ -38,10 +39,6 @@ public class ShooterSubsystem extends SubsystemBase {
         rightShooterController.restoreFactoryDefaults(); 
         rightShooterController.setIdleMode(IdleMode.kCoast);
         rightShooterController.follow(leftShooterController, true);
-
-        kickerController.restoreFactoryDefaults();
-        kickerController.setIdleMode(IdleMode.kBrake);
-        kickerController.setInverted(true);
 
         hoodController.restoreFactoryDefaults();
         hoodController.setIdleMode(IdleMode.kBrake);
@@ -55,6 +52,12 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setPositionConversionFactor(ShooterConstants.ENCODER_DISTANCE_PER_PULSE);
         hoodControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
         HoodZero();
+
+        Shuffleboard.getTab("Shooting").add("Shooter Velocity", ShooterConstants.BALL_VELOCITY*shooterDesiredSpeed)
+            .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
+            .addListener(event -> {
+                shooterDesiredSpeed = event.value.getDouble() / ShooterConstants.BALL_VELOCITY;
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false)
             .withWidget(BuiltInWidgets.kCommand).getEntry()
@@ -88,27 +91,15 @@ public class ShooterSubsystem extends SubsystemBase {
     public void ShooterRun(double speed) {
         this.speed = leftShooterController.getAppliedOutput();
         periodic();
-        leftShooterController.set(verifyVelocity(speed));
-    }
-
-    public void KickerRun(double speed) {
-        kickerController.set(verifyVelocity(speed));
+        leftShooterController.set(verifyVelocity(speed*shooterDesiredSpeed));
     }
 
     public void ShooterStop() {
         leftShooterController.stopMotor();
     }
 
-    public void KickerStop() {
-        kickerController.stopMotor();
-    }
-
     public void ShooterReverse(double speed) {
-        leftShooterController.set(-verifyVelocity(speed));
-    }
-
-    public void KickerReverse(double speed) {
-        kickerController.set(-verifyVelocity(speed));
+        leftShooterController.set(-verifyVelocity(speed*shooterDesiredSpeed));
     }
 
     public void IncreaseHoodPosition(double speed) {

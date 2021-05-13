@@ -49,10 +49,12 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   private final SearchSystem searchSystem = new SearchSystem();
   private final IndexSubsystem indexSubsystem = new IndexSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final KickerSubsystem kickerSubsystem = new KickerSubsystem();
   private final Limelight limelightSubsystem = new Limelight("limelight-eleven");
 
   private Trajectory exampleTrajectory;
@@ -88,12 +90,12 @@ public class RobotContainer {
 
     // Run the intake when Y is pressed
     new JoystickButton(m_driverController, Button.kY.value)
-        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(.225))
+        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(0.3))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
     // B Button
     new JoystickButton(m_driverController, Button.kB.value)
-        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(.225))
+        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(0.3))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
     // X Button
@@ -102,12 +104,12 @@ public class RobotContainer {
         
     //A Button
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(new ShooterRun(shooterSubsystem, 0.8));    //     .whenPressed(() -> shooterSubsystem.CalculateAutoAngle(limelightSubsystem.areaDistance(), 92, ShooterConstants.BALL_VELOCITY));
+        .whenPressed(new SetHoodPosition(shooterSubsystem, 30));
 
     // Right Bumper
     new JoystickButton(m_driverController, 6)
-        .whenPressed(() -> shooterSubsystem.KickerRun(0.85))
-        .whenReleased(() -> shooterSubsystem.KickerStop());
+        .whenPressed(() -> kickerSubsystem.KickerRun(0.85))
+        .whenReleased(() -> kickerSubsystem.KickerStop());
 
     // Left Bumper
     new JoystickButton(m_driverController, 5)
@@ -115,8 +117,8 @@ public class RobotContainer {
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     // Start Button
-    // new JoystickButton(m_driverController, Button.kStart.value)
-    //     .whenPressed(new ShootingRoutine(shooterSubsystem, limelightSubsystem, indexSubsystem));
+    new JoystickButton(m_driverController, Button.kStart.value)
+        .whenPressed(new SetHoodPosition(shooterSubsystem, shooterSubsystem.CalculateAutoAngle(limelightSubsystem.approximateDistance(), 96, ShooterConstants.BALL_VELOCITY*shooterSubsystem.shooterDesiredSpeed)));
 
     // Right Joystick Button
     new JoystickButton(m_driverController, Button.kStickRight.value)
