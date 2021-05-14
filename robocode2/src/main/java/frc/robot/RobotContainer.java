@@ -25,6 +25,7 @@ import frc.robot.commands.shooterSubsystem.SetHoodPosition;
 import frc.robot.commands.shooterSubsystem.ShooterRun;
 import frc.robot.commands.shooterSubsystem.ShootingRoutine;
 import frc.robot.commands.*;
+import frc.robot.commands.auto.ShootMoveBack;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -102,7 +103,7 @@ public class RobotContainer {
         
     //A Button
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(new ShooterRun(shooterSubsystem, 0.8));    //     .whenPressed(() -> shooterSubsystem.CalculateAutoAngle(limelightSubsystem.areaDistance(), 92, ShooterConstants.BALL_VELOCITY));
+        .whenPressed(new ShooterRun(0.8));    //     .whenPressed(() -> shooterSubsystem.CalculateAutoAngle(limelightSubsystem.areaDistance(), 92, ShooterConstants.BALL_VELOCITY));
 
     // Right Bumper
     new JoystickButton(m_driverController, 6)
@@ -216,6 +217,10 @@ public class RobotContainer {
     return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
   }
   */
+  public Command getAutonomousCommand()
+  {
+      return new ShootMoveBack(2,.25,.25);
+  }
 
   public Trajectory getTrajectory() {
       return exampleTrajectory;

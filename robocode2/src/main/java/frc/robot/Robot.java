@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpiutil.math.Num;
-import frc.robot.subsystems.Mimicking;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,17 +35,6 @@ public class Robot extends TimedRobot {
 
   public RobotContainer m_robotContainer;
 
-  public final SendableChooser<String> recordingChooser = new SendableChooser<String>();
-  public boolean isRecording, wasRecording;
-  public File recording, driveSystemFile;
-  public FileOutputStream driveSystemWriter;
-  public String recordingName;
-  public int recordingTicks;
-  public double[] controllerInputs;
-
-  public Scanner playbackScanner;
-  public ArrayList<String> toFollow;
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -57,27 +45,6 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    recordingName = "default";
-    Mimicking.updateRecordingName(this);
-    Mimicking.setupRecordingChooser(this);
-    Shuffleboard.getTab("Mimicking").add("Is recording", false).withWidget(BuiltInWidgets.kToggleButton).getEntry()
-        .addListener(event -> {
-          isRecording = event.value.getBoolean();
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-    Shuffleboard.getTab("Mimicking").add("Update The Recording Name", false).withWidget(BuiltInWidgets.kToggleButton)
-        .getEntry().addListener(event -> {
-          Mimicking.updateRecordingName(this);
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-    Shuffleboard.getTab("Mimicking").add("Recording Name", "default").withWidget(BuiltInWidgets.kTextView).getEntry()
-        .addListener(event -> {
-          recordingName = event.value.getString();
-          System.out.println(event.value.getString());
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-    Shuffleboard.getTab("Mimicking").add(recordingChooser);
   }
 
   /**
@@ -103,39 +70,6 @@ public class Robot extends TimedRobot {
     // Send values to Shuffleboard
     m_robotContainer.getDriveSystem().sendOdometryToShuffleboard();
     m_robotContainer.getSearchSystem().sendEstimatedDistance();
-
-    if (isRecording && driveSystemFile != null && recordingName != null) {
-      try {
-        String toWrite = "";
-        toWrite += ((Math.abs(m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft)) > .02)
-            ? m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft)
-            : 0);
-        toWrite += "," + ((Math.abs(m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight)) > .02)
-            ? m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight)
-            : 0);
-        toWrite += "," + m_robotContainer.isQuickTurn;
-        toWrite += "," + Timer.getFPGATimestamp() + "," + recordingTicks;
-        toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderDistance();
-        toWrite += "," + m_robotContainer.getDriveSystem().getAverageEncoderVelocity();
-        toWrite += "," + m_robotContainer.getDriveSystem().getHeading();
-        toWrite += "," + m_robotContainer.getDriveSystem().getTurnRate() + "\n";
-        System.out.print(toWrite);
-
-        driveSystemWriter = new FileOutputStream(driveSystemFile, true);
-
-        driveSystemWriter.write(toWrite.getBytes());
-        driveSystemWriter.flush();
-        driveSystemWriter.close();
-
-        wasRecording = true;
-        recordingTicks++;
-      } catch (IOException e) {
-        System.out.println("Error: " + e.getMessage());
-      }
-    } else if (wasRecording) {
-      wasRecording = false;
-      recordingTicks = 0;
-    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -153,50 +87,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    try {
-      toFollow = new ArrayList<String>();
-      playbackScanner = new Scanner(new File(recordingChooser.getSelected() +"/driveSystem"));
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-      while(playbackScanner.hasNextLine()) {
-        toFollow.add(playbackScanner.nextLine());
-      }
-    } catch (FileNotFoundException e) {
-      System.out.println("Error: "+ e.getMessage());
-    }
-
-    controllerInputs = new double[2];
-    controllerInputs[0] = 0;
-    controllerInputs[1] = 0;
-
-    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Speed").forceSetDouble(0);
-    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Quick_Turn").forceSetDouble(0);
-    NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Arcade?").forceSetBoolean(false);
+    if(m_autonomousCommand != null)
+      m_autonomousCommand.schedule();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    boolean quickTurn = false;
-
-    if(toFollow.size() != 0) {
-      try {
-        String[] line = toFollow.remove(0).split(",");
-
-        controllerInputs[0] = Double.parseDouble(line[0]);
-        controllerInputs[1] = Double.parseDouble(line[1]);
-        quickTurn = Boolean.parseBoolean(line[2]);
-
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Speed").forceSetDouble(controllerInputs[0]);
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Quick_Turn").forceSetDouble(controllerInputs[1]);
-        NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Recording_Arcade?").forceSetBoolean(quickTurn);
-        //System.out.println(controllerInputs[0] +" "+ controllerInputs[1] +" "+ quickTurn);
-      } catch(NumberFormatException e) {
-        System.out.println("Error: "+ e.getMessage());
-      }
-    }
-
-    m_robotContainer.getDriveSystem().cheesyDrive(controllerInputs[0], controllerInputs[1], quickTurn);
-    //m_robotContainer.getDriveSystem().tankDrive(controllerInputs[0], controllerInputs[0]);
   }
 
   @Override

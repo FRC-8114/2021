@@ -2,36 +2,36 @@ package frc.robot.commands.shooterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
+import edu.wpi.first.wpilibj.Timer;
 
 public class ShooterRun extends CommandBase {
-    
-    ShooterSubsystem shooterSubsystem;
+    private double time = 5;
+    private Timer a;
     double speed;
-    int ticks;
     
-    public ShooterRun (ShooterSubsystem shooterSubsystem, double speed) {
-        this.shooterSubsystem = shooterSubsystem;
+    public ShooterRun (double speed) {
         this.speed = speed;
-
-        addRequirements(shooterSubsystem);
     }
 
     public void initialize() {
-        shooterSubsystem.ShooterRun(speed);
-        ticks = 0;
+        ShooterSubsystem.ShooterRun(speed);
+        a = new Timer();
+        a.start();
+        
     }
     
     public void execute() {
-        shooterSubsystem.ShooterRun(speed);
-        ticks++;
+        ShooterSubsystem.ShooterRun(speed);
     }
 
     public void end() {
-        shooterSubsystem.leftShooterController.set(speed);
+        ShooterSubsystem.ShooterStop();
+        a.reset();
     }
 
     public boolean isFinished() {
-        if(ticks > 200) {
+        if(a.get() > time) {
+            ShooterSubsystem.ShooterStop();
             return true;
         }
         return false;

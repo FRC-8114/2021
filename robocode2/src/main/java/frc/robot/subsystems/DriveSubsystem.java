@@ -29,21 +29,21 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  final CANSparkMax leftMotorLeader = new CANSparkMax(DriveConstants.LEFT_MOTOR_1_PORT, MotorType.kBrushless);
+  final static CANSparkMax leftMotorLeader = new CANSparkMax(DriveConstants.LEFT_MOTOR_1_PORT, MotorType.kBrushless);
   final CANSparkMax leftMotorFollower = new CANSparkMax(DriveConstants.LEFT_MOTOR_2_PORT, MotorType.kBrushless);
 
   // The motors on the right side of the drive.
-  final CANSparkMax rightMotorLeader = new CANSparkMax(DriveConstants.RIGHT_MOTOR_1_PORT, MotorType.kBrushless);
+  final static CANSparkMax rightMotorLeader = new CANSparkMax(DriveConstants.RIGHT_MOTOR_1_PORT, MotorType.kBrushless);
   final CANSparkMax rightMotorFollower = new CANSparkMax(DriveConstants.RIGHT_MOTOR_2_PORT, MotorType.kBrushless);
 
   // The robot's drive
-  private final DifferentialDrive m_drive = new DifferentialDrive(leftMotorLeader, rightMotorLeader);
+  private static final DifferentialDrive m_drive = new DifferentialDrive(leftMotorLeader, rightMotorLeader);
 
   // The left-side drive encoder
-  final CANEncoder leftLeaderEncoder = leftMotorLeader.getEncoder();
+  static final CANEncoder leftLeaderEncoder = leftMotorLeader.getEncoder();
 
   // The right-side drive encoder
-  final CANEncoder rightLeaderEncoder = rightMotorLeader.getEncoder();
+  static final CANEncoder rightLeaderEncoder = rightMotorLeader.getEncoder();
 
   // The gyro sensor
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
@@ -174,7 +174,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fwd the commanded forward movement
    * @param rot the commanded rotation
    */
-  public void tankDrive(double leftSpeed, double rightSpeed) {
+  public static void tankDrive(double leftSpeed, double rightSpeed) {
     m_drive.tankDrive(leftSpeed, rightSpeed);
   }
 
@@ -312,7 +312,7 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return the average of the two encoder readings
    */
-  public double getAverageEncoderDistance() {
+  public static double getAverageEncoderDistance() {
     return (leftLeaderEncoder.getPosition() + rightLeaderEncoder.getPosition()) / 2.0;
   }
 

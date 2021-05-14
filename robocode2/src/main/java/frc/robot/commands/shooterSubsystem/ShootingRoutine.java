@@ -21,7 +21,7 @@ public class ShootingRoutine extends ParallelCommandGroup {
 
 
         addCommands(
-            new ShooterRun(shooterSubsystem, velocity),
+            new ShooterRun(velocity),
 
             new SequentialShooting(shooterSubsystem, indexSubsystem, limelightSubsystem)
 

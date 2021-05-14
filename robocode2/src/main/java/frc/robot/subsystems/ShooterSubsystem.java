@@ -15,27 +15,30 @@ import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
     // Shooter motor controllers
-    public final CANSparkMax leftShooterController = new CANSparkMax(ShooterConstants.LEFT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
+    public final static CANSparkMax leftShooterController = new CANSparkMax(ShooterConstants.LEFT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
     final CANSparkMax rightShooterController = new CANSparkMax(ShooterConstants.RIGHT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
     public final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
-    public final CANSparkMax hoodController = new CANSparkMax(ShooterConstants.HOOD_CONTROLLER_PORT, MotorType.kBrushless);
+    public final static CANSparkMax hoodController = new CANSparkMax(ShooterConstants.HOOD_CONTROLLER_PORT,
+            MotorType.kBrushless);
 
     // Shooter motor controller encoders
     final CANEncoder leftShooterControllerEncoder = leftShooterController.getEncoder();
     final CANEncoder rightShooterControllerEncoder = rightShooterController.getEncoder();
     final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
-    final CANEncoder hoodControllerEncoder = hoodController.getEncoder();
+    final static CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
-    private double current_angle = 0;
-    public double angle = 0, velocity = 0, speed = leftShooterController.getAppliedOutput();
+    private static double current_angle = 0;
+    public static double angle = 0;
+    public static double velocity = 0;
+    public static double speed = leftShooterController.getAppliedOutput();
 
     // Creates the ShooterSubsystem
     public ShooterSubsystem() {
-        leftShooterController.restoreFactoryDefaults(); 
+        leftShooterController.restoreFactoryDefaults();
         leftShooterController.setIdleMode(IdleMode.kCoast);
         leftShooterController.setInverted(true);
 
-        rightShooterController.restoreFactoryDefaults(); 
+        rightShooterController.restoreFactoryDefaults();
         rightShooterController.setIdleMode(IdleMode.kCoast);
         rightShooterController.follow(leftShooterController, true);
 
@@ -56,17 +59,15 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
         HoodZero();
 
-        Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false)
-            .withWidget(BuiltInWidgets.kCommand).getEntry()
-            .addListener(event -> {
-                HoodZero();
-            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false).withWidget(BuiltInWidgets.kCommand)
+                .getEntry().addListener(event -> {
+                    HoodZero();
+                }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         Shuffleboard.getTab("Shooting").add("Shooter Control", ShooterConstants.MAX_INPUT)
-            .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
-            .addListener(event -> {
-              ShooterConstants.MAX_INPUT = event.value.getDouble();
-            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+                .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
+                    ShooterConstants.MAX_INPUT = event.value.getDouble();
+                }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
     public void periodic() {
@@ -78,24 +79,23 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("actualVelocity", speed);
     }
 
-    public double verifyVelocity(double speed) {
+    public static double verifyVelocity(double speed) {
         int sign = (int) (speed / Math.abs(speed));
         if (Math.abs(speed) > ShooterConstants.MAX_INPUT)
             return sign * ShooterConstants.MAX_INPUT;
         return speed;
     }
 
-    public void ShooterRun(double speed) {
-        this.speed = leftShooterController.getAppliedOutput();
-        periodic();
-        leftShooterController.set(verifyVelocity(speed));
+    public static void ShooterRun(double shooterSpeed) {
+        speed = leftShooterController.getAppliedOutput();
+        leftShooterController.set(verifyVelocity(shooterSpeed));
     }
 
     public void KickerRun(double speed) {
         kickerController.set(verifyVelocity(speed));
     }
 
-    public void ShooterStop() {
+    public static void ShooterStop() {
         leftShooterController.stopMotor();
     }
 
