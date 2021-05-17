@@ -25,9 +25,9 @@ public class AutoCenter extends CommandBase {
     public void execute() {
         System.out.println("X Offset = " + limelightSubsystem.getTargetXAngle());
         if (limelightSubsystem.getTargetXAngle() < -3.5 -LimelightConstants.AUTO_CENTER_TOLERANCE) {  
-            driveSystem.cheesyDrive(0, -.2, true);
+            driveSystem.cheesyDrive(0, -.085, true);
         } else if (limelightSubsystem.getTargetXAngle() > -3.5 + LimelightConstants.AUTO_CENTER_TOLERANCE) {
-            driveSystem.cheesyDrive(0, +.2, true);
+            driveSystem.cheesyDrive(0, +.085, true);
         } else {
             driveSystem.tankDrive(0, 0);
         }

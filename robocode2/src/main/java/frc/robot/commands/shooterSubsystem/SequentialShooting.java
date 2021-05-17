@@ -6,11 +6,12 @@ import frc.robot.commands.Wait;
 import frc.robot.commands.indexSubsystem.IndexRun;
 import frc.robot.commands.indexSubsystem.StopIndex;
 import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class SequentialShooting extends ParallelCommandGroup {
-    public SequentialShooting(ShooterSubsystem shooterSubsystem, IndexSubsystem indexSubsystem, Limelight limelightSubsystem) {
+    public SequentialShooting(KickerSubsystem kickerSubsystem, ShooterSubsystem shooterSubsystem, IndexSubsystem indexSubsystem, Limelight limelightSubsystem) {
         double x = limelightSubsystem.approximateDistance();
         double y = 96;
         
@@ -24,7 +25,7 @@ public class SequentialShooting extends ParallelCommandGroup {
 
             new Wait(5000),
 
-            new KickerRun(shooterSubsystem, 0.85),
+            new KickerRun(kickerSubsystem, 0.85),
 
             new IndexRun(indexSubsystem, 0.5),
 
@@ -32,7 +33,7 @@ public class SequentialShooting extends ParallelCommandGroup {
 
             new StopIndex(indexSubsystem),
 
-            new StopKicker(shooterSubsystem)
+            new StopKicker(kickerSubsystem)
         );
     }
 }

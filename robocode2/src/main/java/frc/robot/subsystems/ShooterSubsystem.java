@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import java.security.KeyStore.Entry;
+
 import com.revrobotics.CANEncoder;
 
 import frc.robot.Constants.ShooterConstants;
@@ -42,10 +45,6 @@ public class ShooterSubsystem extends SubsystemBase {
         rightShooterController.setIdleMode(IdleMode.kCoast);
         rightShooterController.follow(leftShooterController, true);
 
-        kickerController.restoreFactoryDefaults();
-        kickerController.setIdleMode(IdleMode.kBrake);
-        kickerController.setInverted(true);
-
         hoodController.restoreFactoryDefaults();
         hoodController.setIdleMode(IdleMode.kBrake);
 
@@ -59,10 +58,11 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
         HoodZero();
 
-        Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false).withWidget(BuiltInWidgets.kCommand)
-                .getEntry().addListener(event -> {
-                    HoodZero();
-                }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false)
+            .withWidget(BuiltInWidgets.kCommand).getEntry()
+            .addListener(event -> {
+                HoodZero();
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         Shuffleboard.getTab("Shooting").add("Shooter Control", ShooterConstants.MAX_INPUT)
                 .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
@@ -86,29 +86,22 @@ public class ShooterSubsystem extends SubsystemBase {
         return speed;
     }
 
-    public static void ShooterRun(double shooterSpeed) {
-        speed = leftShooterController.getAppliedOutput();
-        leftShooterController.set(verifyVelocity(shooterSpeed));
+    public void ShooterRun(double speed) {
+        this.speed = leftShooterController.getAppliedOutput();
+        periodic();
+        leftShooterController.set(verifyVelocity(speed));
     }
 
     public void KickerRun(double speed) {
         kickerController.set(verifyVelocity(speed));
     }
 
-    public static void ShooterStop() {
+    public void ShooterStop() {
         leftShooterController.stopMotor();
     }
 
-    public void KickerStop() {
-        kickerController.stopMotor();
-    }
-
     public void ShooterReverse(double speed) {
-        leftShooterController.set(-verifyVelocity(speed));
-    }
-
-    public void KickerReverse(double speed) {
-        kickerController.set(-verifyVelocity(speed));
+        leftShooterController.set(-verifyVelocity(speed*shooterDesiredSpeed));
     }
 
     public void IncreaseHoodPosition(double speed) {
