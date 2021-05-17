@@ -14,6 +14,7 @@ import java.security.KeyStore.Entry;
 
 import com.revrobotics.CANEncoder;
 
+import frc.robot.AdjustablePID;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -30,9 +31,12 @@ public class ShooterSubsystem extends SubsystemBase {
     final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
     final static CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
-    private static double current_angle = 0;
-    public static double angle = 0;
-    public static double velocity = 0;
+    // PIDs
+    public final AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel PID");
+    public final AdjustablePID hoodPID = new AdjustablePID(leftShooterController, "Hood PID");
+
+    private double current_angle = 0;
+    public double angle = 0, velocity = 0;
     public static double speed = leftShooterController.getAppliedOutput();
 
     // Creates the ShooterSubsystem
