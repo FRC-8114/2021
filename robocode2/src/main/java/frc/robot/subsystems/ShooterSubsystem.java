@@ -104,6 +104,7 @@ public class ShooterSubsystem extends SubsystemBase {
         leftShooterController.set(-verifyVelocity(speed*shooterDesiredSpeed));
     }
 
+    // Hood Positions should be one for 0-5 ft in front of goal and one for 9-14 ft from goal
     public void IncreaseHoodPosition(double speed) {
         hoodController.set(verifyVelocity(speed));
     }
