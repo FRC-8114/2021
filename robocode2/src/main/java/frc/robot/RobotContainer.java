@@ -105,7 +105,7 @@ public class RobotContainer {
         
     //A Button
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(new SetHoodPosition(shooterSubsystem, 30));
+        .whenPressed(() -> DriveSubsystem.reverseDirection());
 
     // Right Bumper
     new JoystickButton(m_driverController, 6)
@@ -123,7 +123,9 @@ public class RobotContainer {
 
     // Right Joystick Button
     new JoystickButton(m_driverController, Button.kStickRight.value)
-      .whenPressed(() -> isQuickTurn = !isQuickTurn);      
+      .whenPressed(() -> isQuickTurn = !isQuickTurn);  
+      
+      
 
     
     // Adds the GetAveragedistance command to SmartDashboard
@@ -248,4 +250,5 @@ public class RobotContainer {
   public SearchSystem getSearchSystem() {
       return searchSystem;
   }
+
 }

@@ -56,6 +56,8 @@ public class DriveSubsystem extends SubsystemBase {
   // NetworkTable Entries for debugging mimicking
   private final NetworkTableEntry speedEntry, curvatureEntry, isArcadeEntry;
 
+  public static boolean back = false;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     speedEntry = NetworkTableInstance.getDefault().getTable("Mimicking").getEntry("Drive_Speed");
@@ -66,23 +68,23 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Left
     leftMotorLeader.restoreFactoryDefaults();
-    leftMotorLeader.setIdleMode(IdleMode.kCoast);  
+    leftMotorLeader.setIdleMode(IdleMode.kCoast);
     leftMotorLeader.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
 
     // Left Follower
     leftMotorFollower.restoreFactoryDefaults();
-    leftMotorFollower.setIdleMode(IdleMode.kCoast);  
+    leftMotorFollower.setIdleMode(IdleMode.kCoast);
     leftMotorFollower.setInverted(DriveConstants.LEFT_MOTORS_INVERSED);
     leftMotorFollower.follow(leftMotorLeader, false);
 
     // Right Leader
     rightMotorLeader.restoreFactoryDefaults();
-    rightMotorLeader.setIdleMode(IdleMode.kCoast);  
+    rightMotorLeader.setIdleMode(IdleMode.kCoast);
     rightMotorLeader.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
 
     // Right Follower
     rightMotorFollower.restoreFactoryDefaults();
-    rightMotorFollower.setIdleMode(IdleMode.kCoast);  
+    rightMotorFollower.setIdleMode(IdleMode.kCoast);
     rightMotorFollower.setInverted(DriveConstants.RIGHT_MOTORS_INVERSED);
     rightMotorFollower.follow(rightMotorLeader, false);
 
@@ -102,24 +104,20 @@ public class DriveSubsystem extends SubsystemBase {
     setRampRate(DriveConstants.INITIAL_RAMP_RATE);
 
     Shuffleboard.getTab("Driving").add("Speed Control", DriveConstants.INITIAL_MAX_VELOCITY)
-        .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
-        .addListener(event -> {
+        .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
           maxVelocity = event.value.getDouble();
           setMaxOutput();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     Shuffleboard.getTab("Driving").add("Curvature Max Curvature", DriveConstants.INITIAL_CURVATURE_MAX_CURVATURE)
-        .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
-        .addListener(event -> {
+        .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
           curvatureMaxCurvature = event.value.getDouble();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     Shuffleboard.getTab("Driving").add("Arcade Max Curvature", DriveConstants.INITIAL_ARCADE_MAX_CURVATURE)
-        .withWidget(BuiltInWidgets.kNumberSlider).getEntry()
-        .addListener(event -> {
+        .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
           arcadeMaxCurvature = event.value.getDouble();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     Shuffleboard.getTab("Driving").add("Ramp Rate", DriveConstants.INITIAL_RAMP_RATE)
-        .withWidget(BuiltInWidgets.kTextView).getEntry()
-        .addListener(event -> {
+        .withWidget(BuiltInWidgets.kTextView).getEntry().addListener(event -> {
           setRampRate(event.value.getDouble());
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
@@ -127,24 +125,24 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    m_odometry.update(
-        m_gyro.getRotation2d(), leftLeaderEncoder.getPosition(), rightLeaderEncoder.getPosition());
+    m_odometry.update(m_gyro.getRotation2d(), leftLeaderEncoder.getPosition(), rightLeaderEncoder.getPosition());
   }
 
   public void emergencyStop(double time) {
-    double startLeft = -currentSpeeds[0]/5, startRight = -currentSpeeds[1]/5;
-    //double signLeft = startLeft/Math.abs(startLeft), signRight = startRight/Math.abs(startRight);
-    
+    double startLeft = -currentSpeeds[0] / 5, startRight = -currentSpeeds[1] / 5;
+    // double signLeft = startLeft/Math.abs(startLeft), signRight =
+    // startRight/Math.abs(startRight);
+
     tankDrive(0, 0);
     Timer timer = new Timer();
     timer.start();
     Timer.delay(.15);
 
-    for ( ; timer.get() < time ; ) {
+    for (; timer.get() < time;) {
       tankDrive(startLeft, startRight);
     }
 
-    tankDrive(0,0);
+    tankDrive(0, 0);
   }
 
   /**
@@ -154,8 +152,13 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void cheesyDrive(double speed, double curvature, boolean isArcade) {
-    if(!isArcade) {
-      // Applies a maximum curvature to curvature mode, limiting the minimum turn radius
+    if(back) {
+      speed = -speed;
+      curvature = -curvature;
+    }
+    if (!isArcade) {
+      // Applies a maximum curvature to curvature mode, limiting the minimum turn
+      // radius
       m_drive.curvatureDrive(speed, curvature * curvatureMaxCurvature, isArcade);
     } else {
       m_drive.curvatureDrive(speed, curvature * arcadeMaxCurvature, isArcade);
@@ -179,7 +182,7 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Controls the left and right sides of the drive directly with voltages.
    *
-   * @param leftVolts the commanded left output
+   * @param leftVolts  the commanded left output
    * @param rightVolts the commanded right output
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -189,7 +192,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**                              **/
-  /**     Shuffleboard Methods     **/
+  /** Shuffleboard Methods **/
   /**                              **/
 
   /**
@@ -206,7 +209,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**                 **/
-  /**     Setters     **/
+  /** Setters **/
   /**                 **/
 
   /**
@@ -224,24 +227,24 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Increments maxOutput by 0.05 and updates the differential drive's
-   * max output, maxing at 1.0.
+   * Increments maxOutput by 0.05 and updates the differential drive's max output,
+   * maxing at 1.0.
    * 
    * @param maxVelocity
    */
   public void incMaxSpeed() {
-    maxVelocity = Math.min(maxVelocity+0.05, 1.0);
+    maxVelocity = Math.min(maxVelocity + 0.05, 1.0);
     setMaxOutput();
   }
 
   /**
-   * Decreases maxOutput by 0.05 and updates the differential drive's
-   * max output, stopping at 0.1.
+   * Decreases maxOutput by 0.05 and updates the differential drive's max output,
+   * stopping at 0.1.
    * 
    * @param maxVelocity
    */
   public void decMaxSpeed() {
-    maxVelocity = Math.max(maxVelocity-0.05, 0.1);
+    maxVelocity = Math.max(maxVelocity - 0.05, 0.1);
     setMaxOutput();
   }
 
@@ -284,7 +287,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**                 **/
-  /**     Getters     **/
+  /** Getters **/
   /**                 **/
 
   /**
@@ -357,5 +360,9 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return -m_gyro.getRate();
+  }
+
+  public static void reverseDirection() {
+    back = !back;
   }
 }

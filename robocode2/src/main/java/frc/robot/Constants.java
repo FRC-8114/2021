@@ -37,7 +37,7 @@ public final class Constants {
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
         new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
-    public static final int ENCODER_PPR = 10;
+    public static final int ENCODER_PPR = 42;
     public static final double POSITION_CONVERSION_FACTOR = /*8.33*/ .00833;
     public static final double VELOCITY_CONVERSION_FACTOR = .001;
     public static final double ENCODER_DISTANCE_PER_PULSE =
