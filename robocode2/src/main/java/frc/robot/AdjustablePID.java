@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -40,18 +41,19 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * load the shuffleboard.json file in the root of this directory to get the full
  * effect of the GUI layout.
  */
-public class AdjustablePID extends TimedRobot {
+public class AdjustablePID {
   public CANPIDController pidController;
   public CANSparkMax motor;
   public CANEncoder encoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, setpoint;
-  public String tabName;
+  public String pidName;
   public boolean inControl = false, mode = false;
+  public NetworkTableEntry processVariableEntry, outputEntry, actualP;
 
-  public AdjustablePID(CANSparkMax motor, String tabName) {
+  public AdjustablePID(CANSparkMax motor, String pidName) {
     // initialize motor
     this.motor = motor;
-    this.tabName = tabName;
+    this.pidName = pidName;
 
     /**
      * The RestoreFactoryDefaults method can be used to reset the configuration parameters
@@ -105,99 +107,74 @@ public class AdjustablePID extends TimedRobot {
     pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
 
     // display PID coefficients on SmartDashboard
-    Shuffleboard.getTab(tabName).add("P Gain", kP)
-        .getEntry().addListener(event -> {
-            kP = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab(tabName).add("I Gain", kI)
-        .getEntry().addListener(event -> {
-            kI = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab(tabName).add("D Gain", kD)
-        .getEntry().addListener(event -> {
-            kD = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab(tabName).add("I Zone", kIz)
-        .getEntry().addListener(event -> {
-            kIz = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab(tabName).add("Feed Forward", kFF)
-        .getEntry().addListener(event -> {
-            kFF = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab(tabName).add("Max Output", kMaxOutput)
-        .getEntry().addListener(event -> {
-            kMaxOutput = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab(tabName).add("Min Output", kMinOutput)
-        .getEntry().addListener(event -> {
-            kMinOutput = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);
+    SmartDashboard.putNumber(pidName + "P Gain", kP);
+    SmartDashboard.putNumber(pidName + "I Gain", kI);
+    SmartDashboard.putNumber(pidName + "D Gain", kD);
+    SmartDashboard.putNumber(pidName + "I Zone", kIz);
+    SmartDashboard.putNumber(pidName + "Feed Forward", kFF);
+    SmartDashboard.putNumber(pidName + "Max Output", kMaxOutput);
+    SmartDashboard.putNumber(pidName + "Min Output", kMinOutput);
 
     // display Smart Motion coefficients
-    Shuffleboard.getTab(tabName).add("Max Velocity", maxVel)
-        .getEntry().addListener(event -> {
-            maxVel = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);;
-    Shuffleboard.getTab(tabName).add("Min Velocity", minVel)
-        .getEntry().addListener(event -> {
-            minVel = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);;
-    Shuffleboard.getTab(tabName).add("Max Acceleration", maxAcc)
-        .getEntry().addListener(event -> {
-            maxAcc = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);;
-    Shuffleboard.getTab(tabName).add("Allowed Closed Loop Error", allowedErr)
-        .getEntry().addListener(event -> {
-            allowedErr = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);;
-    
-    
-    // Setpoint and mode editing
-    Shuffleboard.getTab(tabName).add("Setpoint", 0)
-        .getEntry().addListener(event -> {
-            setpoint = event.value.getDouble();
-    }, EntryListenerFlags.kUpdate);;
-    Shuffleboard.getTab(tabName).add("Mode", false)
-        .getEntry().addListener(event -> {
-            mode = event.value.getBoolean();
-        }, EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab(tabName).add("In Control", false)
-        .withWidget(BuiltInWidgets.kToggleButton).getEntry().addListener(event -> {
-            inControl = event.value.getBoolean();
-        }, EntryListenerFlags.kUpdate);
+    SmartDashboard.putNumber(pidName + "Max Velocity", maxVel);
+    SmartDashboard.putNumber(pidName + "Min Velocity", minVel);
+    SmartDashboard.putNumber(pidName + "Max Acceleration", maxAcc);
+    SmartDashboard.putNumber(pidName + "Allowed Closed Loop Error", allowedErr);
+    SmartDashboard.putNumber(pidName + "Set Position", 0);
+    SmartDashboard.putNumber(pidName + "Set Velocity", 0);
 
     // button to toggle between velocity and smart motion modes
     SmartDashboard.putBoolean("Mode", true);
   }
 
-  @Override
-  public void teleopPeriodic() {
-    if(inControl) {
-        pidController.setP(kP);
-        pidController.setP(kI);
-        pidController.setP(kD);
-    } else {
-        pidController.setP(0);
-        pidController.setP(0);
-        pidController.setP(0);
-    }
+  public void periodic() {
+    // read PID coefficients from SmartDashboard
+    double p = SmartDashboard.getNumber(pidName + "P Gain", 0);
+    double i = SmartDashboard.getNumber(pidName + "I Gain", 0);
+    double d = SmartDashboard.getNumber(pidName + "D Gain", 0);
+    double iz = SmartDashboard.getNumber(pidName + "I Zone", 0);
+    double ff = SmartDashboard.getNumber(pidName + "Feed Forward", 0);
+    double max = SmartDashboard.getNumber(pidName + "Max Output", 0);
+    double min = SmartDashboard.getNumber(pidName + "Min Output", 0);
+    double maxV = SmartDashboard.getNumber(pidName + "Max Velocity", 0);
+    double minV = SmartDashboard.getNumber(pidName + "Min Velocity", 0);
+    double maxA = SmartDashboard.getNumber(pidName + "Max Acceleration", 0);
+    double allE = SmartDashboard.getNumber(pidName + "Allowed Closed Loop Error", 0);
 
-    double processVariable;
+    // if PID coefficients on SmartDashboard have changed, write new values to controller
+    if((p != kP)) { pidController.setP(p); kP = p; }
+    if((i != kI)) { pidController.setI(i); kI = i; }
+    if((d != kD)) { pidController.setD(d); kD = d; }
+    if((iz != kIz)) { pidController.setIZone(iz); kIz = iz; }
+    if((ff != kFF)) { pidController.setFF(ff); kFF = ff; }
+    if((max != kMaxOutput) || (min != kMinOutput)) { 
+      pidController.setOutputRange(min, max); 
+      kMinOutput = min; kMaxOutput = max; 
+    }
+    if((maxV != maxVel)) { pidController.setSmartMotionMaxVelocity(maxV,0); maxVel = maxV; }
+    if((minV != minVel)) { pidController.setSmartMotionMinOutputVelocity(minV,0); minVel = minV; }
+    if((maxA != maxAcc)) { pidController.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
+    if((allE != allowedErr)) { pidController.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
+
+    double setPoint, processVariable;
+    boolean mode = SmartDashboard.getBoolean("Mode", false);
     if(mode) {
-      pidController.setReference(setpoint, ControlType.kVelocity);
+      setPoint = SmartDashboard.getNumber(pidName + "Set Velocity", 0);
+      pidController.setReference(setPoint, ControlType.kVelocity);
       processVariable = encoder.getVelocity();
     } else {
+      setPoint = SmartDashboard.getNumber(pidName + "Set Position", 0);
       /**
        * As with other PID modes, Smart Motion is set by calling the
        * setReference method on an existing pid object and setting
        * the control type to kSmartMotion
        */
-      pidController.setReference(setpoint, ControlType.kSmartMotion);
+      pidController.setReference(setPoint, ControlType.kSmartMotion);
       processVariable = encoder.getPosition();
     }
     
-    Shuffleboard.getTab(tabName).add("Process Variable", processVariable);
-    Shuffleboard.getTab(tabName).add("Output", motor.getAppliedOutput());
+    SmartDashboard.putNumber(pidName + "SetPoint", setPoint);
+    SmartDashboard.putNumber(pidName + "Process Variable", processVariable);
+    SmartDashboard.putNumber(pidName + "Output", motor.getAppliedOutput());
   }
 }
