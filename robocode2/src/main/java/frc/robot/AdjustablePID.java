@@ -127,6 +127,83 @@ public class AdjustablePID {
     SmartDashboard.putBoolean("Mode", true);
   }
 
+  public AdjustablePID(CANSparkMax motor, String pidName, double kP, double kI, double kD, double kIz, double kFF) {
+    // initialize motor
+    this.motor = motor;
+    this.pidName = pidName;
+
+    /**
+     * The RestoreFactoryDefaults method can be used to reset the configuration parameters
+     * in the SPARK MAX to their factory default state. If no argument is passed, these
+     * parameters will not persist between power cycles
+     */
+    motor.restoreFactoryDefaults();
+
+    // initialze PID controller and encoder objects
+    pidController = motor.getPIDController();
+    encoder = motor.getEncoder();
+
+    // PID coefficients
+    this.kP = kP; 
+    this.kI = kI;
+    this.kD = kD; 
+    this.kIz = kIz; 
+    this.kFF = kFF; 
+    kMaxOutput = 1; 
+    kMinOutput = -1;
+    maxRPM = 5700;
+
+    // Smart Motion Coefficients
+    maxVel = 2000; // rpm
+    maxAcc = 1500;
+
+    // set PID coefficients
+    pidController.setP(kP);
+    pidController.setI(kI);
+    pidController.setD(kD);
+    pidController.setIZone(kIz);
+    pidController.setFF(kFF);
+    pidController.setOutputRange(kMinOutput, kMaxOutput);
+
+    /**
+     * Smart Motion coefficients are set on a CANPIDController object
+     * 
+     * - setSmartMotionMaxVelocity() will limit the velocity in RPM of
+     * the pid controller in Smart Motion mode
+     * - setSmartMotionMinOutputVelocity() will put a lower bound in
+     * RPM of the pid controller in Smart Motion mode
+     * - setSmartMotionMaxAccel() will limit the acceleration in RPM^2
+     * of the pid controller in Smart Motion mode
+     * - setSmartMotionAllowedClosedLoopError() will set the max allowed
+     * error for the pid controller in Smart Motion mode
+     */
+    int smartMotionSlot = 0;
+    pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
+    pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
+    pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
+    pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+
+    // display PID coefficients on SmartDashboard
+    SmartDashboard.putNumber(pidName + "P Gain", kP);
+    SmartDashboard.putNumber(pidName + "I Gain", kI);
+    SmartDashboard.putNumber(pidName + "D Gain", kD);
+    SmartDashboard.putNumber(pidName + "I Zone", kIz);
+    SmartDashboard.putNumber(pidName + "Feed Forward", kFF);
+    SmartDashboard.putNumber(pidName + "Max Output", kMaxOutput);
+    SmartDashboard.putNumber(pidName + "Min Output", kMinOutput);
+
+    // display Smart Motion coefficients
+    SmartDashboard.putNumber(pidName + "Max Velocity", maxVel);
+    SmartDashboard.putNumber(pidName + "Min Velocity", minVel);
+    SmartDashboard.putNumber(pidName + "Max Acceleration", maxAcc);
+    SmartDashboard.putNumber(pidName + "Allowed Closed Loop Error", allowedErr);
+    SmartDashboard.putNumber(pidName + "Set Position", 0);
+    SmartDashboard.putNumber(pidName + "Set Velocity", 0);
+
+    // button to toggle between velocity and smart motion modes
+    SmartDashboard.putBoolean("Mode", true);
+  }
+
   public void periodic() {
     // read PID coefficients from SmartDashboard
     double p = SmartDashboard.getNumber(pidName + "P Gain", 0);
