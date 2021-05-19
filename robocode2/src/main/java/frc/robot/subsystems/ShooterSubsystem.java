@@ -86,22 +86,21 @@ public class ShooterSubsystem extends SubsystemBase {
         return speed;
     }
 
-    public void ShooterRun(double speed) {
-        this.speed = leftShooterController.getAppliedOutput();
-        periodic();
-        leftShooterController.set(verifyVelocity(speed));
+    public static void ShooterRun(double shooterSpeed) {
+        speed = leftShooterController.getAppliedOutput();
+        leftShooterController.set(verifyVelocity(shooterSpeed));
     }
 
     public void KickerRun(double speed) {
         kickerController.set(verifyVelocity(speed));
     }
 
-    public void ShooterStop() {
+    public static void ShooterStop() {
         leftShooterController.stopMotor();
     }
 
     public void ShooterReverse(double speed) {
-        leftShooterController.set(-verifyVelocity(speed*shooterDesiredSpeed));
+        leftShooterController.set(-verifyVelocity(speed));
     }
 
     // Hood Positions should be one for 0-5 ft in front of goal and one for 9-14 ft from goal

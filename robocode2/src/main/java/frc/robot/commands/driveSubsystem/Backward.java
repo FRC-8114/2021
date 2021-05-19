@@ -7,9 +7,10 @@ public class Backward extends CommandBase {
     private double d, speedL, speedR;
     public Backward(double d, double speedL, double speedR)
     {
-        this.d = d/391.5;
+        this.d = d;
         this.speedL = -speedL;
         this.speedR = -speedR;
+        System.out.println(DriveSubsystem.getAverageEncoderDistance());
     }
 
     public void execute()

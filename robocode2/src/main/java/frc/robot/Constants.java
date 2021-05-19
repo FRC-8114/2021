@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
   public static final class DriveConstants {
+    public static final double WHEEL_RADIUS = 2.5/12;
+    public static final double WHEEL_CIRCUMFERENCE = WHEEL_RADIUS * 2 * Math.PI;
+
     public static final double INITIAL_RAMP_RATE = 1;
     public static final double INITIAL_MAX_VELOCITY = 0.6;
     public static final double INITIAL_CURVATURE_MAX_CURVATURE = 0.6;
@@ -28,19 +31,18 @@ public final class Constants {
     public static final boolean LEFT_MOTORS_INVERSED = true;
     public static final boolean RIGHT_MOTORS_INVERSED = true;
 
-    public static final boolean LEFT_ENCODER_REVERSED = true;
     public static final boolean RIGHT_ENCODER_REVERSED = true;
+    public static final boolean LEFT_ENCODER_REVERSED = true;
     public static final double TRACKWIDTH_METERS = 1.2387716;
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
         new DifferentialDriveKinematics(TRACKWIDTH_METERS);
 
-    public static final int ENCODER_CPR = 1024;
-    public static final double POSITION_CONVERSION_FACTOR = 100;
+    public static final int ENCODER_PPR = 10;
+    public static final double POSITION_CONVERSION_FACTOR = /*8.33*/ .00833;
     public static final double VELOCITY_CONVERSION_FACTOR = .001;
-    public static final double WHEEL_DIAMETER_METERS = 0.15;
     public static final double ENCODER_DISTANCE_PER_PULSE =
         // Assumes the encoders are directly mounted on the wheel shafts
-        (WHEEL_DIAMETER_METERS * Math.PI) / (double) ENCODER_CPR * POSITION_CONVERSION_FACTOR;
+        WHEEL_CIRCUMFERENCE / (ENCODER_PPR * POSITION_CONVERSION_FACTOR);
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically

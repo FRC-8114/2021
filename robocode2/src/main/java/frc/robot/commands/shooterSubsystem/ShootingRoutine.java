@@ -16,7 +16,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootingRoutine extends ParallelDeadlineGroup {
     public ShootingRoutine(KickerSubsystem kickerSubsystem, ShooterSubsystem shooterSubsystem, Limelight limelightSubsystem, IndexSubsystem indexSubsystem) {
-        super(new SequentialShooting(kickerSubsystem, shooterSubsystem, indexSubsystem, limelightSubsystem), new ShooterRun(shooterSubsystem, shooterSubsystem.CalculateAutoVelocity(limelightSubsystem.approximateDistance(), 96, shooterSubsystem.GetHoodEncoderPosition())));
+        super(new SequentialShooting(kickerSubsystem, shooterSubsystem, indexSubsystem, limelightSubsystem), new ShooterRun(shooterSubsystem.CalculateAutoVelocity(limelightSubsystem.approximateDistance(), 96, shooterSubsystem.GetHoodEncoderPosition())));
         double x = limelightSubsystem.approximateDistance();
         double y = 96;
         

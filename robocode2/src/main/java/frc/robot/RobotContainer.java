@@ -119,7 +119,7 @@ public class RobotContainer {
 
     // Start Button
     new JoystickButton(m_driverController, Button.kStart.value)
-        .whenPressed(new SetHoodPosition(shooterSubsystem, shooterSubsystem.CalculateAutoAngle(limelightSubsystem.approximateDistance(), 96, ShooterConstants.BALL_VELOCITY*shooterSubsystem.shooterDesiredSpeed)));
+        .whenPressed(new SetHoodPosition(shooterSubsystem, shooterSubsystem.CalculateAutoAngle(limelightSubsystem.approximateDistance(), 96, ShooterConstants.BALL_VELOCITY)));
 
     // Right Joystick Button
     new JoystickButton(m_driverController, Button.kStickRight.value)
@@ -143,10 +143,11 @@ public class RobotContainer {
 
     // Right Trigger
     if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
-        shooterSubsystem.ShooterRun(1);
+        ShooterSubsystem.ShooterRun(1);
     }
+    
     else if (m_driverController.getTriggerAxis(Hand.kRight) != 1)
-        shooterSubsystem.ShooterStop();
+        ShooterSubsystem.ShooterStop();
 
     SmartDashboard.putBoolean("isQuickTurn", isQuickTurn);
   }
