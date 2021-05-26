@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class KickerSubsystem extends SubsystemBase {
-    public final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
+    public final static CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT,
+            MotorType.kBrushless);
     final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
 
     public KickerSubsystem() {
@@ -18,7 +19,7 @@ public class KickerSubsystem extends SubsystemBase {
         kickerController.setInverted(true);
     }
 
-    public void KickerRun(double speed) {
+    public static void KickerRun(double speed) {
         kickerController.set(speed);
     }
 

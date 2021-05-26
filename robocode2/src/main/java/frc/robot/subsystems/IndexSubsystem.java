@@ -12,7 +12,8 @@ import frc.robot.Constants.IndexConstants;
 public class IndexSubsystem extends SubsystemBase {
     // Index motor controller
     final CANSparkMax frontIndexController = new CANSparkMax(IndexConstants.FRONT_INDEX_CONTROLLER_PORT, MotorType.kBrushed);
-    final CANSparkMax towerIndexController = new CANSparkMax(IndexConstants.TOWER_INDEX_CONTROLLER_PORT, MotorType.kBrushless);
+    final static CANSparkMax towerIndexController = new CANSparkMax(IndexConstants.TOWER_INDEX_CONTROLLER_PORT,
+            MotorType.kBrushless);
 
     final CANEncoder towerIndexControllEncoder = towerIndexController.getEncoder();
 
@@ -26,11 +27,11 @@ public class IndexSubsystem extends SubsystemBase {
         towerIndexController.setIdleMode(IdleMode.kBrake);
     }
 
-    public void FrontIndexRun (double speed) {
+    public void FrontIndexRun(double speed) {
         frontIndexController.set(speed);
     }
 
-    public void TowerIndexRun (double speed) {
+    public static void TowerIndexRun(double speed) {
         towerIndexController.set(speed);
     }
 

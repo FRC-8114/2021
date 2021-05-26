@@ -9,7 +9,7 @@ public class ShootMoveUp extends SequentialCommandGroup{
     public ShootMoveUp(double d, double speedL, double speedR)
     {
         addCommands(
-            new ShooterRun(.6),
+            new ShooterRun(.6, 15),
 
             new Forward(d, speedL, speedR),
 

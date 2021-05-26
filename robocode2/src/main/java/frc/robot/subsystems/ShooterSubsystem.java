@@ -29,6 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
     final CANEncoder rightShooterControllerEncoder = rightShooterController.getEncoder();
     final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
     final static CANEncoder hoodControllerEncoder = hoodController.getEncoder();
+	public static final double ShooterRPM = 0;
 
     private static double current_angle = 0;
     public static double angle = 0;
@@ -59,7 +60,7 @@ public class ShooterSubsystem extends SubsystemBase {
         HoodZero();
 
         Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false)
-            .withWidget(BuiltInWidgets.kCommand).getEntry()
+            .withWidget(BuiltInWidgets.kBooleanBox).getEntry()
             .addListener(event -> {
                 HoodZero();
             }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);

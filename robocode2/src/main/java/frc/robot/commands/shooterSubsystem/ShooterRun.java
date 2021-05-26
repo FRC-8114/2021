@@ -5,12 +5,13 @@ import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 
 public class ShooterRun extends CommandBase {
-    private double time = 5;
+    private double time;
     private Timer a;
     double speed;
     
-    public ShooterRun (double speed) {
+    public ShooterRun (double speed, double time) {
         this.speed = speed;
+        this.time = time;
     }
 
     public void initialize() {

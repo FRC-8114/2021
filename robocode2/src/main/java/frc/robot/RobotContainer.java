@@ -63,6 +63,7 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
+  XboxController m_operatorController = new XboxController(OIConstants.OPERATOR_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -99,7 +100,7 @@ public class RobotContainer {
         .whenPressed(() -> new SetHoodPosition(shooterSubsystem, ShooterConstants.HOOD_ANGLE_FAR));
 
     // X Button
-    new JoystickButton(m_opertatorController, Button.kX.value)
+    new JoystickButton(m_operatorController, Button.kX.value)
         .whenPressed(() -> new SetHoodPosition(shooterSubsystem, ShooterConstants.HOOD_ANGLE_CLOSE));
         
     //A Button
@@ -112,34 +113,41 @@ public class RobotContainer {
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     // Left Bumper
-    new JoystickButton(m_opertatorController, 5)
+    new JoystickButton(m_operatorController, 5)
         .whenPressed(() -> intakeSubsystem.IntakeReverse(0.65))
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
-    // Start Button
+    // Driver Controls
 
-    // Right Joystick Button 
-      
-      
+    // Button A
+    new JoystickButton(m_driverController, Button.kA.value)
+        .whenPressed(new AutoCenter(m_robotDrive, limelightSubsystem))
+        .whenReleased(() -> m_robotDrive.tankDrive(0, 0));
 
-    
-    // Adds the GetAveragedistance command to SmartDashboard
-    SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
+    // Right Bumper
+    new JoystickButton(m_driverController, 6)
+        .whenPressed(new AutoKicker(3200))
+        .whenReleased(() -> kickerSubsystem.KickerStop())
+        .whenReleased(() -> shooterSubsystem.ShooterStop())
+        .whenReleased(() -> indexSubsystem.TowerIndexStop());
+
+    // Right Joystick Button
+    new JoystickButton(m_driverController, Button.kStickRight.value)
+      .whenPressed(() -> isQuickTurn = !isQuickTurn);
   }
 
   public void periodic() {
     shooterSubsystem.periodic();
     limelightSubsystem.periodic();
 
-    // Left Trigger
-
     // Right Trigger
-    if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
+    if(m_driverController.getTriggerAxis(Hand.kRight) == 1)
         indexSubsystem.TowerIndexRun(1);
-    }
-    
     else if (m_driverController.getTriggerAxis(Hand.kRight) != 1)
         indexSubsystem.TowerIndexStop();
+
+    if (m_driverController.getPOV() != -1)
+        m_robotDrive.reverseDirection();
 
     SmartDashboard.putBoolean("isQuickTurn", isQuickTurn);
   }
@@ -240,5 +248,4 @@ public class RobotContainer {
   public SearchSystem getSearchSystem() {
       return searchSystem;
   }
-
 }

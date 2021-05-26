@@ -9,7 +9,7 @@ public class ShootMoveBack extends SequentialCommandGroup{
     public ShootMoveBack(double d, double speedL, double speedR)
     {
         addCommands(
-            new ShooterRun(.6),
+            new ShooterRun(.6, 15),
 
             new Backward(d, speedL, speedR),
 

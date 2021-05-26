@@ -59,6 +59,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
+	  public static final int OPERATOR_CONTROLLER_PORT = 1;
   }
 
   public static final class AutoConstants {
@@ -95,6 +96,10 @@ public final class Constants {
     public static final double BALL_VELOCITY = 23.788107;
 
     public static double MAX_INPUT = 1;
+
+    public static double HOOD_ANGLE_CLOSE = 0;
+    public static double HOOD_ANGLE_MID = 15;
+    public static double HOOD_ANGLE_FAR = 30;
   }
 
   public static final class LimelightConstants {
