@@ -32,8 +32,8 @@ public class ShooterSubsystem extends SubsystemBase {
     final static CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
     // PIDs
-    public final AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel PID");
-    public final AdjustablePID hoodPID = new AdjustablePID(leftShooterController, "Hood PID");
+    public final AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel", 0.0001, 0.0001, 0.0001, 0, 0.00156);
+    public final AdjustablePID hoodPID = new AdjustablePID(leftShooterController, "Hood");
 
     private double current_angle = 0;
     public double angle = 0, velocity = 0;
@@ -81,6 +81,9 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("desiredAngle", angle);
         SmartDashboard.putNumber("desiredVelocity", velocity);
         SmartDashboard.putNumber("actualVelocity", speed);
+
+        flywheelPID.periodic();
+        hoodPID.periodic();
     }
 
     public static double verifyVelocity(double speed) {
