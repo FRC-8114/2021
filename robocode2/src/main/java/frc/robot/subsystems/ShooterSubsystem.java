@@ -21,20 +21,19 @@ public class ShooterSubsystem extends SubsystemBase {
     // Shooter motor controllers
     public final static CANSparkMax leftShooterController = new CANSparkMax(ShooterConstants.LEFT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
     final CANSparkMax rightShooterController = new CANSparkMax(ShooterConstants.RIGHT_SHOOTER_CONTROLLER_PORT, MotorType.kBrushless);
-    public final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
+    //public final CANSparkMax kickerController = new CANSparkMax(ShooterConstants.KICKER_CONTROLLER_PORT, MotorType.kBrushless);
     public final static CANSparkMax hoodController = new CANSparkMax(ShooterConstants.HOOD_CONTROLLER_PORT,
             MotorType.kBrushless);
 
     // Shooter motor controller encoders
     final CANEncoder leftShooterControllerEncoder = leftShooterController.getEncoder();
     final CANEncoder rightShooterControllerEncoder = rightShooterController.getEncoder();
-    final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
+    //final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
     final static CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
     // PIDs
     public final AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel", 0.0001, 0.0001, 0.0001, 0, 0.00156);
-    public final AdjustablePID hoodPID = new AdjustablePID(leftShooterController, "Hood");
-
+   
     private double current_angle = 0;
     public double angle = 0, velocity = 0;
     public static double speed = leftShooterController.getAppliedOutput();
@@ -83,7 +82,6 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("actualVelocity", speed);
 
         flywheelPID.periodic();
-        hoodPID.periodic();
     }
 
     public static double verifyVelocity(double speed) {
@@ -96,10 +94,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public static void ShooterRun(double shooterSpeed) {
         speed = leftShooterController.getAppliedOutput();
         leftShooterController.set(verifyVelocity(shooterSpeed));
-    }
-
-    public void KickerRun(double speed) {
-        kickerController.set(verifyVelocity(speed));
     }
 
     public static void ShooterStop() {
