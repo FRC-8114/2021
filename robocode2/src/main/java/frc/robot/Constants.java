@@ -91,7 +91,7 @@ public final class Constants {
 
     public static final double HOOD_ENCODER_DISTANCE_PER_PULSE = 90;
     public static final double HOOD_RADIUS = .19812;
-    public static final double DEGREE_TOLERANCE = 0.015;
+    public static final double DEGREE_TOLERANCE = 0.5;
     public static final double BALL_VELOCITY = 23.788107;
 
     public static double MAX_INPUT = 1;
