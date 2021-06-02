@@ -23,7 +23,7 @@ import frc.robot.commands.shooterSubsystem.*;
 import frc.robot.commands.shooterSubsystem.KickerRun;
 import frc.robot.commands.shooterSubsystem.SetHoodPosition;
 import frc.robot.commands.shooterSubsystem.ShooterRun;
-import frc.robot.commands.shooterSubsystem.ShootingRoutine;
+import frc.robot.commands.shooterSubsystem.TeleopShooting;
 import frc.robot.commands.*;
 import frc.robot.commands.auto.ShootMoveBack;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -91,8 +91,8 @@ public class RobotContainer {
 
     // Run the intake when Y is pressed
     new JoystickButton(m_driverController, Button.kY.value)
-        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(0.3))
-        .whenReleased(() -> shooterSubsystem.StopHood());
+        .whenPressed(new TeleopShooting())
+        .whenReleased(() -> shooterSubsystem.ShooterStop());
 
     // B Button
     new JoystickButton(m_driverController, Button.kB.value)
@@ -125,8 +125,6 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kStickRight.value)
       .whenPressed(() -> isQuickTurn = !isQuickTurn);  
       
-      
-
     
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));

@@ -42,7 +42,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * effect of the GUI layout.
  */
 public class AdjustablePID {
-  public CANPIDController pidController;
+  public static CANPIDController pidController;
   public CANSparkMax motor;
   public CANEncoder encoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, setpoint;

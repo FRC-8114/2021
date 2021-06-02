@@ -6,10 +6,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class StopShooter extends CommandBase {
     ShooterSubsystem shooterSubsystem;
 
-    public StopShooter(ShooterSubsystem shooterSubsystem) {
-        this.shooterSubsystem = shooterSubsystem;
-
-        addRequirements(shooterSubsystem);
+    public StopShooter() {
     }
 
     public void initialize() {
@@ -17,7 +14,7 @@ public class StopShooter extends CommandBase {
     }
     
     public void execute() {
-        shooterSubsystem.ShooterStop();
+        ShooterSubsystem.ShooterStop();
     }
 
     public boolean isFinished() {
