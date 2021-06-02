@@ -114,7 +114,7 @@ public class RobotContainer {
 
     // Left Bumper
     new JoystickButton(m_driverController, 5)
-        .whenPressed(() -> intakeSubsystem.IntakeRun(0.65))
+        .whenPressed(() -> intakeSubsystem.IntakeRun(0.35))
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     // Start Button
