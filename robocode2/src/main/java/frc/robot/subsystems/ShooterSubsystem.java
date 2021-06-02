@@ -32,8 +32,9 @@ public class ShooterSubsystem extends SubsystemBase {
     final static CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
     // PIDs
-    public final AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel", 0.0001, 0.0001, 0.0001, 0, 0.00156);
-   
+    public final static AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel", 0.0001, 0.0001,
+            0.0001, 0, 0.00156);
+
     private double current_angle = 0;
     public double angle = 0, velocity = 0;
     public static double speed = leftShooterController.getAppliedOutput();
@@ -61,11 +62,10 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setVelocityConversionFactor(ShooterConstants.VELOCITY_CONVERSION_FACTOR);
         HoodZero();
 
-        Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false)
-            .withWidget(BuiltInWidgets.kCommand).getEntry()
-            .addListener(event -> {
-                HoodZero();
-            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        Shuffleboard.getTab("Reset Hood Angle Party").add("Reset Hood Angle", false).withWidget(BuiltInWidgets.kCommand)
+                .getEntry().addListener(event -> {
+                    HoodZero();
+                }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         Shuffleboard.getTab("Shooting").add("Shooter Control", ShooterConstants.MAX_INPUT)
                 .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
@@ -91,17 +91,16 @@ public class ShooterSubsystem extends SubsystemBase {
         return speed;
     }
 
-    public static void ShooterRun(double shooterSpeed) {
-        speed = leftShooterController.getAppliedOutput();
-        leftShooterController.set(verifyVelocity(shooterSpeed));
+    public static void ShooterRun(double rpm) {
+        flywheelPID.setpoint = rpm;
     }
 
     public static void ShooterStop() {
-        leftShooterController.stopMotor();
+        flywheelPID.setpoint = 0;
     }
 
-    public void ShooterReverse(double speed) {
-        leftShooterController.set(-verifyVelocity(speed));
+    public void ShooterReverse(double rpm) {
+        flywheelPID.setpoint = rpm;
     }
 
     // Hood Positions should be one for 0-5 ft in front of goal and one for 9-14 ft from goal
