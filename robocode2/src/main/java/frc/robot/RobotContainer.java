@@ -91,12 +91,12 @@ public class RobotContainer {
 
     // Run the intake when Y is pressed
     new JoystickButton(m_driverController, Button.kY.value)
-        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(0.3))
+        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(0.1))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
     // B Button
     new JoystickButton(m_driverController, Button.kB.value)
-        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(0.3))
+        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(0.1))
         .whenReleased(() -> shooterSubsystem.StopHood());
 
     // X Button
@@ -144,12 +144,11 @@ public class RobotContainer {
         indexSubsystem.AllIndexStop();
 
     // Right Trigger
-    if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
-        ShooterSubsystem.ShooterRun(3000);
-    }
-    
-    else if (m_driverController.getTriggerAxis(Hand.kRight) != 1)
+    if((m_driverController.getTriggerAxis(Hand.kRight) == 1) && (SmartDashboard.getNumber("Flywheel SetPoint", 0) == 0)) {
+        ShooterSubsystem.ShooterRun(2800);
+    } else if (m_driverController.getTriggerAxis(Hand.kRight) != 1) {
         ShooterSubsystem.ShooterStop();
+    }
 
     SmartDashboard.putBoolean("isQuickTurn", isQuickTurn);
   }
