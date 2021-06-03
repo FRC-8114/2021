@@ -45,9 +45,7 @@ public class AdjustablePID {
   public CANPIDController pidController;
   public CANSparkMax motor;
   public CANEncoder encoder;
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, setpoint;
   public String pidName;
-  public boolean inControl = false, mode = false;
   public NetworkTableEntry processVariableEntry, outputEntry, actualP;
 
   public AdjustablePID(CANSparkMax motor, String pidName) {
@@ -66,27 +64,13 @@ public class AdjustablePID {
     pidController = motor.getPIDController();
     encoder = motor.getEncoder();
 
-    // PID coefficients
-    kP = 5e-5; 
-    kI = 1e-6;
-    kD = 0; 
-    kIz = 0; 
-    kFF = 0.000156; 
-    kMaxOutput = 1; 
-    kMinOutput = -1;
-    maxRPM = 5700;
-
-    // Smart Motion Coefficients
-    maxVel = 2000; // rpm
-    maxAcc = 1500;
-
     // set PID coefficients
-    pidController.setP(kP);
-    pidController.setI(kI);
-    pidController.setD(kD);
-    pidController.setIZone(kIz);
-    pidController.setFF(kFF);
-    pidController.setOutputRange(kMinOutput, kMaxOutput);
+    pidController.setP(5e-5);
+    pidController.setI(1e-6);
+    pidController.setD(0);
+    pidController.setIZone(0);
+    pidController.setFF(0.000156);
+    pidController.setOutputRange(-1, 1);
 
     /**
      * Smart Motion coefficients are set on a CANPIDController object
@@ -101,25 +85,25 @@ public class AdjustablePID {
      * error for the pid controller in Smart Motion mode
      */
     int smartMotionSlot = 0;
-    pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+    pidController.setSmartMotionMaxVelocity(2000, smartMotionSlot);
+    pidController.setSmartMotionMinOutputVelocity(0, smartMotionSlot);
+    pidController.setSmartMotionMaxAccel(1500, smartMotionSlot);
+    pidController.setSmartMotionAllowedClosedLoopError(0, smartMotionSlot);
 
     // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber(pidName + " P Gain", kP);
-    SmartDashboard.putNumber(pidName + " I Gain", kI);
-    SmartDashboard.putNumber(pidName + " D Gain", kD);
-    SmartDashboard.putNumber(pidName + " I Zone", kIz);
-    SmartDashboard.putNumber(pidName + " Feed Forward", kFF);
-    SmartDashboard.putNumber(pidName + " Max Output", kMaxOutput);
-    SmartDashboard.putNumber(pidName + " Min Output", kMinOutput);
+    SmartDashboard.putNumber(pidName + " P Gain", 5e-5);
+    SmartDashboard.putNumber(pidName + " I Gain", 1e-6);
+    SmartDashboard.putNumber(pidName + " D Gain", 0);
+    SmartDashboard.putNumber(pidName + " I Zone", 0);
+    SmartDashboard.putNumber(pidName + " Feed Forward", 0.000156);
+    SmartDashboard.putNumber(pidName + " Max Output", 1);
+    SmartDashboard.putNumber(pidName + " Min Output", -1);
 
     // display Smart Motion coefficients
-    SmartDashboard.putNumber(pidName + " Max Velocity", maxVel);
-    SmartDashboard.putNumber(pidName + " Min Velocity", minVel);
-    SmartDashboard.putNumber(pidName + " Max Acceleration", maxAcc);
-    SmartDashboard.putNumber(pidName + " Allowed Closed Loop Error", allowedErr);
+    SmartDashboard.putNumber(pidName + " Max Velocity", 2000);
+    SmartDashboard.putNumber(pidName + " Min Velocity", 0);
+    SmartDashboard.putNumber(pidName + " Max Acceleration", 1500);
+    SmartDashboard.putNumber(pidName + " Allowed Closed Loop Error", 0);
     SmartDashboard.putNumber(pidName + " Set Position", 0);
     SmartDashboard.putNumber(pidName + " Set Velocity", 0);
 
@@ -143,27 +127,13 @@ public class AdjustablePID {
     pidController = motor.getPIDController();
     encoder = motor.getEncoder();
 
-    // PID coefficients
-    this.kP = kP; 
-    this.kI = kI;
-    this.kD = kD; 
-    this.kIz = kIz; 
-    this.kFF = kFF; 
-    kMaxOutput = 1; 
-    kMinOutput = -1;
-    maxRPM = 5700;
-
-    // Smart Motion Coefficients
-    maxVel = 2000; // rpm
-    maxAcc = 1500;
-
     // set PID coefficients
     pidController.setP(kP);
     pidController.setI(kI);
     pidController.setD(kD);
     pidController.setIZone(kIz);
     pidController.setFF(kFF);
-    pidController.setOutputRange(kMinOutput, kMaxOutput);
+    pidController.setOutputRange(-1, 1);
 
     /**
      * Smart Motion coefficients are set on a CANPIDController object
@@ -178,10 +148,10 @@ public class AdjustablePID {
      * error for the pid controller in Smart Motion mode
      */
     int smartMotionSlot = 0;
-    pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+    pidController.setSmartMotionMaxVelocity(2000, smartMotionSlot);
+    pidController.setSmartMotionMinOutputVelocity(0, smartMotionSlot);
+    pidController.setSmartMotionMaxAccel(1500, smartMotionSlot);
+    pidController.setSmartMotionAllowedClosedLoopError(0, smartMotionSlot);
 
     // display PID coefficients on SmartDashboard
     SmartDashboard.putNumber(pidName + " P Gain", kP);
@@ -189,14 +159,14 @@ public class AdjustablePID {
     SmartDashboard.putNumber(pidName + " D Gain", kD);
     SmartDashboard.putNumber(pidName + " I Zone", kIz);
     SmartDashboard.putNumber(pidName + " Feed Forward", kFF);
-    SmartDashboard.putNumber(pidName + " Max Output", kMaxOutput);
-    SmartDashboard.putNumber(pidName + " Min Output", kMinOutput);
+    SmartDashboard.putNumber(pidName + " Max Output", 1);
+    SmartDashboard.putNumber(pidName + " Min Output", -1);
 
     // display Smart Motion coefficients
-    SmartDashboard.putNumber(pidName + " Max Velocity", maxVel);
-    SmartDashboard.putNumber(pidName + " Min Velocity", minVel);
-    SmartDashboard.putNumber(pidName + " Max Acceleration", maxAcc);
-    SmartDashboard.putNumber(pidName + " Allowed Closed Loop Error", allowedErr);
+    SmartDashboard.putNumber(pidName + " Max Velocity", 2000);
+    SmartDashboard.putNumber(pidName + " Min Velocity", 0);
+    SmartDashboard.putNumber(pidName + " Max Acceleration", 1500);
+    SmartDashboard.putNumber(pidName + " Allowed Closed Loop Error", 0);
     SmartDashboard.putNumber(pidName + " Set Position", 0);
     SmartDashboard.putNumber(pidName + " Set Velocity", 0);
 
@@ -218,20 +188,31 @@ public class AdjustablePID {
     double maxA = SmartDashboard.getNumber(pidName + " Max Acceleration", 0);
     double allE = SmartDashboard.getNumber(pidName + " Allowed Closed Loop Error", 0);
 
+    double kP = pidController.getP();
+    double kI = pidController.getI();
+    double kD = pidController.getD();
+    double kIz = pidController.getIZone();
+    double kFF = pidController.getFF();
+    double kMaxOutput = pidController.getOutputMin();
+    double kMinOutput = pidController.getOutputMax();
+    double maxVel = pidController.getSmartMotionMaxVelocity(0);
+    double minVel = pidController.getSmartMotionMinOutputVelocity(0);
+    double maxAcc = pidController.getSmartMotionMaxAccel(0);
+    double allowedErr = pidController.getSmartMotionAllowedClosedLoopError(0);
+
     // if PID coefficients on SmartDashboard have changed, write new values to controller
-    if((p != kP)) { pidController.setP(p); kP = p; }
-    if((i != kI)) { pidController.setI(i); kI = i; }
-    if((d != kD)) { pidController.setD(d); kD = d; }
-    if((iz != kIz)) { pidController.setIZone(iz); kIz = iz; }
-    if((ff != kFF)) { pidController.setFF(ff); kFF = ff; }
+    if((p != kP)) pidController.setP(p);
+    if((i != kI)) pidController.setI(i); 
+    if((d != kD)) pidController.setD(d);
+    if((iz != kIz)) pidController.setIZone(iz);
+    if((ff != kFF)) pidController.setFF(ff);
     if((max != kMaxOutput) || (min != kMinOutput)) { 
       pidController.setOutputRange(min, max); 
-      kMinOutput = min; kMaxOutput = max; 
     }
-    if((maxV != maxVel)) { pidController.setSmartMotionMaxVelocity(maxV,0); maxVel = maxV; }
-    if((minV != minVel)) { pidController.setSmartMotionMinOutputVelocity(minV,0); minVel = minV; }
-    if((maxA != maxAcc)) { pidController.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
-    if((allE != allowedErr)) { pidController.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
+    if((maxV != maxVel)) pidController.setSmartMotionMaxVelocity(maxV,0);
+    if((minV != minVel)) pidController.setSmartMotionMinOutputVelocity(minV,0);
+    if((maxA != maxAcc)) pidController.setSmartMotionMaxAccel(maxA,0);
+    if((allE != allowedErr)) pidController.setSmartMotionAllowedClosedLoopError(allE,0);
 
     double setPoint, processVariable;
     boolean mode = SmartDashboard.getBoolean(pidName + " Mode", false);
@@ -253,5 +234,11 @@ public class AdjustablePID {
     SmartDashboard.putNumber(pidName + " SetPoint", setPoint);
     SmartDashboard.putNumber(pidName + " Process Variable", processVariable);
     SmartDashboard.putNumber(pidName + " Output", motor.getAppliedOutput());
+
+    SmartDashboard.putNumber(pidName + " PID P", pidController.getP());
+    SmartDashboard.putNumber(pidName + " PID I", pidController.getI());
+    SmartDashboard.putNumber(pidName + " PID D", pidController.getD());
+    SmartDashboard.putNumber(pidName + " PID Iz", pidController.getIZone());
+    SmartDashboard.putNumber(pidName + " PID FF", pidController.getFF());
   }
 }
