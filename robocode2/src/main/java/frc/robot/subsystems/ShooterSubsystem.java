@@ -32,8 +32,7 @@ public class ShooterSubsystem extends SubsystemBase {
     final static CANEncoder hoodControllerEncoder = hoodController.getEncoder();
 
     // PIDs
-    public final static AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel", 0.0001, 0.0001,
-            0.0001, 0, 0.00156);
+    public final static AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel", 0.00005, 0.0000001, 0, 0, 0.000156);
 
     private double current_angle = 0;
     public double angle = 0, velocity = 0;
@@ -92,15 +91,15 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public static void ShooterRun(double rpm) {
-        flywheelPID.setpoint = rpm;
+        SmartDashboard.putNumber("Flywheel Set Velocity", rpm);
     }
 
     public static void ShooterStop() {
-        flywheelPID.setpoint = 0;
+        SmartDashboard.putNumber("Flywheel Set Velocity", 0);
     }
 
     public void ShooterReverse(double rpm) {
-        flywheelPID.setpoint = rpm;
+        SmartDashboard.putNumber("Flywheel Set Velocity", -rpm);
     }
 
     // Hood Positions should be one for 0-5 ft in front of goal and one for 9-14 ft from goal
