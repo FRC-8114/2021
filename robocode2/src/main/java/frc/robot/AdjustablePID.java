@@ -106,6 +106,7 @@ public class AdjustablePID {
     SmartDashboard.putNumber(pidName + " Allowed Closed Loop Error", 0);
     SmartDashboard.putNumber(pidName + " Set Position", 0);
     SmartDashboard.putNumber(pidName + " Set Velocity", 0);
+    SmartDashboard.putNumber(pidName + " SetPoint", 0);
 
     // button to toggle between velocity and smart motion modes
     SmartDashboard.putBoolean(pidName + " Mode", true);
@@ -169,6 +170,7 @@ public class AdjustablePID {
     SmartDashboard.putNumber(pidName + " Allowed Closed Loop Error", 0);
     SmartDashboard.putNumber(pidName + " Set Position", 0);
     SmartDashboard.putNumber(pidName + " Set Velocity", 0);
+    SmartDashboard.putNumber(pidName + " SetPoint", 0);
 
     // button to toggle between velocity and smart motion modes
     SmartDashboard.putBoolean(pidName + " Mode", true);
