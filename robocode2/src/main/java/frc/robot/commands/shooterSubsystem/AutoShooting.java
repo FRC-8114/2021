@@ -13,19 +13,19 @@ public class AutoShooting extends CommandBase {
     }
 
     public void initialize() {
-        new ShooterRun(3200);
+        new ShooterRun(3500);
     }
 
     public void execute() {
         double shooterRPM = SmartDashboard.getNumber("Flywheel Set Position", 0);
-        if (shooterRPM >= 3200)
+        if (shooterRPM >= 3500)
         {
             IndexSubsystem.TowerIndexRun(0.75);
             KickerSubsystem.KickerRun(0.8);
             shotPreviously = true;
         }
 
-        if (shooterRPM < 3000 && shotPreviously) {
+        if (shooterRPM < 3400 && shotPreviously) {
             shots_fired++;
             IndexSubsystem.TowerIndexStop();
             KickerSubsystem.KickerStop();

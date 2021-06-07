@@ -23,8 +23,11 @@ public class Forward extends CommandBase{
 
     public boolean isFinished()
     {
-        if(DriveSubsystem.getAverageEncoderDistance() < d)
-            return false;
-        return true;
+        if(Math.abs(DriveSubsystem.getAverageEncoderDistance()) > Math.abs(d)){
+            DriveSubsystem.tankDrive(0, 0);
+            return true;
+        }
+            
+        return false;
     }
 }

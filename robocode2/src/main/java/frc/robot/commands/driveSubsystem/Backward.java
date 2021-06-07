@@ -10,13 +10,11 @@ public class Backward extends CommandBase {
         this.d = d;
         this.speedL = -speedL;
         this.speedR = -speedR;
-        System.out.println(DriveSubsystem.getAverageEncoderDistance());
     }
 
     public void execute()
     {
         DriveSubsystem.tankDrive(speedL, speedR);
-        System.out.println(DriveSubsystem.getAverageEncoderDistance());
 
     }
 

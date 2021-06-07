@@ -7,21 +7,21 @@ import edu.wpi.first.wpilibj.Timer;
 public class ShooterRun extends CommandBase {
     private double time = 5;
     private Timer a;
-    double speed;
+    double rpm;
     
-    public ShooterRun (double speed) {
-        this.speed = speed;
+    public ShooterRun (double rpm) {
+        this.rpm = rpm;
     }
 
     public void initialize() {
-        ShooterSubsystem.ShooterRun(speed);
+        ShooterSubsystem.ShooterRun(rpm);
         a = new Timer();
         a.start();
         
     }
     
     public void execute() {
-        ShooterSubsystem.ShooterRun(speed);
+        ShooterSubsystem.ShooterRun(rpm);
     }
 
     public void end() {

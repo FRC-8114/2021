@@ -13,7 +13,7 @@ public class IndexSubsystem extends SubsystemBase {
     // Index motor controller
     final CANSparkMax frontIndexController = new CANSparkMax(IndexConstants.FRONT_INDEX_CONTROLLER_PORT, MotorType.kBrushed);
     final static CANSparkMax towerIndexController = new CANSparkMax(IndexConstants.TOWER_INDEX_CONTROLLER_PORT,
-            MotorType.kBrushless);
+            MotorType.kBrushed);
 
     final CANEncoder towerIndexControllEncoder = towerIndexController.getEncoder();
 

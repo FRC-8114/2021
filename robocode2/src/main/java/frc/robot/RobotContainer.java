@@ -143,9 +143,8 @@ public class RobotContainer {
 
     // Right Trigger
     if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
-        ShooterSubsystem.ShooterRun(1);
-    }
-    
+        new TeleopShooting();
+    }    
     else if (m_driverController.getTriggerAxis(Hand.kRight) != 1)
         ShooterSubsystem.ShooterStop();
 

@@ -11,27 +11,26 @@ public class TeleopShooting extends CommandBase {
     }
 
     public void initialize() {
-        new ShooterRun(1);
+        new ShooterRun(3500);
     }
 
     public void execute() {
         double shooterRPM = SmartDashboard.getNumber("Flywheel Set Position", 0);
-        if (shooterRPM >= 3200) {
+        if (shooterRPM >= 3500) {
             IndexSubsystem.TowerIndexRun(0.75);
             KickerSubsystem.KickerRun(0.8);
         }
 
-        if (shooterRPM < 3000) {
+        if (shooterRPM < 3400) {
             IndexSubsystem.TowerIndexStop();
             KickerSubsystem.KickerStop();
         }
     }
 
     public void end() {
-        new StopShooter();
     }
 
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }
