@@ -91,31 +91,33 @@ public class RobotContainer {
 
     // Run the intake when Y is pressed
     new JoystickButton(m_driverController, Button.kY.value)
-        .whenPressed(new TeleopShooting())
-        .whenReleased(() -> shooterSubsystem.ShooterStop());
+        .whenPressed(() -> ClimberSubsystem.ClimberUp(0.6))
+        .whenReleased(() -> ClimberSubsystem.ClimberStop());
 
     // B Button
     new JoystickButton(m_driverController, Button.kB.value)
-        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(0.3))
-        .whenReleased(() -> shooterSubsystem.StopHood());
+        .whenPressed(new SetHoodPosition(shooterSubsystem, ShooterConstants.FAR_HOOD_ANGLE))
+        .whenReleased(() -> ShooterSubsystem.StopHood());
 
     // X Button
     new JoystickButton(m_driverController, Button.kX.value)
-        .whenPressed(new AutoCenter(m_robotDrive, limelightSubsystem));
-        
+        .whenPressed(new SetHoodPosition(shooterSubsystem, ShooterConstants.CLOSE_HOOD_ANGLE))
+        .whenReleased(() -> ShooterSubsystem.StopHood());
+            
     //A Button
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(() -> DriveSubsystem.reverseDirection());
+        .whenPressed(new SetHoodPosition(shooterSubsystem, ShooterConstants.INITIATION_LINE_ANGLE))
+        .whenReleased(() -> ShooterSubsystem.StopHood());
 
     // Right Bumper
     new JoystickButton(m_driverController, 6)
-        .whenPressed(() -> kickerSubsystem.KickerRun(0.85))
-        .whenReleased(() -> kickerSubsystem.KickerStop());
+        .whenPressed(() -> IntakeSubsystem.IntakeRun(0.6))
+        .whenReleased(() -> IntakeSubsystem.IntakeStop());
 
     // Left Bumper
     new JoystickButton(m_driverController, 5)
-        .whenPressed(() -> intakeSubsystem.IntakeRun(0.35))
-        .whenReleased(() -> intakeSubsystem.IntakeStop());
+        .whenPressed(() -> IntakeSubsystem.IntakeReverse(0.6))
+        .whenReleased(() -> IntakeSubsystem.IntakeStop());
 
     // Start Button
     new JoystickButton(m_driverController, Button.kStart.value)
@@ -136,10 +138,10 @@ public class RobotContainer {
 
     // Left Trigger
     if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
-        indexSubsystem.AllIndexRun(.8);
+        ShooterSubsystem.ShooterRun(3500);
     }
     else if(m_driverController.getTriggerAxis(Hand.kLeft) != 1)
-        indexSubsystem.AllIndexStop();
+        ShooterSubsystem.ShooterStop();
 
     // Right Trigger
     if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
@@ -147,6 +149,9 @@ public class RobotContainer {
     }    
     else if (m_driverController.getTriggerAxis(Hand.kRight) != 1)
         ShooterSubsystem.ShooterStop();
+
+    if (m_driverController.getPOV() != 0)
+        DriveSubsystem.reverseDirection();
 
     SmartDashboard.putBoolean("isQuickTurn", isQuickTurn);
   }

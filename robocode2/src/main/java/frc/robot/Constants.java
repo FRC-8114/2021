@@ -93,8 +93,12 @@ public final class Constants {
     public static final double HOOD_RADIUS = .19812;
     public static final double DEGREE_TOLERANCE = 0.015;
     public static final double BALL_VELOCITY = 23.788107;
+	  public static final double FAR_HOOD_ANGLE = 0;
 
     public static double MAX_INPUT = 1;
+
+    public static double CLOSE_HOOD_ANGLE = 14.14;
+    public static double INITIATION_LINE_ANGLE = 44.2;
   }
 
   public static final class LimelightConstants {

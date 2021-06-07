@@ -21,7 +21,7 @@ public class TeleopShooting extends CommandBase {
             KickerSubsystem.KickerRun(0.8);
         }
 
-        if (shooterRPM < 3400) {
+        if (shooterRPM < 3450) {
             IndexSubsystem.TowerIndexStop();
             KickerSubsystem.KickerStop();
         }

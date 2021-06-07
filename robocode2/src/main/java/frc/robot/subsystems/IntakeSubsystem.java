@@ -11,29 +11,30 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     //the intake motor controller
-    final CANSparkMax intakeController = new CANSparkMax(IntakeConstants.INTAKE_CONTROLLER_PORT, MotorType.kBrushless);
+    final static CANSparkMax intakeController = new CANSparkMax(IntakeConstants.INTAKE_CONTROLLER_PORT,
+            MotorType.kBrushless);
 
-    //the intake motor controller encoder
+    // the intake motor controller encoder
     final CANEncoder intakeControllerEncoder = intakeController.getEncoder();
 
-    //Creates the IntakeSubsystem
+    // Creates the IntakeSubsystem
     public IntakeSubsystem() {
 
-        //set to factory default and idle so we know what we're working with 
-        intakeController.restoreFactoryDefaults(); 
+        // set to factory default and idle so we know what we're working with
+        intakeController.restoreFactoryDefaults();
         intakeController.setIdleMode(IdleMode.kCoast);
 
     }
 
-    public void IntakeRun(double speed) {
+    public static void IntakeRun(double speed) {
         intakeController.set(speed);
     }
 
-    public void IntakeReverse(double speed) {
+    public static void IntakeReverse(double speed) {
         intakeController.set(-speed);
     }
 
-    public void IntakeStop() {
+    public static void IntakeStop() {
         intakeController.stopMotor();
     }
 

@@ -25,7 +25,7 @@ public class SequentialShooting extends ParallelCommandGroup {
 
             new Wait(5000),
 
-            new KickerRun(kickerSubsystem, 0.85),
+            new KickerRun(0.85),
 
             new IndexRun(indexSubsystem, 0.5),
 

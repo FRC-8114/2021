@@ -25,7 +25,7 @@ public class AutoShooting extends CommandBase {
             shotPreviously = true;
         }
 
-        if (shooterRPM < 3400 && shotPreviously) {
+        if (shooterRPM <= 3450 && shotPreviously) {
             shots_fired++;
             IndexSubsystem.TowerIndexStop();
             KickerSubsystem.KickerStop();
