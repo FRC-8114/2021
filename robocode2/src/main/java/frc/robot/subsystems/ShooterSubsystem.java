@@ -103,15 +103,15 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     // Hood Positions should be one for 0-5 ft in front of goal and one for 9-14 ft from goal
-    public void IncreaseHoodPosition(double speed) {
+    public static void IncreaseHoodPosition(double speed) {
         hoodController.set(verifyVelocity(speed));
     }
 
-    public void StopHood() {
+    public static void StopHood() {
         hoodController.stopMotor();
     }
 
-    public void LowerHoodPosition(double speed) {
+    public static void LowerHoodPosition(double speed) {
         hoodController.set(-verifyVelocity(speed));
     }
 
@@ -119,7 +119,7 @@ public class ShooterSubsystem extends SubsystemBase {
         hoodControllerEncoder.setPosition(7.3456);
     }
 
-    public double GetHoodEncoderPosition() {
+    public static double GetHoodEncoderPosition() {
         return hoodControllerEncoder.getPosition();
     }
 

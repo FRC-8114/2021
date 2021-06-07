@@ -91,14 +91,17 @@ public final class Constants {
 
     public static final double HOOD_ENCODER_DISTANCE_PER_PULSE = 90;
     public static final double HOOD_RADIUS = .19812;
-    public static final double DEGREE_TOLERANCE = 0.5;
+    public static final double HOOD_DEGREE_TOLERANCE = 0.5;
     public static final double BALL_VELOCITY = 23.788107;
 
     public static double MAX_INPUT = 1;
+
+    public static final double INITIATION_LINE_SHOOTING_ANGLE = 44.23;
+    public static final double WALL_SHOT_SHOOTING_ANGLE = 44.23;
   }
 
   public static final class LimelightConstants {
-    public static final double AUTO_CENTER_TOLERANCE = .25;
-    public static final double AUTO_CENTER_FAKECENTER = -3.5;
+    public static final double SHOOTER_LIMELIGHT_OFFSET_ANGLE = 5;
+    public static final double AUTO_CENTER_TOLERANCE = 0.5;
   }
 }
