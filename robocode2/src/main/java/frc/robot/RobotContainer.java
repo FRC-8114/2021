@@ -89,45 +89,41 @@ public class RobotContainer {
     // new JoystickButton(m_driverController, Button.kBumperLeft.value)
     //     .whenPressed(() -> m_robotDrive.decMaxSpeed());
 
-    // Run the intake when Y is pressed
-    new JoystickButton(m_driverController, Button.kY.value)
-        .whenPressed(() -> shooterSubsystem.IncreaseHoodPosition(0.1))
-        .whenReleased(() -> shooterSubsystem.StopHood());
+    // Y Button
+    // Climbs
+    new JoystickButton(m_driverController, Button.kY.value);
 
     // B Button
-    new JoystickButton(m_driverController, Button.kB.value)
-        .whenPressed(() -> shooterSubsystem.LowerHoodPosition(0.1))
-        .whenReleased(() -> shooterSubsystem.StopHood());
+    // Far shot hood angle
+    new JoystickButton(m_driverController, Button.kB.value);
 
     // X Button
+    // Wall shot hood angle
     new JoystickButton(m_driverController, Button.kX.value)
-        .whenPressed(new AutoCenter(m_robotDrive, limelightSubsystem));
+        .whenPressed(new SetHoodPosition(shooterSubsystem, 14.0));
         
-    //A Button
+    // A Button
+    // Initiation line shot hood angle
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(() -> DriveSubsystem.reverseDirection());
+        .whenPressed(new SetHoodPosition(shooterSubsystem, 44.2));
 
     // Right Bumper
+    // Runs intake forwards
     new JoystickButton(m_driverController, 6)
-        .whenPressed(() -> kickerSubsystem.KickerRun(0.85))
-        .whenReleased(() -> kickerSubsystem.KickerStop());
-
-    // Left Bumper
-    new JoystickButton(m_driverController, 5)
-        .whenPressed(() -> intakeSubsystem.IntakeRun(0.65))
+        .whenPressed(() -> intakeSubsystem.IntakeRun(.6))
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
-    // Start Button
-    new JoystickButton(m_driverController, Button.kStart.value)
-        .whenPressed(new SetHoodPosition(shooterSubsystem, shooterSubsystem.CalculateAutoAngle(limelightSubsystem.approximateDistance(), 96, ShooterConstants.BALL_VELOCITY)));
+    // Left Bumper
+    // Runs intake backwards
+    new JoystickButton(m_driverController, 5)
+    .whenPressed(() -> intakeSubsystem.IntakeReverse(.6))
+    .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     // Right Joystick Button
+    // Toggles arcade/curvature drive
     new JoystickButton(m_driverController, Button.kStickRight.value)
       .whenPressed(() -> isQuickTurn = !isQuickTurn);  
       
-      
-
-    
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
   }
@@ -138,14 +134,17 @@ public class RobotContainer {
 
     // Left Trigger
     if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
-        indexSubsystem.AllIndexRun(.8);
+        indexSubsystem.AllIndexRun(.6);
     }
     else if(m_driverController.getTriggerAxis(Hand.kLeft) != 1)
         indexSubsystem.AllIndexStop();
 
     // Right Trigger
+    // Runs the auto-shoot (and auto center) routines while held
     if((m_driverController.getTriggerAxis(Hand.kRight) == 1) && (SmartDashboard.getNumber("Flywheel SetPoint", 0) == 0)) {
-        ShooterSubsystem.ShooterRun(2800);
+        new AutoCenter(m_robotDrive, limelightSubsystem);
+    } else if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
+        //temp
     } else if (m_driverController.getTriggerAxis(Hand.kRight) != 1) {
         ShooterSubsystem.ShooterStop();
     }
