@@ -34,7 +34,7 @@ public class IndexSubsystem extends SubsystemBase {
     }
 
     public void AllIndexRun (double speed) {
-        FrontIndexRun(1);
+        FrontIndexRun(speed);
         TowerIndexRun(speed);
     }
 
