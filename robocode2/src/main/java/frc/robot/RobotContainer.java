@@ -18,6 +18,8 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.driveSubsystem.*;
 import frc.robot.commands.indexSubsystem.IndexRun;
 import frc.robot.commands.indexSubsystem.StopIndex;
+import frc.robot.commands.limelight.TurnOffLED;
+import frc.robot.commands.limelight.TurnOnLED;
 import frc.robot.commands.searchSystem.GetAverageDistance;
 import frc.robot.commands.shooterSubsystem.*;
 import frc.robot.commands.shooterSubsystem.KickerRun;
@@ -142,11 +144,12 @@ public class RobotContainer {
     // Right Trigger
     // Runs the auto-shoot (and auto center) routines while held
     if((m_driverController.getTriggerAxis(Hand.kRight) == 1) && (SmartDashboard.getNumber("Flywheel SetPoint", 0) == 0)) {
-        new AutoCenter(m_robotDrive, limelightSubsystem);
+        new AutoCenter(m_robotDrive, limelightSubsystem).schedule();
     } else if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
         //temp
     } else if (m_driverController.getTriggerAxis(Hand.kRight) != 1) {
         ShooterSubsystem.ShooterStop();
+        new TurnOffLED(limelightSubsystem).schedule();
     }
 
     SmartDashboard.putBoolean("isQuickTurn", isQuickTurn);

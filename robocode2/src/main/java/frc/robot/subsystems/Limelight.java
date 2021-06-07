@@ -118,7 +118,17 @@ public class Limelight extends SubsystemBase {
    * @param mode    The double representing the desired mode
    */
   public void setLEDMode(double mode) {
-    ledMode.setNumber(mode);
+    ledMode.forceSetNumber(mode);
+  }
+
+  // Sets LEDmode to 1, forcing the limelight to turn off
+  public void turnOffLED() {
+    setLEDMode(1);
+  }
+
+  // Sets LEDmode to 3, forcing the limelight to turn on
+  public void turnOnLED() {
+    setLEDMode(3);
   }
 
   /*

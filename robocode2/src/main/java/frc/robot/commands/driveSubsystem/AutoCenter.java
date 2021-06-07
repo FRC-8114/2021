@@ -19,6 +19,7 @@ public class AutoCenter extends CommandBase {
 
     public void initialize() {
         System.out.println("Initialize");
+        limelightSubsystem.turnOnLED();
     }
 
     public void execute() {
