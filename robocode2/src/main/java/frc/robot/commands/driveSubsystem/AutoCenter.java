@@ -41,4 +41,8 @@ public class AutoCenter extends CommandBase {
         }
         return false;
     }
+
+    public void end() {
+        limelightSubsystem.turnOffLED();
+    }
 }

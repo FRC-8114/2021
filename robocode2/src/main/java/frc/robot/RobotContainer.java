@@ -210,7 +210,6 @@ public class RobotContainer {
         //temp
     } else if (m_driverController.getTriggerAxis(Hand.kRight) != 1) {
         ShooterSubsystem.ShooterStop();
-        new TurnOffLED(limelightSubsystem).schedule();
     }
 
     // D-pad Controls
