@@ -11,8 +11,10 @@ import frc.robot.Constants.IndexConstants;
 
 public class IndexSubsystem extends SubsystemBase {
     // Index motor controller
-    final CANSparkMax frontIndexController = new CANSparkMax(IndexConstants.FRONT_INDEX_CONTROLLER_PORT, MotorType.kBrushed);
-    final CANSparkMax towerIndexController = new CANSparkMax(IndexConstants.TOWER_INDEX_CONTROLLER_PORT, MotorType.kBrushed);
+    final static CANSparkMax frontIndexController = new CANSparkMax(IndexConstants.FRONT_INDEX_CONTROLLER_PORT,
+            MotorType.kBrushed);
+    final static CANSparkMax towerIndexController = new CANSparkMax(IndexConstants.TOWER_INDEX_CONTROLLER_PORT,
+            MotorType.kBrushed);
 
     // Creates the IndexSubsystem
     public IndexSubsystem() {
@@ -24,28 +26,28 @@ public class IndexSubsystem extends SubsystemBase {
         towerIndexController.setIdleMode(IdleMode.kBrake);
     }
 
-    public void FrontIndexRun (double speed) {
+    public static void FrontIndexRun(double speed) {
         frontIndexController.set(speed);
     }
 
-    public void TowerIndexRun (double speed) {
+    public static void TowerIndexRun(double speed) {
         towerIndexController.set(speed);
     }
 
-    public void AllIndexRun (double speed) {
+    public static void AllIndexRun(double speed) {
         FrontIndexRun(speed);
         TowerIndexRun(speed);
     }
 
-    public void FrontIndexStop() {
+    public static void FrontIndexStop() {
         frontIndexController.stopMotor();
     }
 
-    public void TowerIndexStop() {
+    public static void TowerIndexStop() {
         towerIndexController.stopMotor();
     }
 
-    public void AllIndexStop() {
+    public static void AllIndexStop() {
         FrontIndexStop();
         TowerIndexStop();
     }

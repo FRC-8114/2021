@@ -30,6 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
     final CANEncoder rightShooterControllerEncoder = rightShooterController.getEncoder();
     //final CANEncoder kickerControllerEncoder = kickerController.getEncoder();
     final static CANEncoder hoodControllerEncoder = hoodController.getEncoder();
+	public static final double ShooterRPM = 0;
 
     // PIDs
     public final static AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel", 0.00005, 0.0000001, 0, 0, 0.000156);

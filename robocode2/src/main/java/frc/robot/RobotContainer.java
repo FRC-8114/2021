@@ -24,12 +24,10 @@ import frc.robot.commands.limelight.TurnOffLED;
 import frc.robot.commands.limelight.TurnOnLED;
 import frc.robot.commands.searchSystem.GetAverageDistance;
 import frc.robot.commands.shooterSubsystem.*;
-import frc.robot.commands.shooterSubsystem.KickerRun;
-import frc.robot.commands.shooterSubsystem.SetHoodPosition;
-import frc.robot.commands.shooterSubsystem.ShooterRun;
-import frc.robot.commands.shooterSubsystem.ShootingRoutine;
 import frc.robot.commands.*;
 import frc.robot.commands.auto.ShootMoveBack;
+import frc.robot.commands.auto.ShootMoveUp;
+import frc.robot.commands.auto.ShootPushUp;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -71,6 +69,7 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.DRIVER_CONTROLLER_PORT);
+  XboxController m_operatorController = new XboxController(OIConstants.OPERATOR_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -120,15 +119,18 @@ public class RobotContainer {
     // X Button
     // Wall shot hood angle
     new JoystickButton(m_driverController, Button.kX.value)
-        .whenPressed(new SetHoodPosition(shooterSubsystem, wallShotAngle.getDouble(14.0)));
-    Shuffleboard.getTab("Robot Control").add("Set Hood/Wall Shot", new SetHoodPosition(shooterSubsystem, wallShotAngle.getDouble(14.0)));
+        .whenPressed(new SetHoodPosition(wallShotAngle.getDouble(14.0)));
+    Shuffleboard.getTab("Robot Control").add("Set Hood/Wall Shot", new SetHoodPosition(wallShotAngle.getDouble(14.0)));
         
     // A Button
     // Initiation line shot hood angle
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(new SetHoodPosition(shooterSubsystem, lineShotAngle.getDouble(44.2)));
-        Shuffleboard.getTab("Robot Control").add("Set Hood/Line Shot", new SetHoodPosition(shooterSubsystem, wallShotAngle.getDouble(44.2)));
+        .whenPressed(new SetHoodPosition(lineShotAngle.getDouble(44.2)));
+        Shuffleboard.getTab("Robot Control").add("Set Hood/Line Shot", new SetHoodPosition(wallShotAngle.getDouble(44.2)));
 
+    new JoystickButton(m_driverController, Button.kStart.value)
+        .whenPressed(new SetHoodPosition(5));
+    
     // Right Bumper
     // Runs intake forwards
     new JoystickButton(m_driverController, 6)
@@ -205,11 +207,7 @@ public class RobotContainer {
     // Right Trigger
     // Runs the auto-shoot (and auto center) routines while held
     if((m_driverController.getTriggerAxis(Hand.kRight) == 1) && (SmartDashboard.getNumber("Flywheel SetPoint", 0) == 0)) {
-        new AutoCenter(m_robotDrive, limelightSubsystem).schedule();
-    } else if(m_driverController.getTriggerAxis(Hand.kRight) == 1) {
-        //temp
-    } else if (m_driverController.getTriggerAxis(Hand.kRight) != 1) {
-        ShooterSubsystem.ShooterStop();
+        new TeleopShooting(m_driverController).schedule();
     }
 
     // D-pad Controls
@@ -291,7 +289,7 @@ public class RobotContainer {
   */
   public Command getAutonomousCommand()
   {
-      return new ShootMoveBack(2,.25,.25);
+      return new ShootMoveBack(.002,.7,.7);
   }
 
   public Trajectory getTrajectory() {
@@ -317,5 +315,4 @@ public class RobotContainer {
   public SearchSystem getSearchSystem() {
       return searchSystem;
   }
-
 }

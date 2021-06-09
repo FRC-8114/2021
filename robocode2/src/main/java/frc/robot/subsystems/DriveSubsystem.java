@@ -50,11 +50,15 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
-  private double maxVelocity, curvatureMaxCurvature, arcadeMaxCurvature;
+  private double maxVelocity;
+  private static double curvatureMaxCurvature;
+  private static double arcadeMaxCurvature;
   private double[] currentSpeeds = new double[2];
 
   // NetworkTable Entries for debugging mimicking
-  private final NetworkTableEntry speedEntry, curvatureEntry, isArcadeEntry;
+  private static NetworkTableEntry speedEntry;
+  private static NetworkTableEntry curvatureEntry;
+  private static NetworkTableEntry isArcadeEntry;
 
   public static boolean back = false;
 
@@ -151,8 +155,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fwd the commanded forward movement
    * @param rot the commanded rotation
    */
-  public void cheesyDrive(double speed, double curvature, boolean isArcade) {
-    if(back) {
+  public static void cheesyDrive(double speed, double curvature, boolean isArcade) {
+    if (back) {
       speed = -speed;
       curvature = -curvature;
     }
