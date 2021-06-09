@@ -18,6 +18,7 @@ public class IndexSubsystem extends SubsystemBase {
     public IndexSubsystem() {
         frontIndexController.restoreFactoryDefaults();
         frontIndexController.setIdleMode(IdleMode.kBrake);
+        frontIndexController.setInverted(true);
 
         towerIndexController.restoreFactoryDefaults();
         towerIndexController.setIdleMode(IdleMode.kBrake);
