@@ -33,6 +33,7 @@ import frc.robot.commands.auto.ShootMoveBack;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -63,7 +64,7 @@ public class RobotContainer {
   private final KickerSubsystem kickerSubsystem = new KickerSubsystem();
   private final Limelight limelightSubsystem = new Limelight("limelight-eleven");
 
-  private final NetworkTableEntry farShotAngle, wallShotAngle, lineShotAngle, intakeRun, intakeReverse, shooterRPM, indexRun;
+  private final NetworkTableEntry farShotAngle, wallShotAngle, lineShotAngle, intakeRun, intakeReverse, shooterRPM, indexRun, indexReverse, runIndex, reverseIndex;
 
   private Trajectory exampleTrajectory;
   public boolean isQuickTurn = false;
@@ -77,10 +78,13 @@ public class RobotContainer {
     farShotAngle = Shuffleboard.getTab("Robot Control").add("Far Shot Angle", 40).getEntry();
     wallShotAngle = Shuffleboard.getTab("Robot Control").add("Wall Shot Angle", 14.0).getEntry();
     lineShotAngle = Shuffleboard.getTab("Robot Control").add("Line Shot Angle", 44.2).getEntry();
-    intakeRun = Shuffleboard.getTab("Robot Control").add("Intake Run", 0.3).getEntry();
+    intakeRun = Shuffleboard.getTab("Robot Control").add("Intake Run", 0.6).getEntry();
     intakeReverse = Shuffleboard.getTab("Robot Control").add("Intake Reverse", 0.3).getEntry();
     shooterRPM = Shuffleboard.getTab("Robot Control").add("Shooter RPM", 3500).getEntry();
     indexRun = Shuffleboard.getTab("Robot Control").add("Index Run", 0.6).getEntry();
+    indexReverse = Shuffleboard.getTab("Robot Control").add("Index Reverse", 0.6).getEntry();
+    runIndex = Shuffleboard.getTab("Robot Control").add("Run Index", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    reverseIndex = Shuffleboard.getTab("Robot Control").add("Reverse Index", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
 
     configureButtonBindings();
@@ -117,29 +121,71 @@ public class RobotContainer {
     // Wall shot hood angle
     new JoystickButton(m_driverController, Button.kX.value)
         .whenPressed(new SetHoodPosition(shooterSubsystem, wallShotAngle.getDouble(14.0)));
+    Shuffleboard.getTab("Robot Control").add("Set Hood/Wall Shot", new SetHoodPosition(shooterSubsystem, wallShotAngle.getDouble(14.0)));
         
     // A Button
     // Initiation line shot hood angle
     new JoystickButton(m_driverController, Button.kA.value)
         .whenPressed(new SetHoodPosition(shooterSubsystem, lineShotAngle.getDouble(44.2)));
+        Shuffleboard.getTab("Robot Control").add("Set Hood/Line Shot", new SetHoodPosition(shooterSubsystem, wallShotAngle.getDouble(44.2)));
 
     // Right Bumper
     // Runs intake forwards
     new JoystickButton(m_driverController, 6)
-        .whenPressed(() -> intakeSubsystem.IntakeRun(intakeRun.getDouble(0.3)))
+        .whenPressed(() -> intakeSubsystem.IntakeRun(intakeRun.getDouble(0.6)))
         .whenReleased(() -> intakeSubsystem.IntakeStop());
+    Shuffleboard.getTab("Robot Control").add("Run Intake", false).withWidget(BuiltInWidgets.kToggleButton).getEntry().addListener(event -> {
+        if(event.value.getBoolean()) {
+            intakeSubsystem.IntakeRun(intakeRun.getDouble(0.6));
+        } else {
+            intakeSubsystem.IntakeStop();
+        }
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
     // Left Bumper
     // Runs intake backwards
     new JoystickButton(m_driverController, 5)
     .whenPressed(() -> intakeSubsystem.IntakeReverse(intakeReverse.getDouble(0.3)))
     .whenReleased(() -> intakeSubsystem.IntakeStop());
+    Shuffleboard.getTab("Robot Control").add("Reverse Intake", false).withWidget(BuiltInWidgets.kToggleButton).getEntry().addListener(event -> {
+        if(event.value.getBoolean()) {
+            intakeSubsystem.IntakeReverse(intakeReverse.getDouble(0.3));
+        } else {
+            intakeSubsystem.IntakeStop();
+        }
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
     // Right Joystick Button
     // Toggles arcade/curvature drive
     new JoystickButton(m_driverController, Button.kStickRight.value)
       .whenPressed(() -> isQuickTurn = !isQuickTurn);  
-      
+    Shuffleboard.getTab("Robot Control").add("Arcade/Curvature", false).withWidget(BuiltInWidgets.kToggleButton).getEntry().addListener(event -> {
+        isQuickTurn = event.value.getBoolean();
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    
+    // Shuffleboard control for F/B toggle
+    Shuffleboard.getTab("Robot Control").add("Backwards", false).withWidget(BuiltInWidgets.kToggleButton).getEntry().addListener(event -> {
+        m_robotDrive.back = event.value.getBoolean();
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    // Shuffleboard Control for Index Run
+    runIndex.addListener(event -> {
+        if(event.value.getBoolean()) {
+            indexSubsystem.AllIndexRun(indexRun.getDouble(0.6));
+        } else {
+            indexSubsystem.AllIndexStop();
+        }
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    // Shuffleboard Control for Index Reverse
+    reverseIndex.addListener(event -> {
+        if(event.value.getBoolean()) {
+            indexSubsystem.AllIndexReverse(indexReverse.getDouble(0.6));
+        } else {
+            indexSubsystem.AllIndexStop();
+        }
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
     // Adds the GetAveragedistance command to SmartDashboard
     SmartDashboard.putData(new GetAverageDistance(searchSystem, 3));
   }
@@ -152,8 +198,9 @@ public class RobotContainer {
     if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
         indexSubsystem.AllIndexRun(indexRun.getDouble(0.6));
     }
-    else if(m_driverController.getTriggerAxis(Hand.kLeft) != 1)
+    else if((m_driverController.getTriggerAxis(Hand.kLeft) != 1) && !runIndex.getBoolean(false) && !reverseIndex.getBoolean(false)) {
         indexSubsystem.AllIndexStop();
+    }
 
     // Right Trigger
     // Runs the auto-shoot (and auto center) routines while held
