@@ -152,6 +152,12 @@ public class RobotContainer {
         new TurnOffLED(limelightSubsystem).schedule();
     }
 
+    // D-pad Controls
+    // Down reverses the drivetrain
+    if(m_driverController.getPOV() == 180) {
+        m_robotDrive.back = !m_robotDrive.back;
+    }
+
     SmartDashboard.putBoolean("isQuickTurn", isQuickTurn);
   }
 
