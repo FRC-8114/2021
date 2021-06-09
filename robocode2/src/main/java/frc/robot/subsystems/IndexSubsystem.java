@@ -14,8 +14,6 @@ public class IndexSubsystem extends SubsystemBase {
     final CANSparkMax frontIndexController = new CANSparkMax(IndexConstants.FRONT_INDEX_CONTROLLER_PORT, MotorType.kBrushed);
     final CANSparkMax towerIndexController = new CANSparkMax(IndexConstants.TOWER_INDEX_CONTROLLER_PORT, MotorType.kBrushed);
 
-    final CANEncoder towerIndexControllEncoder = towerIndexController.getEncoder();
-
     // Creates the IndexSubsystem
     public IndexSubsystem() {
         frontIndexController.restoreFactoryDefaults();
