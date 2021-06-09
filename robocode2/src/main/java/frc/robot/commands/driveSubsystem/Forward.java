@@ -16,15 +16,15 @@ public class Forward extends CommandBase{
         DriveSubsystem.tankDrive(speedL, speedR);
     }
 
-    public void end()
+    public void end(boolean interrupted)
     {
         DriveSubsystem.tankDrive(0, 0);
     }
 
     public boolean isFinished()
     {
-        if(DriveSubsystem.getAverageEncoderDistance() < d)
-            return false;
-        return true;
+        if(Math.abs(DriveSubsystem.getAverageEncoderDistance()) < Math.abs(d))
+            return true;
+        return false;
     }
 }

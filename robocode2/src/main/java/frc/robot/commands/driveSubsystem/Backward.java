@@ -20,7 +20,7 @@ public class Backward extends CommandBase {
 
     }
 
-    public void end()
+    public void end(boolean interrupted)
     {
         DriveSubsystem.tankDrive(0, 0);
     }
