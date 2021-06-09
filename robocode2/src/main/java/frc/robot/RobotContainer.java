@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj.XboxController.Button;
 
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -31,6 +33,7 @@ import frc.robot.commands.auto.ShootMoveBack;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -60,6 +63,8 @@ public class RobotContainer {
   private final KickerSubsystem kickerSubsystem = new KickerSubsystem();
   private final Limelight limelightSubsystem = new Limelight("limelight-eleven");
 
+  private final NetworkTableEntry farShotAngle, wallShotAngle, lineShotAngle, intakeRun, intakeReverse, shooterRPM, indexRun;
+
   private Trajectory exampleTrajectory;
   public boolean isQuickTurn = false;
 
@@ -68,7 +73,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the button bindings
+    // Configure the button bindings'
+    farShotAngle = Shuffleboard.getTab("Robot Control").add("Far Shot Angle", 40).getEntry();
+    wallShotAngle = Shuffleboard.getTab("Robot Control").add("Wall Shot Angle", 14.0).getEntry();
+    lineShotAngle = Shuffleboard.getTab("Robot Control").add("Line Shot Angle", 44.2).getEntry();
+    intakeRun = Shuffleboard.getTab("Robot Control").add("Intake Run", 0.3).getEntry();
+    intakeReverse = Shuffleboard.getTab("Robot Control").add("Intake Reverse", 0.3).getEntry();
+    shooterRPM = Shuffleboard.getTab("Robot Control").add("Shooter RPM", 3500).getEntry();
+    indexRun = Shuffleboard.getTab("Robot Control").add("Index Run", 0.6).getEntry();
+
+
     configureButtonBindings();
 
     // Configure default commands
@@ -102,23 +116,23 @@ public class RobotContainer {
     // X Button
     // Wall shot hood angle
     new JoystickButton(m_driverController, Button.kX.value)
-        .whenPressed(new SetHoodPosition(shooterSubsystem, 14.0));
+        .whenPressed(new SetHoodPosition(shooterSubsystem, wallShotAngle.getDouble(14.0)));
         
     // A Button
     // Initiation line shot hood angle
     new JoystickButton(m_driverController, Button.kA.value)
-        .whenPressed(new SetHoodPosition(shooterSubsystem, 44.2));
+        .whenPressed(new SetHoodPosition(shooterSubsystem, lineShotAngle.getDouble(44.2)));
 
     // Right Bumper
     // Runs intake forwards
     new JoystickButton(m_driverController, 6)
-        .whenPressed(() -> intakeSubsystem.IntakeRun(.6))
+        .whenPressed(() -> intakeSubsystem.IntakeRun(intakeRun.getDouble(0.3)))
         .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     // Left Bumper
     // Runs intake backwards
     new JoystickButton(m_driverController, 5)
-    .whenPressed(() -> intakeSubsystem.IntakeReverse(.6))
+    .whenPressed(() -> intakeSubsystem.IntakeReverse(intakeReverse.getDouble(0.3)))
     .whenReleased(() -> intakeSubsystem.IntakeStop());
 
     // Right Joystick Button
@@ -136,7 +150,7 @@ public class RobotContainer {
 
     // Left Trigger
     if(m_driverController.getTriggerAxis(Hand.kLeft) == 1) {
-        indexSubsystem.AllIndexRun(.6);
+        indexSubsystem.AllIndexRun(indexRun.getDouble(0.6));
     }
     else if(m_driverController.getTriggerAxis(Hand.kLeft) != 1)
         indexSubsystem.AllIndexStop();
