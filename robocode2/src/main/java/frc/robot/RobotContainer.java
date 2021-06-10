@@ -53,18 +53,18 @@ import java.util.List;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-  private final SearchSystem searchSystem = new SearchSystem();
-  private final IndexSubsystem indexSubsystem = new IndexSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  private final KickerSubsystem kickerSubsystem = new KickerSubsystem();
-  private final Limelight limelightSubsystem = new Limelight("limelight-eleven");
+  public final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  public final SearchSystem searchSystem = new SearchSystem();
+  public final IndexSubsystem indexSubsystem = new IndexSubsystem();
+  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  public final KickerSubsystem kickerSubsystem = new KickerSubsystem();
+  public final Limelight limelightSubsystem = new Limelight("limelight-eleven");
 
-  private final NetworkTableEntry farShotAngle, wallShotAngle, lineShotAngle, intakeRun, intakeReverse, shooterRPM, indexRun, indexReverse, runIndex, reverseIndex;
+  public final NetworkTableEntry farShotAngle, wallShotAngle, lineShotAngle, intakeRun, intakeReverse, shooterRPM, indexRun, indexReverse, runIndex, reverseIndex;
 
-  private Trajectory exampleTrajectory;
+  public Trajectory exampleTrajectory;
   public boolean isQuickTurn = false;
 
   // The driver's controller
@@ -99,7 +99,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {
+  public void configureButtonBindings() {
     // Increment drive speed when the right bumper is pressed
     // new JoystickButton(m_driverController, Button.kBumperRight.value)
     //     .whenPressed(() -> m_robotDrive.incMaxSpeed());
