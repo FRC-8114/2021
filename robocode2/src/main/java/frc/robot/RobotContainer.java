@@ -211,12 +211,15 @@ public class RobotContainer {
     // Runs the auto-shoot (and auto center) routines while held
     if((m_driverController.getTriggerAxis(Hand.kRight) == 1) && (SmartDashboard.getNumber("Flywheel SetPoint", 0) == 0)) {
         new TeleopShooting(m_driverController, shooterRPM.getDouble(3600)).schedule();
+    } else if (m_driverController.getTriggerAxis(Hand.kRight) != 1) {
+        ShooterSubsystem.ShooterStop();
     }
 
     // D-pad Controls
     // Down reverses the drivetrain
     if(m_driverController.getPOV() == 180) {
         m_robotDrive.back = !m_robotDrive.back;
+        ShooterSubsystem.ShooterRun(2800);
     }
 
     SmartDashboard.putBoolean("isQuickTurn", isQuickTurn);

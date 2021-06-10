@@ -97,8 +97,8 @@ public final class Constants {
 
     public static double MAX_INPUT = 1;
 
-    public static final double INITIATION_LINE_SHOOTING_ANGLE = 44.23;
-    public static final double WALL_SHOT_SHOOTING_ANGLE = 44.23;
+    public static final double INITIATION_LINE_SHOOTING_ANGLE = 44.2;
+    public static final double WALL_SHOT_SHOOTING_ANGLE = 14.0;
   }
 
   public static final class LimelightConstants {
