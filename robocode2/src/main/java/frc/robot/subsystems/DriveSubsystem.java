@@ -207,6 +207,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("left_encoder_velocity", leftLeaderEncoder.getVelocity());
     SmartDashboard.putNumber("right_encoder_position", rightLeaderEncoder.getPosition());
     SmartDashboard.putNumber("right_encoder_velocity", rightLeaderEncoder.getVelocity());
+    SmartDashboard.putNumber("average_encoder_position", getAverageEncoderDistance());
 
     SmartDashboard.putNumber("gyro_angle", m_gyro.getAngle());
     SmartDashboard.putNumber("gyro_angle_rate", m_gyro.getRate());
@@ -318,7 +319,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the average of the two encoder readings
    */
   public static double getAverageEncoderDistance() {
-    return (leftLeaderEncoder.getPosition() + rightLeaderEncoder.getPosition()) / 2.0;
+    return (-1 * leftLeaderEncoder.getPosition() + rightLeaderEncoder.getPosition()) / 2.0;
   }
 
   /**

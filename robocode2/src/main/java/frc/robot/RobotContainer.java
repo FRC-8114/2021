@@ -207,7 +207,7 @@ public class RobotContainer {
     // Right Trigger
     // Runs the auto-shoot (and auto center) routines while held
     if((m_driverController.getTriggerAxis(Hand.kRight) == 1) && (SmartDashboard.getNumber("Flywheel SetPoint", 0) == 0)) {
-        new TeleopShooting(m_driverController).schedule();
+        new TeleopShooting(m_driverController, shooterRPM.getDouble(3600)).schedule();
     }
 
     // D-pad Controls
@@ -289,7 +289,7 @@ public class RobotContainer {
   */
   public Command getAutonomousCommand()
   {
-      return new ShootMoveBack(.002,.7,.7);
+      return new ShootMoveUp(25,.4,.4);
   }
 
   public Trajectory getTrajectory() {

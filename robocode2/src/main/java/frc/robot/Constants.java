@@ -16,8 +16,9 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final double WHEEL_RADIUS = 2.5/12;
+    public static final double WHEEL_RADIUS = 5.0 / 2.0;
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_RADIUS * 2 * Math.PI;
+    public static final double DRIVE_GEAR_RATIO = 1.0 / 8.33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333;
 
     public static final double INITIAL_RAMP_RATE = 1;
     public static final double INITIAL_MAX_VELOCITY = 0.6;
@@ -40,9 +41,8 @@ public final class Constants {
     public static final int ENCODER_PPR = 42;
     public static final double POSITION_CONVERSION_FACTOR = /*8.33*/ .00833;
     public static final double VELOCITY_CONVERSION_FACTOR = .001;
-    public static final double ENCODER_DISTANCE_PER_PULSE =
-        // Assumes the encoders are directly mounted on the wheel shafts
-        WHEEL_CIRCUMFERENCE / (ENCODER_PPR * POSITION_CONVERSION_FACTOR);
+    public static final double RANDOM_FIX_THE_ENCODERS_VALUE = 1.5;
+    public static final double ENCODER_DISTANCE_PER_PULSE = DRIVE_GEAR_RATIO * WHEEL_CIRCUMFERENCE;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically

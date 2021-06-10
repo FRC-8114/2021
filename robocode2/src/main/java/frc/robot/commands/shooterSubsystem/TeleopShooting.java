@@ -11,24 +11,26 @@ import frc.robot.subsystems.KickerSubsystem;
 
 public class TeleopShooting extends CommandBase {
     XboxController controller;
+    double rpm;
 
-    public TeleopShooting(XboxController controller) {
+    public TeleopShooting(XboxController controller, double rpm) {
         this.controller = controller;
+        this.rpm = rpm;
     }
 
     public void initialize() {
         new AutoCenter().schedule();
-        new ShooterRun(3600).schedule();
+        new ShooterRun(rpm).schedule();
     }
 
     public void execute() {
         double shooterRPM = SmartDashboard.getNumber("Flywheel Process Variable", 0);
-        if (shooterRPM >= 3575 /* && shooterRPM <= 3675 */) {
+        if (shooterRPM >= rpm-25 /* && shooterRPM <= 3675 */) {
             IndexSubsystem.AllIndexRun(0.6);
             KickerSubsystem.KickerRun(0.8);
         }
 
-        else if (shooterRPM < 3565) {
+        else if (shooterRPM < rpm-35) {
             IndexSubsystem.AllIndexStop();
             KickerSubsystem.KickerStop();
         }

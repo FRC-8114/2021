@@ -9,6 +9,7 @@ public class Forward extends CommandBase{
         this.d = d;
         this.speedL = speedL;
         this.speedR = speedR;
+        DriveSubsystem.tankDrive(speedL, speedR);
     }
 
     public void execute()
@@ -23,8 +24,10 @@ public class Forward extends CommandBase{
 
     public boolean isFinished()
     {
-        if(Math.abs(DriveSubsystem.getAverageEncoderDistance()) < Math.abs(d))
+        if(Math.abs(DriveSubsystem.getAverageEncoderDistance()) < Math.abs(d)) {
+            //DriveSubsystem.tankDrive(0, 0);
             return true;
+        }
         return false;
     }
 }
