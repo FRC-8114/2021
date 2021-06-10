@@ -110,11 +110,14 @@ public class RobotContainer {
 
     // Y Button
     // Climbs
-    new JoystickButton(m_driverController, Button.kY.value);
+    new JoystickButton(m_driverController, Button.kY.value)
+        .whileHeld(() -> climberSubsystem.ClimberUp(0.5))
+        .whenReleased(() -> climberSubsystem.ClimberStop());
 
     // B Button
     // Far shot hood angle
-    new JoystickButton(m_driverController, Button.kB.value);
+    new JoystickButton(m_driverController, Button.kB.value)
+        .whenPressed(new Forward(10, .45));
 
     // X Button
     // Wall shot hood angle
@@ -129,7 +132,7 @@ public class RobotContainer {
         Shuffleboard.getTab("Robot Control").add("Set Hood/Line Shot", new SetHoodPosition(wallShotAngle.getDouble(44.2)));
 
     new JoystickButton(m_driverController, Button.kStart.value)
-        .whenPressed(new SetHoodPosition(5));
+        .whenPressed(new SetHoodPosition(10));
     
     // Right Bumper
     // Runs intake forwards
@@ -289,7 +292,7 @@ public class RobotContainer {
   */
   public Command getAutonomousCommand()
   {
-      return new ShootMoveUp(25,.4,.4);
+      return new ShootMoveBack(35,.4);
   }
 
   public Trajectory getTrajectory() {

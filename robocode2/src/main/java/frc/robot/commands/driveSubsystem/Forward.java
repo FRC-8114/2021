@@ -1,33 +1,49 @@
 package frc.robot.commands.driveSubsystem;
+
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.ChangeToCoast;
+import frc.robot.commands.Wait;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class Forward extends CommandBase{
-    private double d, speedL, speedR;
-    public Forward(double d, double speedL, double speedR)
+    private double d, speed;
+    public Forward(double d, double speed)
     {
         this.d = d;
-        this.speedL = speedL;
-        this.speedR = speedR;
-        DriveSubsystem.tankDrive(speedL, speedR);
+        this.speed = speed;
+    }
+
+    public void initialize() {
+        DriveSubsystem.tankDrive(speed, speed);
+        DriveSubsystem.driverControl = false;
+
+        DriveSubsystem.leftMotorLeader.setIdleMode(IdleMode.kBrake);
+        DriveSubsystem.leftMotorFollower.setIdleMode(IdleMode.kBrake);
+        DriveSubsystem.rightMotorLeader.setIdleMode(IdleMode.kBrake);
+        DriveSubsystem.rightMotorFollower.setIdleMode(IdleMode.kBrake);
     }
 
     public void execute()
     {
-        DriveSubsystem.tankDrive(speedL, speedR);
+        DriveSubsystem.tankDrive(speed, speed);
     }
 
     public void end(boolean interrupted)
     {
         DriveSubsystem.tankDrive(0, 0);
+        System.out.println(d + "\n" + DriveSubsystem.getAverageEncoderDistance());
+        DriveSubsystem.driverControl = true;
+
+        new ChangeToCoast(2).schedule(); 
     }
 
     public boolean isFinished()
     {
         if(Math.abs(DriveSubsystem.getAverageEncoderDistance()) < Math.abs(d)) {
-            //DriveSubsystem.tankDrive(0, 0);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 }

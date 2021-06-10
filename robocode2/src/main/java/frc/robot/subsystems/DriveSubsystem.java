@@ -29,12 +29,12 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  final static CANSparkMax leftMotorLeader = new CANSparkMax(DriveConstants.LEFT_MOTOR_1_PORT, MotorType.kBrushless);
-  final CANSparkMax leftMotorFollower = new CANSparkMax(DriveConstants.LEFT_MOTOR_2_PORT, MotorType.kBrushless);
+  public final static CANSparkMax leftMotorLeader = new CANSparkMax(DriveConstants.LEFT_MOTOR_1_PORT, MotorType.kBrushless);
+  public final static CANSparkMax leftMotorFollower = new CANSparkMax(DriveConstants.LEFT_MOTOR_2_PORT, MotorType.kBrushless);
 
   // The motors on the right side of the drive.
-  final static CANSparkMax rightMotorLeader = new CANSparkMax(DriveConstants.RIGHT_MOTOR_1_PORT, MotorType.kBrushless);
-  final CANSparkMax rightMotorFollower = new CANSparkMax(DriveConstants.RIGHT_MOTOR_2_PORT, MotorType.kBrushless);
+  public final static CANSparkMax rightMotorLeader = new CANSparkMax(DriveConstants.RIGHT_MOTOR_1_PORT, MotorType.kBrushless);
+  public final static CANSparkMax rightMotorFollower = new CANSparkMax(DriveConstants.RIGHT_MOTOR_2_PORT, MotorType.kBrushless);
 
   // The robot's drive
   private static final DifferentialDrive m_drive = new DifferentialDrive(leftMotorLeader, rightMotorLeader);
@@ -46,10 +46,10 @@ public class DriveSubsystem extends SubsystemBase {
   static final CANEncoder rightLeaderEncoder = rightMotorLeader.getEncoder();
 
   // The gyro sensor
-  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  private final static ADIS16470_IMU m_gyro = new ADIS16470_IMU();
 
   // Odometry class for tracking robot pose
-  private final DifferentialDriveOdometry m_odometry;
+  private static DifferentialDriveOdometry m_odometry;
   private double maxVelocity;
   private static double curvatureMaxCurvature;
   private static double arcadeMaxCurvature;
@@ -60,7 +60,7 @@ public class DriveSubsystem extends SubsystemBase {
   private static NetworkTableEntry curvatureEntry;
   private static NetworkTableEntry isArcadeEntry;
 
-  public static boolean back = false;
+  public static boolean back = false, driverControl = true;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -254,12 +254,12 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /** Zeroes the heading of the robot. */
-  public void zeroHeading() {
+  public static void zeroHeading() {
     m_gyro.reset();
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
-  public void resetEncoders() {
+  public static void resetEncoders() {
     leftLeaderEncoder.setPosition(0);
     rightLeaderEncoder.setPosition(0);
   }
@@ -269,7 +269,7 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @param pose The pose to which to set the odometry.
    */
-  public void resetOdometry(Pose2d pose) {
+  public static void resetOdometry(Pose2d pose) {
     resetEncoders();
     zeroHeading();
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());

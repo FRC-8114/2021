@@ -1,5 +1,6 @@
 package frc.robot.commands.shooterSubsystem;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.*;
@@ -8,6 +9,7 @@ import frc.robot.subsystems.*;
 public class AutoShooting extends CommandBase {
     int shots_fired = 0;
     double rpm;
+    Timer timer = new Timer();
     boolean shotPreviously = false;
 
     public AutoShooting(double rpm) {
@@ -15,6 +17,7 @@ public class AutoShooting extends CommandBase {
     }
 
     public void initialize() {
+        timer.start();
         //new ShooterRun(3600).schedule();
     }
 
@@ -39,10 +42,12 @@ public class AutoShooting extends CommandBase {
         new StopShooter().schedule();
         IndexSubsystem.TowerIndexStop();
         KickerSubsystem.KickerStop();
+        timer.stop();
+        timer.reset();
     }
 
     public boolean isFinished() {
-        if (shots_fired >= 3)
+        if (shots_fired >= 3 || timer.get() > 12)
             return true;
         return false;
     }

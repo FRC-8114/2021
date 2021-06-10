@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpiutil.math.Num;
 import frc.robot.commands.limelight.TurnOffLED;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -114,11 +115,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if(DriveSubsystem.driverControl) {
     m_robotContainer.periodic();
     m_robotContainer.getDriveSystem().cheesyDrive(
-                    (m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight) > 0.02 || m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight) < -0.02)? m_robotContainer.m_driverController.getY(GenericHID.Hand.kRight):0,
-                    (m_robotContainer.m_driverController.getX(GenericHID.Hand.kLeft) > 0.02 || m_robotContainer.m_driverController.getX(GenericHID.Hand.kLeft) < -0.02)? m_robotContainer.m_driverController.getX(GenericHID.Hand.kLeft):0,
+                    (m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft) > 0.05 || m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft) < -0.05)? m_robotContainer.m_driverController.getY(GenericHID.Hand.kLeft):0,
+                    (m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight) > 0.05 || m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight) < -0.05)? m_robotContainer.m_driverController.getX(GenericHID.Hand.kRight):0,
                     m_robotContainer.isQuickTurn);
+    }
   }
 
   @Override
