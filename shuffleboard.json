@@ -703,7 +703,7 @@
       }
     },
     {
-      "title": "Shooter Flywheel PID",
+      "title": "Robot Control",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
@@ -719,68 +719,18 @@
             ],
             "content": {
               "_type": "List Layout",
-              "_title": "PID Control",
+              "_title": "Climber Controls",
               "Layout/Label position": "LEFT",
               "_children": [
                 {
                   "_type": "Toggle Switch",
-                  "_source0": "network_table:///SmartDashboard/Hood Mode",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Extend Climber",
                   "_title": "Hood Position/Velocity Control"
                 },
                 {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood P Gain",
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Retract Climber",
                   "_title": "Hood P Gain"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood I Gain",
-                  "_title": "Hood I Gain"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood D Gain",
-                  "_title": "Hood D Gain"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood I Zone",
-                  "_title": "Hood I Zone"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood Feed Forward",
-                  "_title": "Hood Feed Forward"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood Min Output",
-                  "_title": "Hood Min Output"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood Max Output",
-                  "_title": "Hood Max Output"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood Min Velocity",
-                  "_title": "Hood Min Velocity"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood Max Velocity",
-                  "_title": "Hood Max Velocity"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood Max Acceleration",
-                  "_title": "Hood Max Acceleration"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Hood Allowed Closed Loop Error",
-                  "_title": "Hood Allowed Closed Loop Error"
                 }
               ]
             }
