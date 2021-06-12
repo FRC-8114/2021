@@ -47,7 +47,7 @@ public class AutoShooting extends CommandBase {
     }
 
     public boolean isFinished() {
-        if (shots_fired >= 3 || timer.get() > 12)
+        if (shots_fired >= 3 || timer.get() > 8)
             return true;
         return false;
     }
