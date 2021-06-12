@@ -26,7 +26,7 @@ public class TeleopShooting extends CommandBase {
     public void execute() {
         double shooterRPM = SmartDashboard.getNumber("Flywheel Process Variable", 0);
         if (shooterRPM >= rpm-25 /* && shooterRPM <= 3675 */) {
-            IndexSubsystem.AllIndexRun(0.6);
+            IndexSubsystem.AllIndexRun(0.75);
             KickerSubsystem.KickerRun(0.8);
         }
 
