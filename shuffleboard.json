@@ -1,6 +1,518 @@
 {
   "tabPane": [
     {
+      "title": "Robot Control",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 64.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Climber Controls",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Climber/Extend Climber",
+                  "_title": "Extend"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Climber/Retract Climber",
+                  "_title": "Retract"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Climber/Climber Up",
+                  "_title": "Extend Speed"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Climber/Climber Down",
+                  "_title": "Retract Speed"
+                }
+              ]
+            }
+          },
+          "0,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///Shuffleboard/Robot Control/Limelight Toggle",
+              "_title": "Limelight On?"
+            }
+          },
+          "0,5": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///Shuffleboard/Robot Control/Auto Center Toggle",
+              "_title": "Auto Center On/Off"
+            }
+          },
+          "3,0": {
+            "size": [
+              3,
+              6 
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Shooter Controls",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Shooter/Auto Shoot",
+                  "_title": "Auto Shoot"
+                },
+                {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Shooter/Run Shooter",
+                  "_title": "Run Shooter"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Shooter/Auto Aim",
+                  "_title": "Auto Aim"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Shooter/Shooter RPM",
+                  "_title": "Shooter RPM"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Process Variable",
+                  "_title": "Flywheel Process Variable"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Shooter/Auto Shoot Index Speed",
+                  "_title": "Auto Shoot Index Speed"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Shooter/Auto Aim Speed",
+                  "_title": "Auto Aim Speed"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Shooter/Auto Aim Offset Angle",
+                  "_title": "Auto Aim Offset Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Shooter/Auto Aim MOE",
+                  "_title": "Auto Aim MOE"
+                }
+              ]
+            }
+          },
+          "6,0": {
+            "size": [
+              3,
+              5 
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Hood Controls",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Hood/Set Wall Shot Angle",
+                  "_title": "Set Wall Shot Angle"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Hood/Set Initiation Shot Angle",
+                  "_title": "Set Initiation Shot Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Hood/Hood Angle",
+                  "_title": "Current Hood Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Hood/Hood Speed",
+                  "_title": "Hood Speed"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Hood/Wall Shot Angle",
+                  "_title": "Wall Shot Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Hood/Initiation Shot Angle",
+                  "_title": "Initiation Shot Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Hood/Hood Angle MOE",
+                  "_title": "Hood Angle MOE"
+                }
+              ]
+            }
+          },
+          "9,0": {
+            "size": [
+              3,
+              5
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Index Controls",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Index/Run All Index",
+                  "_title": "Run All Index"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Index/Reverse All Index",
+                  "_title": "Reverse All Index"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Index/Run Front Index",
+                  "_title": "Run Front Index"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Index/Reverse Front Index",
+                  "_title": "Reverse Front Index"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Index/Run Ball Tube",
+                  "_title": "Run Ball Tube"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Index/Reverse Ball Tube",
+                  "_title": "Reverse Ball Tube"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Index/Run Index Speed",
+                  "_title": "Run Index Speed"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Index/Reverse Index Speed",
+                  "_title": "Reverse Index Speed"
+                }
+              ]
+            }
+          },
+          "12,0": {
+            "size": [
+              3,
+              4
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Intake Controls",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Intake/Run Intake",
+                  "_title": "Run Intake"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Intake/Reverse Intake",
+                  "_title": "Reverse Intake"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Intake/Run Intake Speed",
+                  "_title": "Run Intake Speed"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Intake/Reverse Intake Speed",
+                  "_title": "Reverse Intake Speed"
+                }
+              ]
+            }
+          },
+          "12,4": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Drive Controls",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Drive/Reverse Drive",
+                  "_title": "Reverse Drive"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Drive/Arcade-Curvature",
+                  "_title": "Arcade-Curvature"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Drive/Speed Control",
+                  "_title": "Drive Max Speed"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Drive/Arcade Max Curvature",
+                  "_title": "Arcade Max Curvature"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Drive/Curvature Max Curvature",
+                  "_title": "Curvature Max Curvature"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Robot Control/Drive/Ramp Rate",
+                  "_title": "Ramp Rate"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Shooter Flywheel PID",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "3,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "PID Control",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Mode",
+                  "_title": "Flywheel Position/Velocity Control"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel P Gain",
+                  "_title": "Flywheel P Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel I Gain",
+                  "_title": "Flywheel I Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel D Gain",
+                  "_title": "Flywheel D Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel I Zone",
+                  "_title": "Flywheel I Zone"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Feed Forward",
+                  "_title": "Flywheel Feed Forward"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Min Output",
+                  "_title": "Flywheel Min Output"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Max Output",
+                  "_title": "Flywheel Max Output"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Min Velocity",
+                  "_title": "Flywheel Min Velocity"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Max Velocity",
+                  "_title": "Flywheel Max Velocity"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Max Acceleration",
+                  "_title": "Flywheel Max Acceleration"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Flywheel Allowed Closed Loop Error",
+                  "_title": "Flywheel Allowed Closed Loop Error"
+                }
+              ]
+            }
+          },
+          "0,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Flywheel SetPoint",
+              "_source1": "network_table:///SmartDashboard/Flywheel Process Variable",
+              "_title": "Flywheel Process Variable",
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Y-axis/Unit": "ul"
+            }
+          },
+          "0,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Flywheel Output",
+              "_title": "Flywheel Output",
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Y-axis/Unit": "ul"
+            }
+          },
+          "5,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Flywheel Set Position",
+              "_title": "Flywheel Set Position"
+            }
+          },
+          "5,0": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Flywheel Set Velocity",
+              "_title": "Flywheel Set Velocity"
+            }
+          },
+          "9,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Flywheel GetAverageDistance",
+              "_title": "Flywheel GetAverageDistance"
+            }
+          },
+          "6,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Flywheel encoderDegrees",
+              "_title": "Flywheel encoderDegrees"
+            }
+          },
+          "7,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Flywheel hoodAngle",
+              "_title": "Flywheel hoodAngle"
+            }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Flywheel desiredAngle",
+              "_title": "Flywheel desiredAngle"
+            }
+          },
+          "9,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Flywheel desiredVelocity",
+              "_title": "Flywheel desiredVelocity"
+            }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Flywheel actualVelocity",
+              "_title": "Flywheel actualVelocity"
+            }
+          }
+        }
+      }
+    },
+    {
       "title": "SmartDashboard",
       "autoPopulate": true,
       "autoPopulatePrefix": "SmartDashboard/",
@@ -488,374 +1000,6 @@
               "_title": "ShooterSubsystem",
               "Layout/Label position": "BOTTOM",
               "_children": []
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "Shooter Flywheel PID",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "3,0": {
-            "size": [
-              2,
-              4
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "PID Control",
-              "Layout/Label position": "LEFT",
-              "_children": [
-                {
-                  "_type": "Toggle Switch",
-                  "_source0": "network_table:///SmartDashboard/Flywheel Mode",
-                  "_title": "Flywheel Position/Velocity Control"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel P Gain",
-                  "_title": "Flywheel P Gain"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel I Gain",
-                  "_title": "Flywheel I Gain"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel D Gain",
-                  "_title": "Flywheel D Gain"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel I Zone",
-                  "_title": "Flywheel I Zone"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel Feed Forward",
-                  "_title": "Flywheel Feed Forward"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel Min Output",
-                  "_title": "Flywheel Min Output"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel Max Output",
-                  "_title": "Flywheel Max Output"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel Min Velocity",
-                  "_title": "Flywheel Min Velocity"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel Max Velocity",
-                  "_title": "Flywheel Max Velocity"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel Max Acceleration",
-                  "_title": "Flywheel Max Acceleration"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Flywheel Allowed Closed Loop Error",
-                  "_title": "Flywheel Allowed Closed Loop Error"
-                }
-              ]
-            }
-          },
-          "0,0": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Flywheel SetPoint",
-              "_source1": "network_table:///SmartDashboard/Flywheel Process Variable",
-              "_title": "Flywheel Process Variable",
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul"
-            }
-          },
-          "0,3": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Flywheel Output",
-              "_title": "Flywheel Output",
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul"
-            }
-          },
-          "5,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Flywheel Set Position",
-              "_title": "Flywheel Set Position"
-            }
-          },
-          "5,0": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Flywheel Set Velocity",
-              "_title": "Flywheel Set Velocity"
-            }
-          },
-          "9,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Flywheel GetAverageDistance",
-              "_title": "Flywheel GetAverageDistance"
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Flywheel encoderDegrees",
-              "_title": "Flywheel encoderDegrees"
-            }
-          },
-          "7,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Flywheel hoodAngle",
-              "_title": "Flywheel hoodAngle"
-            }
-          },
-          "8,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Flywheel desiredAngle",
-              "_title": "Flywheel desiredAngle"
-            }
-          },
-          "9,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Flywheel desiredVelocity",
-              "_title": "Flywheel desiredVelocity"
-            }
-          },
-          "5,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Flywheel actualVelocity",
-              "_title": "Flywheel actualVelocity"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "Robot Control",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "3,0": {
-            "size": [
-              2,
-              4
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "Climber Controls",
-              "Layout/Label position": "LEFT",
-              "_children": [
-                {
-                  "_type": "Toggle Switch",
-                  "_source0": "network_table:///Shuffleboard/Robot Control/Extend Climber",
-                  "_title": "Hood Position/Velocity Control"
-                },
-                {
-                  "_type": "Toggle Switch",
-                  "_source0": "network_table:///Shuffleboard/Robot Control/Retract Climber",
-                  "_title": "Hood P Gain"
-                }
-              ]
-            }
-          },
-          "0,0": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Hood SetPoint",
-              "_source1": "network_table:///SmartDashboard/Hood Process Variable",
-              "_title": "Hood Process Variable",
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul"
-            }
-          },
-          "0,3": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Hood Output",
-              "_title": "Hood Output",
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul"
-            }
-          },
-          "5,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Hood Set Position",
-              "_title": "Hood Set Position"
-            }
-          },
-          "5,0": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Hood Set Velocity",
-              "_title": "Hood Set Velocity"
-            }
-          },
-          "9,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Hood GetAverageDistance",
-              "_title": "Hood GetAverageDistance"
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Hood encoderDegrees",
-              "_title": "Hood encoderDegrees"
-            }
-          },
-          "7,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Hood hoodAngle",
-              "_title": "Hood hoodAngle"
-            }
-          },
-          "8,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Hood desiredAngle",
-              "_title": "Hood desiredAngle"
-            }
-          },
-          "9,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Hood desiredVelocity",
-              "_title": "Hood desiredVelocity"
-            }
-          },
-          "5,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Hood actualVelocity",
-              "_title": "Hood actualVelocity"
             }
           }
         }
