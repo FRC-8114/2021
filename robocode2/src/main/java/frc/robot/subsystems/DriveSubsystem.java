@@ -60,7 +60,7 @@ public class DriveSubsystem extends SubsystemBase {
   private static NetworkTableEntry curvatureEntry;
   private static NetworkTableEntry isArcadeEntry;
 
-  public static boolean back = false, driverControl = true;
+  public static boolean back = false, driverControl = true, canAutoCenter = true;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -107,20 +107,20 @@ public class DriveSubsystem extends SubsystemBase {
     setMaxOutput();
     setRampRate(DriveConstants.INITIAL_RAMP_RATE);
 
-    Shuffleboard.getTab("Driving").add("Speed Control", DriveConstants.INITIAL_MAX_VELOCITY)
+    Shuffleboard.getTab("Robot Control").add("Drive/Speed Control", DriveConstants.INITIAL_MAX_VELOCITY)
         .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
           maxVelocity = event.value.getDouble();
           setMaxOutput();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab("Driving").add("Curvature Max Curvature", DriveConstants.INITIAL_CURVATURE_MAX_CURVATURE)
+    Shuffleboard.getTab("Robot Control").add("Drive/Curvature Max Curvature", DriveConstants.INITIAL_CURVATURE_MAX_CURVATURE)
         .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
           curvatureMaxCurvature = event.value.getDouble();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab("Driving").add("Arcade Max Curvature", DriveConstants.INITIAL_ARCADE_MAX_CURVATURE)
+    Shuffleboard.getTab("Robot Control").add("Drive/Arcade Max Curvature", DriveConstants.INITIAL_ARCADE_MAX_CURVATURE)
         .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
           arcadeMaxCurvature = event.value.getDouble();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-    Shuffleboard.getTab("Driving").add("Ramp Rate", DriveConstants.INITIAL_RAMP_RATE)
+    Shuffleboard.getTab("Robot Control").add("Drive/Ramp Rate", DriveConstants.INITIAL_RAMP_RATE)
         .withWidget(BuiltInWidgets.kTextView).getEntry().addListener(event -> {
           setRampRate(event.value.getDouble());
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);

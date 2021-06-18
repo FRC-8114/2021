@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,6 +35,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // PIDs
     public final static AdjustablePID flywheelPID = new AdjustablePID(leftShooterController, "Flywheel", 0.00005, 0.0000001, 0, 0, 0.000156);
+
+    public final static NetworkTableEntry encoderDegreesEntry = Shuffleboard.getTab("Robot Control").add("Hood/Hood Angle", 0).getEntry();
 
     private double current_angle = 0;
     public double angle = 0, velocity = 0;
@@ -71,6 +74,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 .withWidget(BuiltInWidgets.kNumberSlider).getEntry().addListener(event -> {
                     ShooterConstants.MAX_INPUT = event.value.getDouble();
                 }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        
     }
 
     public void periodic() {
@@ -80,6 +84,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("desiredAngle", angle);
         SmartDashboard.putNumber("desiredVelocity", velocity);
         SmartDashboard.putNumber("actualVelocity", speed);
+
+        encoderDegreesEntry.forceSetDouble(hoodControllerEncoder.getPosition());
 
         flywheelPID.periodic();
     }

@@ -8,24 +8,28 @@ import frc.robot.subsystems.*;
 
 public class AutoShooting extends CommandBase {
     int shots_fired = 0;
-    double rpm;
+    double rpm, indexSpeed;
     Timer timer = new Timer();
     boolean shotPreviously = false;
 
-    public AutoShooting(double rpm) {
+    public AutoShooting(double rpm, double indexSpeed) {
         this.rpm = rpm;
+        this.indexSpeed = indexSpeed;
     }
 
     public void initialize() {
         timer.start();
+        ShooterSubsystem.ShooterRun(rpm);
         //new ShooterRun(3600).schedule();
     }
 
     public void execute() {
         double shooterRPM = SmartDashboard.getNumber("Flywheel Process Variable", 0);
-        if (shooterRPM >= rpm-45 && shooterRPM <= rpm)
-        {
-            IndexSubsystem.TowerIndexRun(0.6);
+        if (shooterRPM >= rpm-45
+        
+          && shooterRPM <= rpm)
+        { 
+            IndexSubsystem.TowerIndexRun(indexSpeed);
             KickerSubsystem.KickerRun(0.8);
             shotPreviously = true;
         }
@@ -42,6 +46,7 @@ public class AutoShooting extends CommandBase {
         new StopShooter().schedule();
         IndexSubsystem.TowerIndexStop();
         KickerSubsystem.KickerStop();
+        ShooterSubsystem.ShooterStop();
         timer.stop();
         timer.reset();
     }

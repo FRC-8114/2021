@@ -8,25 +8,32 @@ import frc.robot.commands.driveSubsystem.AutoCenter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class TeleopShooting extends CommandBase {
     XboxController controller;
     double rpm;
+    double speed, offsetAngle, moe, indexSpeed;
 
-    public TeleopShooting(XboxController controller, double rpm) {
+    public TeleopShooting(XboxController controller, double rpm, double speed, double offsetAngle, double moe, double indexSpeed) {
         this.controller = controller;
         this.rpm = rpm;
+
+        this.speed = speed;
+        this.offsetAngle = offsetAngle;
+        this.moe = moe;
+        this.indexSpeed = indexSpeed;
     }
 
     public void initialize() {
-        new AutoCenter().schedule();
-        new ShooterRun(rpm).schedule();
+        new AutoCenter(speed, offsetAngle, moe).schedule();
+        ShooterSubsystem.ShooterRun(rpm);
     }
 
     public void execute() {
         double shooterRPM = SmartDashboard.getNumber("Flywheel Process Variable", 0);
         if (shooterRPM >= rpm-25 /* && shooterRPM <= 3675 */) {
-            IndexSubsystem.AllIndexRun(0.75);
+            IndexSubsystem.AllIndexRun(indexSpeed);
             KickerSubsystem.KickerRun(0.8);
         }
 

@@ -20,6 +20,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
         //set to factory default and idle so we know what we're working with 
         climberController.restoreFactoryDefaults();
+        climberController.setInverted(true);
         climberController.set(0);
     }
 

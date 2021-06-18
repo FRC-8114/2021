@@ -3,6 +3,7 @@ package frc.robot.commands.driveSubsystem;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.ChangeToCoast;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class Backward extends CommandBase{
@@ -36,10 +37,7 @@ public class Backward extends CommandBase{
         System.out.println(d + "\n" + DriveSubsystem.getAverageEncoderDistance());
         DriveSubsystem.driverControl = true;
 
-        DriveSubsystem.leftMotorLeader.setIdleMode(IdleMode.kCoast);
-        DriveSubsystem.leftMotorFollower.setIdleMode(IdleMode.kCoast);
-        DriveSubsystem.rightMotorLeader.setIdleMode(IdleMode.kCoast);
-        DriveSubsystem.rightMotorFollower.setIdleMode(IdleMode.kCoast);
+        new ChangeToCoast(2).schedule();
     }
 
     public boolean isFinished()

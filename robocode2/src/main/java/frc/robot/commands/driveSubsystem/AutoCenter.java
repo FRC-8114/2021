@@ -6,31 +6,35 @@ import frc.robot.subsystems.Limelight;
 
 public class AutoCenter extends CommandBase {
     private DriveSubsystem DriveSubsystem;
+    private double speed, offsetAngle, moe;
 
-    public AutoCenter() {
-        System.out.println("Constructor");
+    public AutoCenter(double speed, double offsetAngle, double moe) {
+        this.speed = speed;
+        this.offsetAngle = offsetAngle;
+        this.moe = moe;
     }
 
     public void initialize() {
-        System.out.println("Initialize");
         Limelight.turnOnLED();
     }
 
     public void execute() {
-        double offset = Limelight.getTargetXAngle() + Limelight.shooterLimelightOffsetAngle;
-        if (offset < -Limelight.autoCenterTolerance) {  
-            DriveSubsystem.cheesyDrive(0, -0.15, true);
-        } else if (offset > Limelight.autoCenterTolerance) {
-            DriveSubsystem.cheesyDrive(0, 0.15, true);
+        double offset = Limelight.getTargetXAngle() + offsetAngle;
+        if (offset < -moe) {  
+            DriveSubsystem.cheesyDrive(0, -speed, true);
+        } else if (offset > moe) {
+            DriveSubsystem.cheesyDrive(0, speed, true);
         } else {
             DriveSubsystem.cheesyDrive(0, 0, true);
         }
     }
 
     public boolean isFinished() {
-        double offset = Limelight.getTargetXAngle() + Limelight.shooterLimelightOffsetAngle;
-        if (offset < Limelight.autoCenterTolerance && 
-            offset > -Limelight.autoCenterTolerance) {
+        double offsetAngle = Limelight.getTargetXAngle() + Limelight.shooterLimelightOffsetAngle;
+        if (offsetAngle < Limelight.autoCenterTolerance && 
+            offsetAngle > -Limelight.autoCenterTolerance) {
+            return true;
+        } else if(!DriveSubsystem.canAutoCenter) {
             return true;
         }
         return false;

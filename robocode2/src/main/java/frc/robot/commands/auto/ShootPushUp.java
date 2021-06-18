@@ -7,7 +7,6 @@ import frc.robot.commands.driveSubsystem.Forward;
 import frc.robot.commands.driveSubsystem.ResetOdometry;
 import frc.robot.commands.shooterSubsystem.AutoShooting;
 import frc.robot.commands.shooterSubsystem.SetHoodPosition;
-import frc.robot.commands.shooterSubsystem.ShooterRun;
 
 public class ShootPushUp extends SequentialCommandGroup{
     public ShootPushUp(double d, double speed)
@@ -15,11 +14,9 @@ public class ShootPushUp extends SequentialCommandGroup{
         addCommands(
             new ResetOdometry(),
 
-            new SetHoodPosition(44.2),
+            new SetHoodPosition(44.2, .1, .5),
             
-            new ShooterRun(3500),
-
-            new AutoShooting(3500),
+            new AutoShooting(3500, 0.6),
 
             new Backward(d, speed),
 

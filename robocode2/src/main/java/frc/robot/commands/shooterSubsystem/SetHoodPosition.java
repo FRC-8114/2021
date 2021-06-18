@@ -5,10 +5,12 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class SetHoodPosition extends CommandBase {
-    double desired_angle, current_angle;
+    double desired_angle, current_angle, speed, moe;
         
-    public SetHoodPosition(double angle) {
+    public SetHoodPosition(double angle, double speed, double moe) {
         desired_angle = angle;
+        this.speed = speed;
+        this.moe = moe;
     }
 
     public void initialize() {
@@ -18,18 +20,18 @@ public class SetHoodPosition extends CommandBase {
     public void execute() {
         current_angle = ShooterSubsystem.GetHoodEncoderPosition();
 
-        if (current_angle < desired_angle-ShooterConstants.HOOD_DEGREE_TOLERANCE) {
-                ShooterSubsystem.IncreaseHoodPosition(0.1);
-        } else if (current_angle > desired_angle+ShooterConstants.HOOD_DEGREE_TOLERANCE) {
-                ShooterSubsystem.LowerHoodPosition(0.1);
+        if (current_angle < desired_angle-moe) {
+                ShooterSubsystem.IncreaseHoodPosition(speed);
+        } else if (current_angle > desired_angle+moe) {
+                ShooterSubsystem.LowerHoodPosition(speed);
         } else {
             ShooterSubsystem.StopHood();
         }
     }
 
     public boolean isFinished() {
-        if (current_angle > desired_angle-ShooterConstants.HOOD_DEGREE_TOLERANCE
-            && current_angle < desired_angle+ShooterConstants.HOOD_DEGREE_TOLERANCE)
+        if (current_angle > desired_angle-moe
+            && current_angle < desired_angle+moe)
             return true;
         return false;
     }
